@@ -8,6 +8,11 @@
 
 Automagical snippet management.
 
+<https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
+
+<https://github.com/chrisgrieser/nvim-scissors/assets/73286100/97cd47b8-f055-4f70-b256-71fb85e921d5>
+
+## Table of Contents
 <!-- toc -->
 
 - [Features](#features)
@@ -21,7 +26,7 @@ Automagical snippet management.
 <!-- tocstop -->
 
 ## Features
-- ℹ️ Supports only [VSCode-style snippets (JSON files)](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vscode).
+- ℹ️ Supports only [VSCode-style snippets](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vscode).
 - Add new snippets, edit snippets, delete snippets.
 - Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
 - Syntax highlighting while you edit the snippet. Includes highlighting of
@@ -32,13 +37,13 @@ Automagical snippet management.
 
 > [!NOTE]
 > This plugin only *manages* snippets. It does not provide a snippet *engine*
-> and therefore does not expand snippets. Install a plugin like
-> [LuaSnip](https://github.com/L3MON4D3/LuaSnip) for that.
+> and therefore does not expand snippets, which is done by plugins like
+> [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ## Rationale
 - Regrettably, there are innumerable formats in which snippets can be saved. The
-  only format which supported by many applications and somewhat comes close to
-  being a standard is the [VSCode snippet
+  only format supported by several applications and the closest thing to a
+  a standard is the [VSCode snippet
   format](https://code.visualstudio.com/docs/editor/userdefinedsnippets). For
   portability and to future-proof your snippet collection, it thus makes sense to
   save your snippets in that format.
@@ -76,6 +81,14 @@ use {
 }
 ```
 
+The snippet selection is implemented via `vim.ui.select`, so you need a plugin
+like
+[telescope-ui-select](https://github.com/nvim-telescope/telescope-ui-select.nvim)
+or [dressing.nvim](https://github.com/stevearc/dressing.nvim) for the nice UI.
+The notifications are implemented via `vim.notify`, so you require a plugin like
+[nvim-notify](https://github.com/rcarriga/nvim-notify) for the pretty
+notifications.
+
 ## Usage
 The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
 code to create keymaps for them:
@@ -85,7 +98,7 @@ vim.keymap.set(
 	"n",
 	"<leader>se",
 	function() require("scissors").editSnippet() end,
-	{ desc = " Edit Snippets" }
+	{ desc = " Edit snippets" }
 )
 vim.keymap.set(
 	"n",
@@ -94,6 +107,9 @@ vim.keymap.set(
 	{ desc = " Add new snippet" }
 )
 ```
+
+Currently, the number of prefixes for a snippet is fixed and cannot be changed 
+with this plugin. 
 
 ## Configuration
 
@@ -127,7 +143,7 @@ require("nvim-scissors").setup {
 
 > [!TIP]
 > `vim.fn.stdpath("config")` returns the path to your nvim config, so you do not
-> need to the location of your snippet folder.
+> need to provide an absolute path to your snippet folder.
 
 ## Note on JSON-formatting
 This plugin writes JSON files via `vim.encode.json`. This method always writes

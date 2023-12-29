@@ -1,9 +1,10 @@
-*scissors.txt*          For NVIM v0.8.0          Last change: 2023 December 29
+*scissors.txt*          For NVIM v0.8.0          Last change: 2023 December 30
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
 
 1. nvim-scissors                                     |scissors-nvim-scissors-|
+  - Table of Contents              |scissors-nvim-scissors--table-of-contents|
   - Features                                |scissors-nvim-scissors--features|
   - Rationale                              |scissors-nvim-scissors--rationale|
   - Installation                        |scissors-nvim-scissors--installation|
@@ -17,6 +18,15 @@ Table of Contents                                 *scissors-table-of-contents*
 
 Automagicalsnippet management.
 
+
+<https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
+
+
+<https://github.com/chrisgrieser/nvim-scissors/assets/73286100/97cd47b8-f055-4f70-b256-71fb85e921d5>
+
+
+TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
+
 - |scissors-features|
 - |scissors-rationale|
 - |scissors-installation|
@@ -28,7 +38,7 @@ Automagicalsnippet management.
 
 FEATURES                                    *scissors-nvim-scissors--features*
 
-- Supports only VSCode-style snippets (JSON files) <https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vscode>.
+- Supports only VSCode-style snippets <https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vscode>.
 - Add new snippets, edit snippets, delete snippets.
 - Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
 - Syntax highlighting while you edit the snippet. Includes highlighting of
@@ -39,14 +49,14 @@ FEATURES                                    *scissors-nvim-scissors--features*
 
 
   [!NOTE] This plugin only _manages_ snippets. It does not provide a snippet
-  _engine_ and therefore does not expand snippets. Install a plugin like LuaSnip
-  <https://github.com/L3MON4D3/LuaSnip> for that.
+  _engine_ and therefore does not expand snippets, which is done by plugins like
+  LuaSnip <https://github.com/L3MON4D3/LuaSnip>.
 
 RATIONALE                                  *scissors-nvim-scissors--rationale*
 
 - Regrettably, there are innumerable formats in which snippets can be saved. The
-    only format which supported by many applications and somewhat comes close to
-    being a standard is the VSCode snippet
+    only format supported by several applications and the closest thing to a
+    a standard is the VSCode snippet
     format <https://code.visualstudio.com/docs/editor/userdefinedsnippets>. For
     portability and to future-proof your snippet collection, it thus makes sense to
     save your snippets in that format.
@@ -84,6 +94,13 @@ INSTALLATION                            *scissors-nvim-scissors--installation*
     }
 <
 
+The snippet selection is implemented via `vim.ui.select`, so you need a plugin
+like telescope-ui-select
+<https://github.com/nvim-telescope/telescope-ui-select.nvim> or dressing.nvim
+<https://github.com/stevearc/dressing.nvim> for the nice UI. The notifications
+are implemented via `vim.notify`, so you require a plugin like nvim-notify
+<https://github.com/rcarriga/nvim-notify> for the pretty notifications.
+
 
 USAGE                                          *scissors-nvim-scissors--usage*
 
@@ -95,7 +112,7 @@ the code to create keymaps for them:
         "n",
         "<leader>se",
         function() require("scissors").editSnippet() end,
-        { desc = " Edit Snippets" }
+        { desc = " Edit snippets" }
     )
     vim.keymap.set(
         "n",
@@ -104,6 +121,9 @@ the code to create keymaps for them:
         { desc = " Add new snippet" }
     )
 <
+
+Currently, the number of prefixes for a snippet is fixed and cannot be changed
+with this plugin.
 
 
 CONFIGURATION                          *scissors-nvim-scissors--configuration*
@@ -138,7 +158,7 @@ The `.setup()` call is optional.
 
 
   [!TIP] `vim.fn.stdpath("config")` returns the path to your nvim config, so you
-  do not need to the location of your snippet folder.
+  do not need to provide an absolute path to your snippet folder.
 
 NOTE ON JSON-FORMATTING      *scissors-nvim-scissors--note-on-json-formatting*
 
