@@ -77,9 +77,27 @@ use {
 ```
 
 ## Usage
--
+The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
+code to create keymaps for them:
+
+```lua
+vim.keymap.set(
+	"n",
+	"<leader>se",
+	function() require("scissors").editSnippet() end,
+	{ desc = " Edit Snippets" }
+)
+vim.keymap.set(
+	"n",
+	"<leader>sa",
+	function() require("scissors").addNewSnippet() end,
+	{ desc = " Add new snippet" }
+)
+```
 
 ## Configuration
+
+The `.setup()` call is optional.
 
 ```lua
 -- default settings
@@ -91,7 +109,7 @@ require("nvim-scissors").setup {
 		border = "rounded",
 		keymaps = {
 			cancel = "q",
-			saveChanges = "<CR>",
+			saveChanges = "<CR>", -- normal mode
 			delete = "<C-BS>",
 			openInFile = "<C-o>",
 		},
@@ -117,7 +135,7 @@ the file in minified form, and also does not have a deterministic order of
 dictionary keys. That means that the JSON file can have a different order of
 keys before and after updating it via `nvim-scissors`.
 
-Both, minification and unstable key order are of course problem if you version-control
+Both, minification, and unstable key order are of course problem if you version-control
 your snippet collection. To solve this problem, `nvim-scissors` can optionally
 unminify and sort the JSON files after updating it via `yq` or `jq`. (Both are
 also available via [mason.nvim](https://github.com/williamboman/mason.nvim).)
