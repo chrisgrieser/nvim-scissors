@@ -13,6 +13,7 @@ Automagical snippet management.
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/97cd47b8-f055-4f70-b256-71fb85e921d5>
 
 ## Table of Contents
+
 <!-- toc -->
 
 - [Features](#features)
@@ -42,7 +43,7 @@ Automagical snippet management.
 
 ## Rationale
 - Regrettably, there are innumerable formats in which snippets can be saved. The
-  only format supported by several applications and the closest thing to a
+  only format supported by several applications and the closest thing to
   a standard is the [VSCode snippet
   format](https://code.visualstudio.com/docs/editor/userdefinedsnippets). For
   portability and to future-proof your snippet collection, it thus makes sense to
@@ -74,7 +75,7 @@ Automagical snippet management.
 use {
 	"chrisgrieser/nvim-scissors",
 	config = function()
-		require("nvim-scissors").setup ({
+		require("scissors").setup ({
 			snippetDir = "path/to/your/snippetFolder",
 		})
 	end,
@@ -108,8 +109,8 @@ vim.keymap.set(
 )
 ```
 
-Currently, the number of prefixes for a snippet is fixed and cannot be changed 
-with this plugin. 
+Currently, the number of prefixes for a snippet is fixed and cannot be changed
+with this plugin.
 
 ## Configuration
 
@@ -117,7 +118,7 @@ The `.setup()` call is optional.
 
 ```lua
 -- default settings
-require("nvim-scissors").setup {
+require("scissors").setup {
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
 		height = 0.4, -- between 0-1
