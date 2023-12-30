@@ -2,7 +2,7 @@ local M = {}
 
 local setup = require("scissors.config").setupPlugin
 local config = require("scissors.config").config
-local editPopup = require("scissors.edit-popup")
+local edit = require("scissors.edit-snippet")
 local rw = require("scissors.read-write-operations")
 local u = require("scissors.utils")
 
@@ -52,7 +52,7 @@ function M.editSnippet()
 		kind = "nvim-scissors.snippetSearch",
 	}, function(snip)
 		if not snip then return end
-		editPopup.editInPopup(snip, "update")
+		edit.editInPopup(snip, "update")
 	end)
 end
 
@@ -79,7 +79,7 @@ function M.addNewSnippet()
 			body = "",
 			prefix = "",
 		}
-		editPopup.editInPopup(snip, "new")
+		edit.editInPopup(snip, "new")
 	end)
 end
 

@@ -36,6 +36,61 @@ local function guessFileType(pathOfSnippetFile)
 	return false
 end
 
+---@param snip snippetObj snippet to update/create
+---@param editedLines string[]
+local function updateSnippetFile(snip, editedLines)
+	local snippetsInFile = rw.readAndParseJson(snip.fullPath)
+	local filepath = snip.fullPath
+
+	-- determine prefix & body
+	local numOfPrefixes = type(snip.prefix) == "string" and 1 or #snip.prefix
+	local prefix = vim.list_slice(editedLines, 1, numOfPrefixes)
+	local body = vim.list_slice(editedLines, numOfPrefixes + 1, #editedLines)
+
+	-- LINT/VALIDATE PREFIX & BODY
+	-- trim (only trailing for body, since leading there is indentation)
+	prefix = vim.tbl_map(function(line) return vim.trim(line) end, prefix)
+	body = vim.tbl_map(function(line) return line:gsub("%s+$", "") end, body)
+	-- remove deleted prefixes
+	prefix = vim.tbl_filter(function(line) return line ~= "" end, prefix)
+	if #prefix == 0 then
+		u.notify("Prefix is empty. No changes made.", "warn")
+		return
+	end
+	-- trim trailing empty lines from body
+	while body[#body] == "" do
+		table.remove(body)
+		if #body == 0 then
+			u.notify("Body is empty. No changes made.", "warn")
+			return
+		end
+	end
+
+	-- new snippet: key = prefix
+	local isNewSnippet = snip.originalKey == nil
+	local key = isNewSnippet and prefix[1] or snip.originalKey
+	assert(key, "Snippet key missing")
+	-- ensure key is unique
+	while isNewSnippet and snippetsInFile[key] ~= nil do
+		key = key .. "_1"
+	end
+
+	-- update snipObj
+	snip.originalKey = nil -- delete key set by this plugin
+	snip.fullPath = nil -- delete key set by this plugin
+	snip.body = #body == 1 and body[1] or body
+	snip.prefix = #prefix == 1 and prefix[1] or prefix
+	snippetsInFile[key] = snip
+
+	-- write & notify
+	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
+	if success then
+		local displayName = #key > 20 and key:sub(1, 20) .. "…" or key
+		local action = isNewSnippet and "created" or "updated"
+		u.notify(("%q %s."):format(displayName, action))
+	end
+end
+
 --------------------------------------------------------------------------------
 
 ---@param snip snippetObj
@@ -119,7 +174,7 @@ function M.editInPopup(snip, mode)
 	vim.keymap.set("n", conf.keymaps.cancel, close, opts)
 	vim.keymap.set("n", conf.keymaps.saveChanges, function()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
-		rw.updateSnippetFile(snip, editedLines)
+		updateSnippetFile(snip, editedLines)
 		close()
 	end, opts)
 	vim.keymap.set("n", conf.keymaps.delete, function()
