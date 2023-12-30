@@ -1,33 +1,38 @@
 local M = {}
 
-local setup = require("scissors.config").setupPlugin
-local config = require("scissors.config").config
-local edit = require("scissors.edit-snippet")
-local rw = require("scissors.read-write-operations")
-local u = require("scissors.utils")
+-- PERF do not require the submodules here, since that loads the entire codebase
+-- of the plugin on initialization instead of lazy-loading the parts when needed.
 
----@return boolean?
+--------------------------------------------------------------------------------
+
+---@return string|nil snippetDir nil when the directory does not exist
 ---@nodiscard
-local function snippetDirExists()
-	local stat = vim.loop.fs_stat(config.snippetDir)
+local function getSnippetDir()
+	local snippetDir = require("scissors.config").config.snippetDir
+	local stat = vim.loop.fs_stat(snippetDir)
 	local exists = stat and stat.type == "directory"
-	if not exists then u.notify("Snippet directory does not exist: " .. config.snippetDir, "error") end
-	return exists
+	if exists then return snippetDir end
+
+	require("scissors.utils").notify("Snippet directory does not exist: " .. snippetDir, "error")
+	return nil
 end
 
 --------------------------------------------------------------------------------
 
 ---@param userConfig? pluginConfig
-function M.setup(userConfig) setup(userConfig or {}) end
+function M.setup(userConfig) require("scissors.config").setupPlugin(userConfig or {}) end
 
 function M.editSnippet()
-	if not snippetDirExists() then return end
+	local snippetDir = getSnippetDir()
+	if not snippetDir then return end
+
+	local rw = require("scissors.read-write-operations")
 
 	-- get all snippets
 	local allSnippets = {} ---@type snippetObj[]
-	for name, _ in vim.fs.dir(config.snippetDir, { depth = 3 }) do
+	for name, _ in vim.fs.dir(snippetDir, { depth = 3 }) do
 		if name:find("%.jsonc?$") and name ~= "package.json" then
-			local filepath = config.snippetDir .. "/" .. name
+			local filepath = snippetDir .. "/" .. name
 			local snippetsInFileDict = rw.readAndParseJson(filepath)
 
 			-- convert dictionary to array for `vim.ui.select`
@@ -52,16 +57,17 @@ function M.editSnippet()
 		kind = "nvim-scissors.snippetSearch",
 	}, function(snip)
 		if not snip then return end
-		edit.editInPopup(snip, "update")
+		require("scissors.edit-snippet").editInPopup(snip, "update")
 	end)
 end
 
 function M.addNewSnippet()
-	if not snippetDirExists() then return end
+	local snippetDir = getSnippetDir()
+	if not snippetDir then return end
 
-	-- get all snippets JSON files
+	-- get list of all snippet JSON files
 	local jsonFiles = {}
-	for name, _ in vim.fs.dir(config.snippetDir, { depth = 3 }) do
+	for name, _ in vim.fs.dir(snippetDir, { depth = 3 }) do
 		if name:find("%.json$") and name ~= "package.json" then table.insert(jsonFiles, name) end
 	end
 
@@ -75,11 +81,11 @@ function M.addNewSnippet()
 
 		---@type snippetObj
 		local snip = {
-			fullPath = config.snippetDir .. "/" .. file,
+			fullPath = snippetDir .. "/" .. file,
 			body = "",
 			prefix = "",
 		}
-		edit.editInPopup(snip, "new")
+		require("scissors.edit-snippet").editInPopup(snip, "new")
 	end)
 end
 
