@@ -213,7 +213,7 @@ local function updateSnippetFile(snip, editedLines)
 	if success then
 		local displayName = #key > 20 and key:sub(1, 20) .. "…" or key
 		local action = isNewSnippet and "created" or "updated"
-		notify(('"%s" %s.'):format(displayName, action))
+		notify(('%q %s.'):format(displayName, action))
 	end
 end
 
@@ -227,7 +227,7 @@ local function deleteSnippet(snip)
 	local success = writeAndFormatSnippetFile(snip.fullPath, snippetsInFile)
 	if success then
 		local displayName = #key > 20 and key:sub(1, 20) .. "…" or key
-		notify(('"%s" deleted.'):format(displayName))
+		notify(('%q deleted.'):format(displayName))
 	end
 end
 
@@ -246,8 +246,8 @@ local function editInPopup(snip, mode)
 
 	-- title
 	local displayName = mode == "new" and "New Snippet" or snip.originalKey:sub(1, 25)
-	local title = mode == "new" and (' New Snippet in "%s" '):format(nameOfSnippetFile)
-		or (" %s [%s] "):format(displayName, nameOfSnippetFile)
+	local title = mode == "new" and (' New Snippet in %q '):format(nameOfSnippetFile)
+		or (" %q [%s] "):format(displayName, nameOfSnippetFile)
 
 	-- create buffer and window
 	local bufnr = a.nvim_create_buf(false, true)
@@ -325,8 +325,8 @@ local function editInPopup(snip, mode)
 	end, opts)
 	vim.keymap.set("n", conf.keymaps.openInFile, function()
 		close()
-		local locationInFile = '"' .. snip.originalKey:gsub(" ", [[\ ]]) .. '":'
-		vim.cmd(("edit +/%s %s"):format(locationInFile, snip.fullPath))
+		local locationInFile = snip.originalKey:gsub(" ", [[\ ]])
+		vim.cmd(("edit +/%q %s"):format(locationInFile, snip.fullPath))
 	end, opts)
 
 	-- HACK prevent shifting of extmarks and highlights by disabling keys that
