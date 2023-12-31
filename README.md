@@ -27,7 +27,7 @@ Automagical snippet management.
 <!-- tocstop -->
 
 ## Features
-- ℹ️ Supports only [VSCode-style snippets](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vscode).
+- ℹ️ Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 - Add new snippets, edit snippets, delete snippets.
 - Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
 - Syntax highlighting while you edit the snippet. Includes highlighting of
@@ -50,7 +50,7 @@ Automagical snippet management.
   save your snippets in that format.
 - Most notably, the VSCode snippet format is used by plugins like
   [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and also
-  supported by [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
+  supported by [LuaSnip](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
 - However, the snippets are stored in JSON files, which are a pain to modify
   manually. This plugin aims to alleviate that pain by automagically writing
   the JSON for you.
