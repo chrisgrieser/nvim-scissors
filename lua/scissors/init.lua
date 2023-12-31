@@ -27,22 +27,16 @@ function M.editSnippet()
 	if not snippetDir then return end
 
 	local rw = require("scissors.read-write-operations")
+	local snipObj = require("scissors.snippet-object")
 
 	-- get all snippets
-	local allSnippets = {} ---@type snippetObj[]
+	local allSnippets = {} ---@type SnippetObj[]
 	for name, _ in vim.fs.dir(snippetDir, { depth = 3 }) do
 		if name:find("%.jsonc?$") and name ~= "package.json" then
 			local filepath = snippetDir .. "/" .. name
-			local snippetsInFileDict = rw.readAndParseJson(filepath)
-
-			-- convert dictionary to array for `vim.ui.select`
-			local snippetsInFileList = {} ---@type snippetObj[]
-			for key, snip in pairs(snippetsInFileDict) do
-				snip.fullPath = filepath
-				snip.originalKey = key
-				table.insert(snippetsInFileList, snip)
-			end
-			vim.list_extend(allSnippets, snippetsInFileList)
+			local vscodeJson = rw.readAndParseJson(filepath) ---@cast vscodeJson VSCodeSnippetDict
+			local snippetsInFileArr = snipObj.restructureVsCodeObj(vscodeJson, filepath)
+			vim.list_extend(allSnippets, snippetsInFileArr)
 		end
 	end
 
@@ -50,7 +44,7 @@ function M.editSnippet()
 	vim.ui.select(allSnippets, {
 		prompt = "Select snippet:",
 		format_item = function(item)
-			local snipname = item.prefix[1] or item.prefix
+			local snipname = item.originalKey
 			local filename = vim.fs.basename(item.fullPath):gsub("%.json$", "")
 			return ("%s\t\t[%s]"):format(snipname, filename)
 		end,
@@ -79,11 +73,11 @@ function M.addNewSnippet()
 	}, function(file)
 		if not file then return end
 
-		---@type snippetObj
+		---@type SnippetObj
 		local snip = {
 			fullPath = snippetDir .. "/" .. file,
-			body = "",
-			prefix = "",
+			body = {},
+			prefix = {},
 		}
 		require("scissors.edit-snippet").editInPopup(snip, "new")
 	end)

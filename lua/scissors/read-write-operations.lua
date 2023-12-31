@@ -15,14 +15,14 @@ end
 --------------------------------------------------------------------------------
 
 ---@param path string
----@return table<string, object>
+---@return table
 function M.readAndParseJson(path)
 	local name = vim.fs.basename(path)
 	local file, _ = io.open(path, "r")
 	assert(file, name .. " could not be read")
 	local content = file:read("*a")
 	file:close()
-	local ok, json = pcall(vim.json.decode, content) ---@cast json table
+	local ok, json = pcall(vim.json.decode, content) ---@cast json VSCodeSnippetDict
 	if not ok then
 		u.notify("Could not parse " .. name, "warn")
 		return {}
@@ -31,7 +31,7 @@ function M.readAndParseJson(path)
 end
 
 ---@param filepath string
----@param snippetsInFile snippetObj[]
+---@param snippetsInFile SnippetObj[]
 ---@return boolean success
 ---@nodiscard
 function M.writeAndFormatSnippetFile(filepath, snippetsInFile)
@@ -74,7 +74,7 @@ function M.writeAndFormatSnippetFile(filepath, snippetsInFile)
 	return true
 end
 
----@param snip snippetObj
+---@param snip SnippetObj
 function M.deleteSnippet(snip)
 	local key = snip.originalKey
 	assert(key)

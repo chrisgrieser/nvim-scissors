@@ -55,7 +55,7 @@ local function guessFileType(pathOfSnippetFile)
 	return false
 end
 
----@param snip snippetObj snippet to update/create
+---@param snip SnippetObj snippet to update/create
 ---@param prefixCount number
 ---@param editedLines string[]
 local function updateSnippetFile(snip, editedLines, prefixCount)
@@ -114,7 +114,7 @@ end
 
 --------------------------------------------------------------------------------
 
----@param snip snippetObj
+---@param snip SnippetObj
 ---@param mode "new"|"update"
 function M.editInPopup(snip, mode)
 	local a = vim.api
@@ -122,10 +122,8 @@ function M.editInPopup(snip, mode)
 	local ns = a.nvim_create_namespace("nvim-scissors-editing")
 
 	-- snippet properties
-	local body = type(snip.body) == "string" and { snip.body } or snip.body ---@cast body string[]
-	local prefix = type(snip.prefix) == "string" and { snip.prefix } or snip.prefix ---@cast prefix string[]
-	local prefixCount = #prefix -- needs to be saved since `list_extend` mutates `prefix`
-	local snipLines = vim.list_extend(prefix, body)
+	local prefixCount = #snip.prefix -- needs to be saved since `list_extend` mutates
+	local lines = vim.list_extend(snip.prefix, snip.body)
 	local nameOfSnippetFile = vim.fs.basename(snip.fullPath)
 
 	-- title
@@ -135,7 +133,7 @@ function M.editInPopup(snip, mode)
 
 	-- create buffer and window
 	local bufnr = a.nvim_create_buf(false, true)
-	a.nvim_buf_set_lines(bufnr, 0, -1, false, snipLines)
+	a.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 	a.nvim_buf_set_name(bufnr, displayName)
 	local guessedFt = guessFileType(snip.fullPath)
 	if guessedFt then a.nvim_buf_set_option(bufnr, "filetype", guessedFt) end
