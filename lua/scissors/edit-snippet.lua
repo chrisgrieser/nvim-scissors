@@ -57,23 +57,25 @@ local function updateSnippetFile(snip, editedLines, prefixBodySep)
 	local prefix = vim.list_slice(editedLines, 1, numOfPrefixes)
 	local body = vim.list_slice(editedLines, numOfPrefixes + 1, #editedLines)
 
-	-- LINT/VALIDATE PREFIX & BODY
+	-- LINT
 	-- trim (only trailing for body, since leading there is indentation)
 	prefix = vim.tbl_map(function(line) return vim.trim(line) end, prefix)
 	body = vim.tbl_map(function(line) return line:gsub("%s+$", "") end, body)
 	-- remove deleted prefixes
 	prefix = vim.tbl_filter(function(line) return line ~= "" end, prefix)
+	-- trim trailing empty lines from body
+	while body[#body] == "" do
+		vim.notify("🪚 body: " .. vim.inspect(body))
+		table.remove(body)
+	end
+	-- GUARD validate
+	if #body == 0 then
+		u.notify("Body is empty. No changes made.", "warn")
+		return
+	end
 	if #prefix == 0 then
 		u.notify("Prefix is empty. No changes made.", "warn")
 		return
-	end
-	-- trim trailing empty lines from body
-	while body[#body] == "" do
-		table.remove(body)
-		if #body == 0 then
-			u.notify("Body is empty. No changes made.", "warn")
-			return
-		end
 	end
 
 	-- new snippet: key = prefix

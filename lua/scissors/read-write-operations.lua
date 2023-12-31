@@ -4,10 +4,10 @@ local config = require("scissors.config").config
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
----currently only supports luasnip
+---Currently only supports luasnip
 ---@param path string
 local function reloadSnippetFile(path)
-	-- LuaSnip https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
+	-- DOCS https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
 	local ok, luasnipLoaders = pcall(require, "luasnip.loaders")
 	if ok and luasnipLoaders then luasnipLoaders.reload_file(path) end
 end
