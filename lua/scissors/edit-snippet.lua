@@ -10,6 +10,18 @@ local u = require("scissors.utils")
 ---@field ns number
 ---@field id number
 
+---INFO the extmark representing the horizontal divider between prefix and body
+---also acts as method to determine the number of prefixes. If the user has
+---inserted/deleted a line, this is considered a change in number of prefixes
+---@param prefixBodySep extMarkInfo
+---@return number newCount
+---@nodiscard
+local function getPrefixCount(prefixBodySep)
+	local extM = prefixBodySep
+	local newCount = vim.api.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1] + 1
+	return newCount
+end
+
 --------------------------------------------------------------------------------
 
 ---@param pathOfSnippetFile string
@@ -44,18 +56,15 @@ local function guessFileType(pathOfSnippetFile)
 end
 
 ---@param snip snippetObj snippet to update/create
----@param prefixBodySep extMarkInfo the extmark representing the horizontal divider, its position marks number of prefixes
+---@param prefixCount number
 ---@param editedLines string[]
-local function updateSnippetFile(snip, editedLines, prefixBodySep)
+local function updateSnippetFile(snip, editedLines, prefixCount)
 	local snippetsInFile = rw.readAndParseJson(snip.fullPath)
 	local filepath = snip.fullPath
 
 	-- determine prefix & body
-	-- INFO moved separator line position indicates the number of prefixes
-	local extM = prefixBodySep
-	local numOfPrefixes = vim.api.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1] + 1
-	local prefix = vim.list_slice(editedLines, 1, numOfPrefixes)
-	local body = vim.list_slice(editedLines, numOfPrefixes + 1, #editedLines)
+	local prefix = vim.list_slice(editedLines, 1, prefixCount)
+	local body = vim.list_slice(editedLines, prefixCount + 1, #editedLines)
 
 	-- LINT
 	-- trim (only trailing for body, since leading there is indentation)
@@ -110,11 +119,12 @@ end
 function M.editInPopup(snip, mode)
 	local a = vim.api
 	local conf = config.editSnippetPopup
+	local ns = a.nvim_create_namespace("nvim-scissors-editing")
 
 	-- snippet properties
 	local body = type(snip.body) == "string" and { snip.body } or snip.body ---@cast body string[]
 	local prefix = type(snip.prefix) == "string" and { snip.prefix } or snip.prefix ---@cast prefix string[]
-	local numOfPrefixes = #prefix -- needs to be saved as list_extend mutates `prefix`
+	local prefixCount = #prefix -- needs to be saved since `list_extend` mutates `prefix`
 	local snipLines = vim.list_extend(prefix, body)
 	local nameOfSnippetFile = vim.fs.basename(snip.fullPath)
 
@@ -149,33 +159,50 @@ function M.editInPopup(snip, mode)
 	if mode == "new" then
 		vim.cmd.startinsert()
 	elseif mode == "update" then
-		local firstLineOfBody = numOfPrefixes + 1
+		local firstLineOfBody = prefixCount + 1
 		pcall(a.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
 	end
 
-	-- highlight cursor positions like `$0` or `${1:foo}`
-	vim.fn.matchadd("DiagnosticVirtualTextInfo", [[\$\d]])
-	vim.fn.matchadd("DiagnosticVirtualTextInfo", [[\${\d:.\{-}}]])
+	-- highlight cursor positions
+	-- DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax
+	vim.fn.matchadd("DiagnosticVirtualTextInfo", [[\$\d]]) -- tabstops
+	vim.fn.matchadd("DiagnosticVirtualTextInfo", [[\${\d:.\{-}}]]) -- placeholders
+	vim.fn.matchadd("DiagnosticVirtualTextInfo", [[\${\d|.\{-}|}]]) -- choice
 
-	-- highlight prefix lines and add label
-	local ns = a.nvim_create_namespace("nvim-scissors")
-	for i = 1, numOfPrefixes do
-		local ln = i - 1
-		local label = numOfPrefixes == 1 and "Prefix" or "Prefix #" .. i
-		a.nvim_buf_add_highlight(bufnr, ns, "DiagnosticVirtualTextHint", ln, 0, -1)
-		a.nvim_buf_set_extmark(bufnr, ns, ln, 0, {
-			virt_text = { { label, "Todo" } },
-			virt_text_pos = "right_align",
-		})
-	end
 	-- prefixBodySeparator -> INFO its position determines number of prefixes
 	local winWidth = a.nvim_win_get_width(winnr)
 	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type extMarkInfo
-	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, numOfPrefixes - 1, 0, {
+	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, prefixCount - 1, 0, {
 		virt_lines = {
 			{ { ("═"):rep(winWidth), "FloatBorder" } },
 		},
 		virt_lines_leftcol = true,
+	})
+
+	-- continuously update highlight prefix lines and add label
+	local labelExtMarkIds = {} ---@type number[]
+	local function updatePrefixLabel(newPrefixCount) ---@param newPrefixCount number
+		for _, label in pairs(labelExtMarkIds) do
+			a.nvim_buf_del_extmark(bufnr, ns, label)
+		end
+		for i = 1, newPrefixCount do
+			local ln = i - 1
+			local label = newPrefixCount == 1 and "Prefix" or "Prefix #" .. i
+			a.nvim_buf_add_highlight(bufnr, ns, "DiagnosticVirtualTextHint", ln, 0, -1)
+			local id = a.nvim_buf_set_extmark(bufnr, ns, ln, 0, {
+				virt_text = { { label, "Todo" } },
+				virt_text_pos = "right_align",
+			})
+			table.insert(labelExtMarkIds, id)
+		end
+	end
+	updatePrefixLabel(prefixCount) -- initialize
+	vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
+		buffer = bufnr,
+		callback = function()
+			local newPrefixCount = getPrefixCount(prefixBodySep)
+			updatePrefixLabel(newPrefixCount)
+		end,
 	})
 
 	-- keymaps
@@ -187,7 +214,8 @@ function M.editInPopup(snip, mode)
 	vim.keymap.set("n", conf.keymaps.cancel, close, opts)
 	vim.keymap.set("n", conf.keymaps.saveChanges, function()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
-		updateSnippetFile(snip, editedLines, prefixBodySep)
+		local newPrefixCount = getPrefixCount(prefixBodySep)
+		updateSnippetFile(snip, editedLines, newPrefixCount)
 		close()
 	end, opts)
 	vim.keymap.set("n", conf.keymaps.delete, function()
