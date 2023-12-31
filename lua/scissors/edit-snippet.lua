@@ -150,7 +150,7 @@ function M.editInPopup(snip, mode)
 		vim.cmd.startinsert()
 	elseif mode == "update" then
 		local firstLineOfBody = numOfPrefixes + 1
-		a.nvim_win_set_cursor(winnr, { firstLineOfBody, 0 })
+		pcall(a.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
 	end
 
 	-- highlight cursor positions like `$0` or `${1:foo}`
