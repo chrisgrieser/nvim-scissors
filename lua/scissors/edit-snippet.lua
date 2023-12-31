@@ -18,7 +18,7 @@ local u = require("scissors.utils")
 ---@nodiscard
 local function getPrefixCount(prefixBodySep)
 	local extM = prefixBodySep
-	local newCount = vim.api.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1] + 1
+	local newCount = vim.api.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1]
 	return newCount
 end
 
@@ -170,11 +170,12 @@ function M.editInPopup(snip, mode)
 	-- prefixBodySeparator -> INFO its position determines number of prefixes
 	local winWidth = a.nvim_win_get_width(winnr)
 	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type extMarkInfo
-	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, prefixCount - 1, 0, {
+	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, prefixCount, 0, {
 		virt_lines = {
 			{ { ("═"):rep(winWidth), "FloatBorder" } },
 		},
 		virt_lines_leftcol = true,
+		virt_lines_above = true,
 	})
 
 	-- continuously update highlight prefix lines and add label
