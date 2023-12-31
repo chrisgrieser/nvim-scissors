@@ -125,6 +125,12 @@ the code to create keymaps for them:
     )
 <
 
+The popup intelligently adapts to changes in the prefix area. Each new line
+represents one prefix, and creating or removing lines thus changes the number
+of prefixes.
+
+
+
 
 CONFIGURATION                          *scissors-nvim-scissors--configuration*
 
