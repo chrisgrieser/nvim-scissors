@@ -63,6 +63,7 @@ local function updateSnippetFile(snip, editedLines, prefixCount)
 	local filepath = snip.fullPath
 	local prefix = vim.list_slice(editedLines, 1, prefixCount)
 	local body = vim.list_slice(editedLines, prefixCount + 1, #editedLines)
+	local isNewSnippet = snip.originalKey == nil
 
 	-- LINT
 	-- trim (only trailing for body, since leading there is indentation)
@@ -86,15 +87,13 @@ local function updateSnippetFile(snip, editedLines, prefixCount)
 	end
 
 	-- new snippet: key = prefix
-	local isNewSnippet = snip.originalKey == nil
 	local key = table.concat(prefix, " + ")
 	-- ensure key is unique
-	while isNewSnippet and snippetsInFile[key] ~= nil do
+	while snippetsInFile[key] ~= nil do
 		key = key .. "-1"
 	end
 
 	-- convert snipObj to VSCodeSnippet and insert it
-	local snipName = u.snipDisplayName(snip)
 	snip.originalKey = nil -- delete keys set by this plugin
 	snip.fullPath = nil
 	snip.body = #body == 1 and body[1] or body -- flatten if only one element
@@ -106,6 +105,7 @@ local function updateSnippetFile(snip, editedLines, prefixCount)
 	-- write & notify
 	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
 	if success then
+		local snipName = u.snipDisplayName(snip)
 		local action = isNewSnippet and "created" or "updated"
 		u.notify(("%q %s."):format(snipName, action))
 	end
