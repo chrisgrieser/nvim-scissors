@@ -49,7 +49,10 @@ function M.writeAndFormatSnippetFile(filepath, snippetsInFile)
 			jq = { "jq", "--sort-keys", "--monochrome-output" },
 		}
 		jsonStr = vim.fn.system(cmds[config.jsonFormatter], jsonStr)
-		assert(vim.v.shell_error == 0, "JSON formatting exited with " .. vim.v.shell_error)
+		if vim.v.shell_error ~= 0 then
+			u.notify("JSON formatting failed: " .. jsonStr, "error")
+			return false
+		end
 	end
 
 	-- WRITE
