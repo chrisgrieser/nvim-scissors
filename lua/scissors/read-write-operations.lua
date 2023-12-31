@@ -31,7 +31,7 @@ function M.readAndParseJson(path)
 end
 
 ---@param filepath string
----@param snippetsInFile SnippetObj[]
+---@param snippetsInFile VSCodeSnippetDict
 ---@return boolean success
 ---@nodiscard
 function M.writeAndFormatSnippetFile(filepath, snippetsInFile)

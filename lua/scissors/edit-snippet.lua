@@ -59,7 +59,7 @@ end
 ---@param prefixCount number
 ---@param editedLines string[]
 local function updateSnippetFile(snip, editedLines, prefixCount)
-	local snippetsInFile = rw.readAndParseJson(snip.fullPath)
+	local snippetsInFile = rw.readAndParseJson(snip.fullPath) ---@cast snippetsInFile VSCodeSnippetDict
 	local filepath = snip.fullPath
 	local prefix = vim.list_slice(editedLines, 1, prefixCount)
 	local body = vim.list_slice(editedLines, prefixCount + 1, #editedLines)
@@ -94,11 +94,14 @@ local function updateSnippetFile(snip, editedLines, prefixCount)
 		key = key .. "_1"
 	end
 
-	-- update snipObj
+	-- convert snipObj to VSCodeSnippet and insert it
 	snip.originalKey = nil -- delete key set by this plugin
-	snip.fullPath = nil -- delete key set by this plugin
-	snip.body = #body == 1 and body[1] or body
+	snip.originalKey = nil -- delete keys set by this plugin
+	snip.fullPath = nil
+	snip.body = #body == 1 and body[1] or body -- flatten if only one element
 	snip.prefix = #prefix == 1 and prefix[1] or prefix
+	---@diagnostic disable-next-line: cast-type-mismatch -- we are converting it here
+	---@cast snip VSCodeSnippet
 	snippetsInFile[key] = snip
 
 	-- write & notify
