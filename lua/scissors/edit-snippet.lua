@@ -195,7 +195,8 @@ function M.editInPopup(snip, mode)
 		end
 	end
 	updatePrefixLabel(prefixCount) -- initialize
-	vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave" }, {
+	-- update in case prefix count changes due to user input
+	vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
 		buffer = bufnr,
 		callback = function()
 			local newPrefixCount = getPrefixCount(prefixBodySep)
