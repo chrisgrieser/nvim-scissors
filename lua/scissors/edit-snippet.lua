@@ -5,6 +5,13 @@ local rw = require("scissors.read-write-operations")
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
+---@class (exact) extMarkInfo
+---@field bufnr number
+---@field ns number
+---@field id number
+
+--------------------------------------------------------------------------------
+
 ---@param pathOfSnippetFile string
 ---@return string|false filetype
 ---@nodiscard
@@ -37,13 +44,16 @@ local function guessFileType(pathOfSnippetFile)
 end
 
 ---@param snip snippetObj snippet to update/create
+---@param prefixBodySep extMarkInfo the extmark representing the horizontal divider, its position marks number of prefixes
 ---@param editedLines string[]
-local function updateSnippetFile(snip, editedLines)
+local function updateSnippetFile(snip, editedLines, prefixBodySep)
 	local snippetsInFile = rw.readAndParseJson(snip.fullPath)
 	local filepath = snip.fullPath
 
 	-- determine prefix & body
-	local numOfPrefixes = type(snip.prefix) == "string" and 1 or #snip.prefix
+	-- INFO moved separator line position indicates the number of prefixes
+	local extM = prefixBodySep
+	local numOfPrefixes = vim.api.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1] + 1
 	local prefix = vim.list_slice(editedLines, 1, numOfPrefixes)
 	local body = vim.list_slice(editedLines, numOfPrefixes + 1, #editedLines)
 
@@ -156,9 +166,10 @@ function M.editInPopup(snip, mode)
 			virt_text_pos = "right_align",
 		})
 	end
-	-- win separator as virtual line
+	-- prefixBodySeparator -> INFO its position determines number of prefixes
 	local winWidth = a.nvim_win_get_width(winnr)
-	a.nvim_buf_set_extmark(bufnr, ns, numOfPrefixes - 1, 0, {
+	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type extMarkInfo
+	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, numOfPrefixes - 1, 0, {
 		virt_lines = {
 			{ { ("═"):rep(winWidth), "FloatBorder" } },
 		},
@@ -174,7 +185,7 @@ function M.editInPopup(snip, mode)
 	vim.keymap.set("n", conf.keymaps.cancel, close, opts)
 	vim.keymap.set("n", conf.keymaps.saveChanges, function()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
-		updateSnippetFile(snip, editedLines)
+		updateSnippetFile(snip, editedLines, prefixBodySep)
 		close()
 	end, opts)
 	vim.keymap.set("n", conf.keymaps.delete, function()
@@ -190,22 +201,6 @@ function M.editInPopup(snip, mode)
 		local locationInFile = snip.originalKey:gsub(" ", [[\ ]])
 		vim.cmd(("edit +/%q %s"):format(locationInFile, snip.fullPath))
 	end, opts)
-
-	-- HACK prevent shifting of extmarks and highlights by disabling keys that
-	-- create new lines. (Cannot find a way to make extmarks fixed.)
-	local disabledKeys = {
-		["O"] = "n",
-		["o"] = "n",
-		["<CR>"] = "i",
-		["dd"] = "n",
-	}
-	for key, vimMode in pairs(disabledKeys) do
-		vim.keymap.set(vimMode, key, function()
-			local row = a.nvim_win_get_cursor(0)[1]
-			if row <= numOfPrefixes then return end
-			return key
-		end, { buffer = bufnr, expr = true })
-	end
 end
 
 --------------------------------------------------------------------------------

@@ -109,9 +109,6 @@ vim.keymap.set(
 )
 ```
 
-Currently, the number of prefixes for a snippet is fixed and cannot be changed
-with this plugin.
-
 ## Configuration
 
 The `.setup()` call is optional.
