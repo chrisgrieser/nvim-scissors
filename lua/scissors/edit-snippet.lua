@@ -27,8 +27,8 @@ end
 ---@param pathOfSnippetFile string
 ---@return string|false filetype
 ---@nodiscard
-local function guessFileType(pathOfSnippetFile)
-	-- primary: read `package.json` https://code.visualstudio.com/api/language-extensions/snippet-guide
+local function determineFileType(pathOfSnippetFile)
+	-- PRIMARY METHOD: read `package.json` https://code.visualstudio.com/api/language-extensions/snippet-guide
 	local relPathOfSnipFile = pathOfSnippetFile:sub(#config.snippetDir + 2)
 	local packageJson = rw.readAndParseJson(config.snippetDir .. "/package.json")
 	local snipFilesInfo = packageJson.contributes.snippets
@@ -43,12 +43,12 @@ local function guessFileType(pathOfSnippetFile)
 		if lang[1] then return lang[1] end
 	end
 
-	-- fallback #1: filename is filetype
+	-- FALLBACK #1: filename is filetype
 	local filename = vim.fs.basename(pathOfSnippetFile):gsub("%.json$", "")
 	local allKnownFts = vim.fn.getcompletion("", "filetype")
 	if vim.tbl_contains(allKnownFts, filename) then return filename end
 
-	-- fallback #2: filename is extension
+	-- FALLBACK #2: filename is extension
 	local matchedFt = vim.filetype.match { filename = "dummy." .. filename }
 	if matchedFt then return matchedFt end
 
@@ -61,8 +61,6 @@ end
 local function updateSnippetFile(snip, editedLines, prefixCount)
 	local snippetsInFile = rw.readAndParseJson(snip.fullPath)
 	local filepath = snip.fullPath
-
-	-- determine prefix & body
 	local prefix = vim.list_slice(editedLines, 1, prefixCount)
 	local body = vim.list_slice(editedLines, prefixCount + 1, #editedLines)
 
@@ -135,8 +133,8 @@ function M.editInPopup(snip, mode)
 	local bufnr = a.nvim_create_buf(false, true)
 	a.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 	a.nvim_buf_set_name(bufnr, displayName)
-	local guessedFt = guessFileType(snip.fullPath)
-	if guessedFt then a.nvim_buf_set_option(bufnr, "filetype", guessedFt) end
+	local ft = determineFileType(snip.fullPath)
+	if ft then a.nvim_buf_set_option(bufnr, "filetype", ft) end
 	a.nvim_buf_set_option(bufnr, "buftype", "nofile")
 
 	local winnr = a.nvim_open_win(bufnr, true, {
@@ -175,6 +173,9 @@ function M.editInPopup(snip, mode)
 			{ { ("═"):rep(winWidth), "FloatBorder" } },
 		},
 		virt_lines_leftcol = true,
+		-- "above line n" instead of "below line n-1" ensures that creating a new
+		-- line at the last line above the virtual line places the line above the
+		-- virtual line and not below it.
 		virt_lines_above = true,
 	})
 
