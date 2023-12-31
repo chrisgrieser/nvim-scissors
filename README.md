@@ -6,7 +6,8 @@
 <img alt="badge" src="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors/shield"/></a>
 -->
 
-Automagical snippet management.
+Automagical snippet management. Edit snippets with correct syntax highlighting
+and without worrying about escaping characters.
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
 
@@ -30,16 +31,17 @@ Automagical snippet management.
 - ℹ️ Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 - Add new snippets, edit snippets, delete snippets.
 - Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
+- Intuitive UI for editing the snippet, dynamically adapt the number of
+  prefixes.
 - Syntax highlighting while you edit the snippet. Includes highlighting of
   tabstop tokens like `$0` or `${2:foobar}`.
-- Auto-reloading of the new snippet (if using `LuaSnip`).
+- Auto-reloading of the new/edited snippet (if using `LuaSnip`).
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
-  `jq` (Optional, but useful when version-controlling your snippet collection.)
+  `jq`. (Optional, but useful when version-controlling your snippet collection.)
 
 > [!NOTE]
 > This plugin only *manages* snippets. It does not provide a snippet *engine*
-> and therefore does not expand snippets, which is done by plugins like
-> [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
+> to expand snippets, which is done by plugins like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ## Rationale
 - Regrettably, there are innumerable formats in which snippets can be saved. The
@@ -118,7 +120,7 @@ The `.setup()` call is optional.
 require("scissors").setup {
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
-		height = 0.4, -- between 0-1
+		height = 0.4, -- relative to the window, between 0-1
 		width = 0.6,
 		border = "rounded",
 		keymaps = {
