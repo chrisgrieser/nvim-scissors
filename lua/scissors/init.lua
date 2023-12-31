@@ -28,6 +28,7 @@ function M.editSnippet()
 
 	local rw = require("scissors.read-write-operations")
 	local snipObj = require("scissors.snippet-object")
+	local u = require("scissors.utils")
 
 	-- get all snippets
 	local allSnippets = {} ---@type SnippetObj[]
@@ -43,10 +44,10 @@ function M.editSnippet()
 	-- let user select
 	vim.ui.select(allSnippets, {
 		prompt = "Select snippet:",
-		format_item = function(item)
-			local snipname = item.originalKey
-			local filename = vim.fs.basename(item.fullPath):gsub("%.json$", "")
-			return ("%s\t\t[%s]"):format(snipname, filename)
+		format_item = function(snip)
+			local snipName = u.snipDisplayName(snip)
+			local filename = vim.fs.basename(snip.fullPath):gsub("%.json$", "")
+			return ("%s\t\t[%s]"):format(snipName, filename)
 		end,
 		kind = "nvim-scissors.snippetSearch",
 	}, function(snip)

@@ -8,5 +8,13 @@ function M.notify(msg, level)
 	vim.notify(msg, vim.log.levels[level:upper()], { title = "nvim-scissors" })
 end
 
+---@param snip SnippetObj
+---@return string snipName
+function M.snipDisplayName(snip)
+	local snipName = table.concat(snip.prefix, " + ")
+	if #snipName > 50 then snipName = snipName:sub(1, 50) .. "…" end
+	return snipName
+end
+
 --------------------------------------------------------------------------------
 return M

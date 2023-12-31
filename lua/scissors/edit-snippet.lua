@@ -87,15 +87,14 @@ local function updateSnippetFile(snip, editedLines, prefixCount)
 
 	-- new snippet: key = prefix
 	local isNewSnippet = snip.originalKey == nil
-	local key = isNewSnippet and prefix[1] or snip.originalKey
-	assert(key, "Snippet key missing")
+	local key = table.concat(prefix, " + ")
 	-- ensure key is unique
 	while isNewSnippet and snippetsInFile[key] ~= nil do
-		key = key .. "_1"
+		key = key .. "-1"
 	end
 
 	-- convert snipObj to VSCodeSnippet and insert it
-	snip.originalKey = nil -- delete key set by this plugin
+	local snipName = u.snipDisplayName(snip)
 	snip.originalKey = nil -- delete keys set by this plugin
 	snip.fullPath = nil
 	snip.body = #body == 1 and body[1] or body -- flatten if only one element
@@ -107,9 +106,8 @@ local function updateSnippetFile(snip, editedLines, prefixCount)
 	-- write & notify
 	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
 	if success then
-		local displayName = #key > 20 and key:sub(1, 20) .. "…" or key
 		local action = isNewSnippet and "created" or "updated"
-		u.notify(("%q %s."):format(displayName, action))
+		u.notify(("%q %s."):format(snipName, action))
 	end
 end
 
@@ -123,26 +121,31 @@ function M.editInPopup(snip, mode)
 	local ns = a.nvim_create_namespace("nvim-scissors-editing")
 
 	-- snippet properties
-	local prefixCount = #snip.prefix -- needs to be saved since `list_extend` mutates
-	local lines = vim.list_extend(snip.prefix, snip.body)
+	local copy = vim.deepcopy(snip.prefix) -- copy since `list_extend` mutates destination
+	local lines = vim.list_extend(copy, snip.body)
 	local nameOfSnippetFile = vim.fs.basename(snip.fullPath)
 
-	-- title
-	local displayName = mode == "new" and "New Snippet" or snip.originalKey:sub(1, 25)
-	local title = mode == "new" and (" New Snippet in %q "):format(nameOfSnippetFile)
-		or (" Editing %q [%s] "):format(displayName, nameOfSnippetFile)
+	local bufName, winTitle
+	if mode == "update" then
+		bufName = u.snipDisplayName(snip)
+		winTitle = (" Editing %q [%s] "):format(bufName, nameOfSnippetFile)
+	else
+		bufName = "New Snippet"
+		winTitle = (" New Snippet in %q "):format(nameOfSnippetFile)
+	end
 
 	-- create buffer and window
 	local bufnr = a.nvim_create_buf(false, true)
 	a.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-	a.nvim_buf_set_name(bufnr, displayName)
+	a.nvim_buf_set_name(bufnr, bufName)
+	a.nvim_buf_set_option(bufnr, "buftype", "nofile")
+
 	local ft = determineFileType(snip.fullPath)
 	if ft then a.nvim_buf_set_option(bufnr, "filetype", ft) end
-	a.nvim_buf_set_option(bufnr, "buftype", "nofile")
 
 	local winnr = a.nvim_open_win(bufnr, true, {
 		relative = "win",
-		title = title,
+		title = winTitle,
 		title_pos = "center",
 		border = conf.border,
 		-- centered window
@@ -158,7 +161,7 @@ function M.editInPopup(snip, mode)
 	if mode == "new" then
 		vim.cmd.startinsert()
 	elseif mode == "update" then
-		local firstLineOfBody = prefixCount + 1
+		local firstLineOfBody = #snip.prefix + 1
 		pcall(a.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
 	end
 
@@ -171,7 +174,7 @@ function M.editInPopup(snip, mode)
 	-- prefixBodySeparator -> INFO its position determines number of prefixes
 	local winWidth = a.nvim_win_get_width(winnr)
 	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type extMarkInfo
-	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, prefixCount, 0, {
+	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, #snip.prefix, 0, {
 		virt_lines = {
 			{ { ("═"):rep(winWidth), "FloatBorder" } },
 		},
@@ -199,7 +202,7 @@ function M.editInPopup(snip, mode)
 			table.insert(labelExtMarkIds, id)
 		end
 	end
-	updatePrefixLabel(prefixCount) -- initialize
+	updatePrefixLabel(#snip.prefix) -- initialize
 	-- update in case prefix count changes due to user input
 	vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
 		buffer = bufnr,
