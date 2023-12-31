@@ -76,8 +76,8 @@ function M.addNewSnippet()
 		---@type SnippetObj
 		local snip = {
 			fullPath = snippetDir .. "/" .. file,
-			body = {},
-			prefix = {},
+			body = { "" },
+			prefix = { "" },
 		}
 		require("scissors.edit-snippet").editInPopup(snip, "new")
 	end)
