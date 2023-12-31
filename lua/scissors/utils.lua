@@ -17,5 +17,19 @@ function M.snipDisplayName(snip)
 	return snipName
 end
 
+---@param lines string[]
+---@return string[] dedentedLines
+function M.dedent(lines)
+	local indentAmounts = vim.tbl_map(function(line) return #(line:match("^%s*")) end, lines)
+	local smallestIndent = math.min(unpack(indentAmounts))
+	local dedentedLines = vim.tbl_map(function(line) return line:sub(smallestIndent + 1) end, lines)
+	return dedentedLines
+end
+
+function M.leaveVisualMode()
+	local escKey = vim.api.nvim_replace_termcodes("<Esc>", false, true, true)
+	vim.api.nvim_feedkeys(escKey, "nx", false)
+end
+
 --------------------------------------------------------------------------------
 return M

@@ -1,7 +1,8 @@
 local M = {}
 
--- PERF do not require the submodules here, since that loads the entire codebase
+-- PERF do not require other submodules here, since that loads the entire codebase
 -- of the plugin on initialization instead of lazy-loading the parts when needed.
+local u = require("scissors.utils")
 
 --------------------------------------------------------------------------------
 
@@ -28,7 +29,6 @@ function M.editSnippet()
 
 	local rw = require("scissors.read-write-operations")
 	local snipObj = require("scissors.snippet-object")
-	local u = require("scissors.utils")
 
 	-- get all snippets
 	local allSnippets = {} ---@type SnippetObj[]
@@ -60,6 +60,18 @@ function M.addNewSnippet()
 	local snippetDir = getSnippetDir()
 	if not snippetDir then return end
 
+	-- visual mode: prefill body with selected text
+	local bodyPrefill = { "" }
+	local mode = vim.fn.mode()
+	if mode:find("[Vv]") then
+		u.leaveVisualMode() -- necessary so `<` and `>` marks are set
+		local startRow, startCol = unpack(vim.api.nvim_buf_get_mark(0, "<"))
+		local endRow, endCol = unpack(vim.api.nvim_buf_get_mark(0, ">"))
+		endCol = mode:find("V") and -1 or (endCol + 1)
+		bodyPrefill = vim.api.nvim_buf_get_text(0, startRow - 1, startCol, endRow - 1, endCol, {})
+		bodyPrefill = u.dedent(bodyPrefill)
+	end
+
 	-- get list of all snippet JSON files
 	local jsonFiles = {}
 	for name, _ in vim.fs.dir(snippetDir, { depth = 3 }) do
@@ -77,8 +89,8 @@ function M.addNewSnippet()
 		---@type SnippetObj
 		local snip = {
 			fullPath = snippetDir .. "/" .. file,
-			body = { "" },
 			prefix = { "" },
+			body = bodyPrefill,
 		}
 		require("scissors.edit-snippet").editInPopup(snip, "new")
 	end)

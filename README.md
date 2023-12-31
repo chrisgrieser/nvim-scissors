@@ -6,8 +6,7 @@
 <img alt="badge" src="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors/shield"/></a>
 -->
 
-Automagical snippet management. Edit snippets with correct syntax highlighting
-and without worrying about escaping characters.
+Automagical snippet management and creation. 
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
 
@@ -30,11 +29,11 @@ and without worrying about escaping characters.
 ## Features
 - ℹ️ Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 - Add new snippets, edit snippets, delete snippets.
+- Syntax highlighting while you edit the snippet. Includes highlighting of
+  tokens like `$0` or `${2:foobar}`.
 - Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
 - Intuitive UI for editing the snippet, dynamically adapt the number of
   prefixes.
-- Syntax highlighting while you edit the snippet. Includes highlighting of
-  tabstop tokens like `$0` or `${2:foobar}`.
 - Auto-reloading of the new/edited snippet (if using `LuaSnip`).
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
   `jq`. (Optional, but useful when version-controlling your snippet collection.)
@@ -50,10 +49,10 @@ and without worrying about escaping characters.
   format](https://code.visualstudio.com/docs/editor/userdefinedsnippets). For
   portability and to future-proof your snippet collection, it thus makes sense to
   save your snippets in that format.
-- Most notably, the VSCode snippet format is used by plugins like
+- Most notably, the VSCode format is used by plugins like
   [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and also
   supported by [LuaSnip](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
-- However, the snippets are stored in JSON files, which are a pain to modify
+- However, the snippets are stored as JSON files, which are a pain to modify
   manually. This plugin aims to alleviate that pain by automagically writing
   the JSON for you.
 
@@ -103,8 +102,10 @@ vim.keymap.set(
 	function() require("scissors").editSnippet() end,
 	{ desc = " Edit snippets" }
 )
+
+-- when used in visual mode, will prefill the dedented selected text as body
 vim.keymap.set(
-	"n",
+	{ "n", "x" },
 	"<leader>sa",
 	function() require("scissors").addNewSnippet() end,
 	{ desc = " Add new snippet" }
