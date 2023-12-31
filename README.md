@@ -135,10 +135,6 @@ require("scissors").setup {
 	-- `yq` and `jq` ensure formatted & sorted json files, which is relevant when
 	-- you are version control your snippets.
 	jsonFormatter = "none", -- "yq"|"jq"|"none"
-
-	-- on adding/editing a snippet, reload the snippet file. Currently only
-	-- supports LuaSnip (PRs welcome)
-	autoReload = true,
 }
 ```
 

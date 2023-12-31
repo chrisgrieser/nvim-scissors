@@ -4,10 +4,9 @@ local config = require("scissors.config").config
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
+---currently only supports luasnip
 ---@param path string
 local function reloadSnippetFile(path)
-	if not config.autoReload then return end
-
 	-- LuaSnip https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
 	local ok, luasnipLoaders = pcall(require, "luasnip.loaders")
 	if ok and luasnipLoaders then luasnipLoaders.reload_file(path) end
@@ -60,7 +59,7 @@ function M.writeAndFormatSnippetFile(filepath, snippetsInFile)
 	file:close()
 
 	-- RELOAD
-	if config.autoReload then reloadSnippetFile(filepath) end
+	reloadSnippetFile(filepath)
 
 	return true
 end

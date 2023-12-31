@@ -5,7 +5,6 @@ local M = {}
 ---@field snippetDir string
 ---@field editSnippetPopup { height: number, width: number, border: string, keymaps: popupKeymaps }
 ---@field jsonFormatter "yq"|"jq"|"none"
----@field autoReload boolean
 
 ---@class (exact) popupKeymaps
 ---@field cancel string
@@ -31,10 +30,6 @@ local defaultConfig = {
 	-- `yq` and `jq` ensure formatted & sorted json files, which is relevant when
 	-- you are version control your snippets.
 	jsonFormatter = "none", -- "yq"|"jq"|"none"
-
-	-- on adding/editing a snippet, reload the snippet file. Currently only
-	-- supports LuaSnip (PRs welcome)
-	autoReload = true,
 }
 
 --------------------------------------------------------------------------------
