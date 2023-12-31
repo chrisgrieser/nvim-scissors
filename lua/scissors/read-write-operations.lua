@@ -44,7 +44,14 @@ function M.writeAndFormatSnippetFile(filepath, snippetsInFile)
 	if config.jsonFormatter ~= "none" then
 		local cmds = {
 			-- DOCS https://mikefarah.gitbook.io/yq/operators/sort-keys
-			yq = { "yq", "--prettyPrint", "--output-format=json", "--no-colors", "sort_keys(..)" },
+			yq = {
+				"yq",
+				"--prettyPrint",
+				"--output-format=json",
+				"--input-format=json", -- different parser, more stable https://github.com/mikefarah/yq/issues/1265#issuecomment-1200784274
+				"--no-colors", -- safety net for some shells
+				"sort_keys(..)",
+			},
 			-- DOCS https://jqlang.github.io/jq/manual/#invoking-jq
 			jq = { "jq", "--sort-keys", "--monochrome-output" },
 		}
