@@ -1,8 +1,10 @@
-local M = {}
-
 local config = require("scissors.config").config
 local rw = require("scissors.read-write-operations")
+local snipObj = require("scissors.snippet-object")
 local u = require("scissors.utils")
+
+local M = {}
+local a = vim.api
 --------------------------------------------------------------------------------
 
 ---@class (exact) extMarkInfo
@@ -18,11 +20,9 @@ local u = require("scissors.utils")
 ---@nodiscard
 local function getPrefixCount(prefixBodySep)
 	local extM = prefixBodySep
-	local newCount = vim.api.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1]
+	local newCount = a.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1]
 	return newCount
 end
-
---------------------------------------------------------------------------------
 
 ---@param pathOfSnippetFile string
 ---@return string|false filetype
@@ -55,69 +55,11 @@ local function determineFileType(pathOfSnippetFile)
 	return false
 end
 
----@param snip SnippetObj snippet to update/create
----@param prefixCount number
----@param editedLines string[]
-local function updateSnippetFile(snip, editedLines, prefixCount)
-	local snippetsInFile = rw.readAndParseJson(snip.fullPath) ---@cast snippetsInFile VSCodeSnippetDict
-	local filepath = snip.fullPath
-	local prefix = vim.list_slice(editedLines, 1, prefixCount)
-	local body = vim.list_slice(editedLines, prefixCount + 1, #editedLines)
-	local isNewSnippet = snip.originalKey == nil
-
-	-- LINT
-	-- trim (only trailing for body, since leading there is indentation)
-	prefix = vim.tbl_map(function(line) return vim.trim(line) end, prefix)
-	body = vim.tbl_map(function(line) return line:gsub("%s+$", "") end, body)
-	-- remove deleted prefixes
-	prefix = vim.tbl_filter(function(line) return line ~= "" end, prefix)
-	-- trim trailing empty lines from body
-	while body[#body] == "" do
-		vim.notify("🪚 body: " .. vim.inspect(body))
-		table.remove(body)
-	end
-	-- GUARD validate
-	if #body == 0 then
-		u.notify("Body is empty. No changes made.", "warn")
-		return
-	end
-	if #prefix == 0 then
-		u.notify("Prefix is empty. No changes made.", "warn")
-		return
-	end
-
-	-- convert snipObj to VSCodeSnippet
-	local originalKey = snip.originalKey
-	snip.originalKey = nil -- delete keys set by this plugin
-	snip.fullPath = nil
-	snip.body = #body == 1 and body[1] or body -- flatten if only one element
-	snip.prefix = #prefix == 1 and prefix[1] or prefix
-	---@diagnostic disable-next-line: cast-type-mismatch -- we are converting it here
-	---@cast snip VSCodeSnippet
-
-	-- move item to new key
-	if originalKey ~= nil then snippetsInFile[originalKey] = nil end -- remove from old key
-	local key = table.concat(prefix, " + ")
-	while snippetsInFile[key] ~= nil do -- ensure new key is unique
-		key = key .. "-1"
-	end
-	snippetsInFile[key] = snip -- insert at new key
-
-	-- write & notify
-	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
-	if success then
-		local snipName = u.snipDisplayName(snip)
-		local action = isNewSnippet and "created" or "updated"
-		u.notify(("%q %s."):format(snipName, action))
-	end
-end
-
 --------------------------------------------------------------------------------
 
 ---@param snip SnippetObj
 ---@param mode "new"|"update"
 function M.editInPopup(snip, mode)
-	local a = vim.api
 	local conf = config.editSnippetPopup
 	local ns = a.nvim_create_namespace("nvim-scissors-editing")
 
@@ -205,7 +147,7 @@ function M.editInPopup(snip, mode)
 	end
 	updatePrefixLabel(#snip.prefix) -- initialize
 	-- update in case prefix count changes due to user input
-	vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+	a.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
 		buffer = bufnr,
 		callback = function()
 			local newPrefixCount = getPrefixCount(prefixBodySep)
@@ -223,7 +165,7 @@ function M.editInPopup(snip, mode)
 	vim.keymap.set("n", conf.keymaps.saveChanges, function()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
 		local newPrefixCount = getPrefixCount(prefixBodySep)
-		updateSnippetFile(snip, editedLines, newPrefixCount)
+		snipObj.updateSnippetFile(snip, editedLines, newPrefixCount)
 		close()
 	end, opts)
 	vim.keymap.set("n", conf.keymaps.delete, function()

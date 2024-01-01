@@ -52,7 +52,7 @@ function M.editSnippet()
 		kind = "nvim-scissors.snippetSearch",
 	}, function(snip)
 		if not snip then return end
-		require("scissors.edit-snippet").editInPopup(snip, "update")
+		require("scissors.edit-popup").editInPopup(snip, "update")
 	end)
 end
 
@@ -92,7 +92,7 @@ function M.addNewSnippet()
 			prefix = { "" },
 			body = bodyPrefill,
 		}
-		require("scissors.edit-snippet").editInPopup(snip, "new")
+		require("scissors.edit-popup").editInPopup(snip, "new")
 	end)
 end
 

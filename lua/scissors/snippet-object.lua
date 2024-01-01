@@ -1,3 +1,6 @@
+local rw = require("scissors.read-write-operations")
+local u = require("scissors.utils")
+
 local M = {}
 --------------------------------------------------------------------------------
 
@@ -58,6 +61,63 @@ function M.restructureVsCodeObj(vscodeJson, filepath)
 		snip.prefix, snip.body = cleanPrefix, cleanBody
 	end
 	return snippetsInFileList
+end
+
+---@param snip SnippetObj snippet to update/create
+---@param prefixCount number
+---@param editedLines string[]
+function M.updateSnippetFile(snip, editedLines, prefixCount)
+	local snippetsInFile = rw.readAndParseJson(snip.fullPath) ---@cast snippetsInFile VSCodeSnippetDict
+	local filepath = snip.fullPath
+	local prefix = vim.list_slice(editedLines, 1, prefixCount)
+	local body = vim.list_slice(editedLines, prefixCount + 1, #editedLines)
+	local isNewSnippet = snip.originalKey == nil
+
+	-- LINT
+	-- trim (only trailing for body, since leading there is indentation)
+	prefix = vim.tbl_map(function(line) return vim.trim(line) end, prefix)
+	body = vim.tbl_map(function(line) return line:gsub("%s+$", "") end, body)
+	-- remove deleted prefixes
+	prefix = vim.tbl_filter(function(line) return line ~= "" end, prefix)
+	-- trim trailing empty lines from body
+	while body[#body] == "" do
+		vim.notify("🪚 body: " .. vim.inspect(body))
+		table.remove(body)
+	end
+	-- GUARD validate
+	if #body == 0 then
+		u.notify("Body is empty. No changes made.", "warn")
+		return
+	end
+	if #prefix == 0 then
+		u.notify("Prefix is empty. No changes made.", "warn")
+		return
+	end
+
+	-- convert snipObj to VSCodeSnippet
+	local originalKey = snip.originalKey
+	snip.originalKey = nil -- delete keys set by this plugin
+	snip.fullPath = nil
+	snip.body = #body == 1 and body[1] or body -- flatten if only one element
+	snip.prefix = #prefix == 1 and prefix[1] or prefix
+	---@diagnostic disable-next-line: cast-type-mismatch -- we are converting it here
+	---@cast snip VSCodeSnippet
+
+	-- move item to new key
+	if originalKey ~= nil then snippetsInFile[originalKey] = nil end -- remove from old key
+	local key = table.concat(prefix, " + ")
+	while snippetsInFile[key] ~= nil do -- ensure new key is unique
+		key = key .. "-1"
+	end
+	snippetsInFile[key] = snip -- insert at new key
+
+	-- write & notify
+	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
+	if success then
+		local snipName = u.snipDisplayName(snip)
+		local action = isNewSnippet and "created" or "updated"
+		u.notify(("%q %s."):format(snipName, action))
+	end
 end
 
 --------------------------------------------------------------------------------

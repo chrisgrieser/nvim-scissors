@@ -12,7 +12,7 @@ end
 ---@return string snipName
 function M.snipDisplayName(snip)
 	local snipName = snip.prefix
-	if type(snipName) == "table" then snipName = table.concat(snipName, " + ") end
+	if type(snipName) == "table" then snipName = table.concat(snipName, " · ") end
 	if #snipName > 50 then snipName = snipName:sub(1, 50) .. "…" end
 	return snipName
 end
