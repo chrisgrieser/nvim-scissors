@@ -86,21 +86,22 @@ local function updateSnippetFile(snip, editedLines, prefixCount)
 		return
 	end
 
-	-- new snippet: key = prefix
-	local key = table.concat(prefix, " + ")
-	-- ensure key is unique
-	while snippetsInFile[key] ~= nil do
-		key = key .. "-1"
-	end
-
-	-- convert snipObj to VSCodeSnippet and insert it
+	-- convert snipObj to VSCodeSnippet
+	local originalKey = snip.originalKey
 	snip.originalKey = nil -- delete keys set by this plugin
 	snip.fullPath = nil
 	snip.body = #body == 1 and body[1] or body -- flatten if only one element
 	snip.prefix = #prefix == 1 and prefix[1] or prefix
 	---@diagnostic disable-next-line: cast-type-mismatch -- we are converting it here
 	---@cast snip VSCodeSnippet
-	snippetsInFile[key] = snip
+
+	-- move item to new key
+	if originalKey ~= nil then snippetsInFile[originalKey] = nil end -- remove from old key
+	local key = table.concat(prefix, " + ")
+	while snippetsInFile[key] ~= nil do -- ensure new key is unique
+		key = key .. "-1"
+	end
+	snippetsInFile[key] = snip -- insert at new key
 
 	-- write & notify
 	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
