@@ -132,9 +132,10 @@ require("scissors").setup {
 		border = "rounded",
 		keymaps = {
 			cancel = "q",
-			saveChanges = "<CR>", -- normal mode
+			saveChanges = "<CR>",
 			delete = "<C-BS>",
 			openInFile = "<C-o>",
+			insertNextToken = "<C-t>", -- insert & normal mode
 		},
 	},
 	-- `none` writes as a minified json file using `:h vim.encode.json`.

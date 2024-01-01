@@ -55,6 +55,24 @@ local function determineFileType(pathOfSnippetFile)
 	return false
 end
 
+---@param bufnr number
+local function insertNextToken(bufnr)
+	local bufText = table.concat(a.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
+	local numbers = {}
+	local tokenPattern = "${?(%d+)" -- match `$1`, `${2:word}`, or `${3|word|}`
+	for token in bufText:gmatch(tokenPattern) do
+		table.insert(numbers, tonumber(token))
+	end
+	local highestToken = #numbers > 0 and math.max(unpack(numbers)) or 1
+
+	local insertStr = ("${%s:}"):format(highestToken + 1)
+	local row, col = unpack(a.nvim_win_get_cursor(0))
+	a.nvim_buf_set_text(bufnr, row - 1, col, row - 1, col, { insertStr })
+
+	-- move cursor
+	a.nvim_win_set_cursor(0, { row, col + #insertStr - 1 })
+	vim.cmd.startinsert()
+end
 --------------------------------------------------------------------------------
 
 ---@param snip SnippetObj
@@ -181,6 +199,12 @@ function M.editInPopup(snip, mode)
 		local locationInFile = snip.originalKey:gsub(" ", [[\ ]])
 		vim.cmd(("edit +/%q %s"):format(locationInFile, snip.fullPath))
 	end, opts)
+	vim.keymap.set(
+		{ "n", "i" },
+		conf.keymaps.insertNextToken,
+		function() insertNextToken(bufnr) end,
+		opts
+	)
 end
 
 --------------------------------------------------------------------------------
