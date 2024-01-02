@@ -12,6 +12,7 @@ local M = {}
 ---@field delete string
 ---@field openInFile string
 ---@field insertNextToken string
+---@field goBackToSearch string
 
 ---@type pluginConfig
 local defaultConfig = {
@@ -23,6 +24,7 @@ local defaultConfig = {
 		keymaps = {
 			cancel = "q",
 			saveChanges = "<CR>",
+			goBackToSearch = "<BS>",
 			delete = "<C-BS>",
 			openInFile = "<C-o>",
 			insertNextToken = "<C-t>", -- insert & normal mode

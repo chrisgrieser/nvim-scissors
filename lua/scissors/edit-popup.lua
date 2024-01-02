@@ -144,17 +144,17 @@ function M.editInPopup(snip, mode)
 	})
 
 	-- keymaps
-	local function close()
+	local function closePopup()
 		a.nvim_win_close(winnr, true)
 		a.nvim_buf_delete(bufnr, { force = true })
 	end
 	local opts = { buffer = bufnr, nowait = true, silent = true }
-	vim.keymap.set("n", conf.keymaps.cancel, close, opts)
+	vim.keymap.set("n", conf.keymaps.cancel, closePopup, opts)
 	vim.keymap.set("n", conf.keymaps.saveChanges, function()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
 		local newPrefixCount = getPrefixCount(prefixBodySep)
 		snipObj.updateSnippetFile(snip, editedLines, newPrefixCount)
-		close()
+		closePopup()
 	end, opts)
 	vim.keymap.set("n", conf.keymaps.delete, function()
 		if mode == "new" then
@@ -162,10 +162,10 @@ function M.editInPopup(snip, mode)
 			return
 		end
 		rw.deleteSnippet(snip)
-		close()
+		closePopup()
 	end, opts)
 	vim.keymap.set("n", conf.keymaps.openInFile, function()
-		close()
+		closePopup()
 		local locationInFile = snip.originalKey:gsub(" ", [[\ ]])
 		vim.cmd(("edit +/%q %s"):format(locationInFile, snip.fullPath))
 	end, opts)
@@ -175,6 +175,14 @@ function M.editInPopup(snip, mode)
 		function() insertNextToken(bufnr) end,
 		opts
 	)
+	vim.keymap.set( "n", conf.keymaps.goBackToSearch, function()
+		closePopup()
+		if mode == "new" then
+			require("scissors").addNewSnippet()
+		elseif mode == "update" then
+			require("scissors").editSnippet()
+		end
+	end, opts)
 end
 
 --------------------------------------------------------------------------------

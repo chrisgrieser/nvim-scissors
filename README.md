@@ -133,6 +133,7 @@ require("scissors").setup {
 		keymaps = {
 			cancel = "q",
 			saveChanges = "<CR>",
+			goBackToSearch = "<BS>",
 			delete = "<C-BS>",
 			openInFile = "<C-o>",
 			insertNextToken = "<C-t>", -- insert & normal mode
