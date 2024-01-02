@@ -1,6 +1,7 @@
 local config = require("scissors.config").config
+local packageJson = require("scissors.vscode-snippet.package-json")
 local rw = require("scissors.read-write-operations")
-local snipObj = require("scissors.snippet-object")
+local snipObj = require("scissors.vscode-snippet")
 local u = require("scissors.utils")
 
 local M = {}
@@ -22,37 +23,6 @@ local function getPrefixCount(prefixBodySep)
 	local extM = prefixBodySep
 	local newCount = a.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1]
 	return newCount
-end
-
----@param pathOfSnippetFile string
----@return string|false filetype
----@nodiscard
-local function determineFileType(pathOfSnippetFile)
-	-- PRIMARY METHOD: read `package.json` https://code.visualstudio.com/api/language-extensions/snippet-guide
-	local relPathOfSnipFile = pathOfSnippetFile:sub(#config.snippetDir + 2)
-	local packageJson = rw.readAndParseJson(config.snippetDir .. "/package.json")
-	local snipFilesInfo = packageJson.contributes.snippets
-	local fileMetadata = vim.tbl_filter(
-		function(info) return info.path:gsub("^%.?/", "") == relPathOfSnipFile end,
-		snipFilesInfo
-	)
-	if fileMetadata[1] then
-		local lang = fileMetadata[1].language
-		if type(lang) == "string" then lang = { lang } end
-		lang = vim.tbl_filter(function(l) return l ~= "global" and l ~= "all" end, lang)
-		if lang[1] then return lang[1] end
-	end
-
-	-- FALLBACK #1: filename is filetype
-	local filename = vim.fs.basename(pathOfSnippetFile):gsub("%.json$", "")
-	local allKnownFts = vim.fn.getcompletion("", "filetype")
-	if vim.tbl_contains(allKnownFts, filename) then return filename end
-
-	-- FALLBACK #2: filename is extension
-	local matchedFt = vim.filetype.match { filename = "dummy." .. filename }
-	if matchedFt then return matchedFt end
-
-	return false
 end
 
 ---@param bufnr number
@@ -101,7 +71,7 @@ function M.editInPopup(snip, mode)
 	a.nvim_buf_set_name(bufnr, bufName)
 	a.nvim_buf_set_option(bufnr, "buftype", "nofile")
 
-	local ft = determineFileType(snip.fullPath)
+	local ft = packageJson.determineFileType(snip.fullPath)
 	if ft then a.nvim_buf_set_option(bufnr, "filetype", ft) end
 
 	local winnr = a.nvim_open_win(bufnr, true, {

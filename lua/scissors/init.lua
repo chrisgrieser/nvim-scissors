@@ -28,7 +28,7 @@ function M.editSnippet()
 	if not snippetDir then return end
 
 	local rw = require("scissors.read-write-operations")
-	local snipObj = require("scissors.snippet-object")
+	local snipObj = require("scissors.vscode-snippet")
 
 	-- get all snippets
 	local allSnippets = {} ---@type SnippetObj[]
