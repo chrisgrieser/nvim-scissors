@@ -6,7 +6,7 @@
 <img alt="badge" src="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors/shield"/></a>
 -->
 
-Automagical snippet management and creation. 
+Automagical snippet management and creation.
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
 
@@ -38,9 +38,10 @@ Automagical snippet management and creation.
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
   `jq`. (Optional, but useful when version-controlling your snippet collection.)
 
-> [!NOTE]
-> This plugin only *manages* snippets. It does not provide a snippet *engine*
-> to expand snippets, which is done by plugins like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
+> [!TIP]
+> You can use
+> [snippet-converter.nvim](https://github.com/smjonas/snippet-converter.nvim) to
+> convert your snippets to the VSCode format.
 
 ## Rationale
 - Regrettably, there are innumerable formats in which snippets can be saved. The
@@ -55,11 +56,6 @@ Automagical snippet management and creation.
 - However, the snippets are stored as JSON files, which are a pain to modify
   manually. This plugin aims to alleviate that pain by automagically writing
   the JSON for you.
-
-> [!TIP]
-> You can use
-> [snippet-converter.nvim](https://github.com/smjonas/snippet-converter.nvim) to
-> convert your snippets to different formats.
 
 ## Installation
 
@@ -112,8 +108,8 @@ vim.keymap.set(
 )
 ```
 
-The popup intelligently adapts to changes in the prefix area. Each new line 
-represents one prefix, and creating or removing lines thus changes the number 
+The popup intelligently adapts to changes in the prefix area. Each new line
+represents one prefix, and creating or removing lines thus changes the number
 of prefixes.
 
 <img alt="Showcase prefix change" width=70% src="https://github.com/chrisgrieser/nvim-scissors/assets/73286100/d54f96c2-6751-46e9-9185-77b63eb2664a">
