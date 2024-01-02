@@ -22,8 +22,8 @@ function M.readAndParseJson(path)
 	assert(file, name .. " could not be read")
 	local content = file:read("*a")
 	file:close()
-	local ok, json = pcall(vim.json.decode, content) ---@cast json VSCodeSnippetDict
-	if not ok then
+	local ok, json = pcall(vim.json.decode, content)
+	if not (ok and json) then
 		u.notify("Could not parse " .. name, "warn")
 		return {}
 	end
@@ -78,7 +78,7 @@ end
 function M.deleteSnippet(snip)
 	local key = snip.originalKey
 	assert(key)
-	local snippetsInFile = M.readAndParseJson(snip.fullPath)
+	local snippetsInFile = M.readAndParseJson(snip.fullPath) ---@cast snippetsInFile VSCodeSnippetDict
 	snippetsInFile[key] = nil -- = delete
 
 	local success = M.writeAndFormatSnippetFile(snip.fullPath, snippetsInFile)
