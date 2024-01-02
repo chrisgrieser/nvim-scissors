@@ -1,40 +1,71 @@
 local rw = require("scissors.read-write-operations")
 local u = require("scissors.utils")
+local config = require("scissors.config").config
 
 local M = {}
 --------------------------------------------------------------------------------
 
+---DOCS https://code.visualstudio.com/api/language-extensions/snippet-guide
+---@alias packageJson { contributes: { snippets: snippetFileMetadata[] } }
+
+---@class (exact) snippetFileMetadata
+---@field language string|string[]
+---@field path string
+
+---@param filetype "all"|string
+---@return string[] absPathsOfSnipFileForThisFt
+function M.getSnippetFilesForFt(filetype)
+	local packageJson = rw.readAndParseJson(config.snippetDir .. "/package.json")
+	---@cast packageJson packageJson
+
+	local snipFilesInfos = packageJson.contributes.snippets
+
+	local absPaths = {}
+	for _, info in pairs(snipFilesInfos) do
+		local lang = info.language
+		if type(lang) == "string" then lang = { lang } end
+		if vim.tbl_contains(lang, filetype) then
+			local absPath = config.snippetDir .. "/" .. info.path:gsub("^%.?/", "")
+			table.insert(absPaths, absPath)
+		end
+	end
+	return absPaths
+end
+
+--------------------------------------------------------------------------------
+
 ---@class SnippetObj used by this plugin
 ---@field fullPath string (key only set by this plugin)
+---@field filetype string (key only set by this plugin)
 ---@field originalKey? string if not set, is a new snippet (key only set by this plugin)
 ---@field prefix string[] -- VS Code allows single string, but this plugin converts to array on read
 ---@field body string[] -- VS Code allows single string, but this plugin converts to array on read
 ---@field description? string
 
--- https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets
+---DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets
+---@alias VSCodeSnippetDict table<string, VSCodeSnippet>
+
 ---@class VSCodeSnippet
 ---@field prefix string|string[]
 ---@field body string|string[]
 ---@field description? string
 
----@alias VSCodeSnippetDict table<string, VSCodeSnippet>
-
---------------------------------------------------------------------------------
-
 ---1. convert dictionary to array for `vim.ui.select`
 ---2. make body & prefix consistent array for nvim-api functions
 ---3. inject filepath into the snippet for convenience later on
 ---@param vscodeJson VSCodeSnippetDict
+---@param filetype string filetype to assign to all snippets in the file
 ---@return SnippetObj[]
-function M.restructureVsCodeObj(vscodeJson, filepath)
+function M.restructureVsCodeObj(vscodeJson, filepath, filetype)
 	local snippetsInFileList = {} ---@type SnippetObj[]
 
 	-- convert dictionary to array
 	for key, snip in pairs(vscodeJson) do
-		---@diagnostic disable-next-line: cast-type-mismatch we are converting it here!
+		---@diagnostic disable-next-line: cast-type-mismatch we are converting it here
 		---@cast snip SnippetObj
 		snip.fullPath = filepath
 		snip.originalKey = key
+		snip.filetype = filetype
 		table.insert(snippetsInFileList, snip)
 	end
 

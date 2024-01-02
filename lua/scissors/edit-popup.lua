@@ -1,8 +1,7 @@
 local config = require("scissors.config").config
-local packageJson = require("scissors.vscode-snippet.package-json")
 local rw = require("scissors.read-write-operations")
-local snipObj = require("scissors.vscode-snippet")
 local u = require("scissors.utils")
+local vscodeFmt = require("scissors.vscode-format")
 
 local M = {}
 local a = vim.api
@@ -43,7 +42,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	keymap("n", mappings.saveChanges, function()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
 		local newPrefixCount = getPrefixCount(prefixBodySep)
-		snipObj.updateSnippetFile(snip, editedLines, newPrefixCount)
+		vscodeFmt.updateSnippetFile(snip, editedLines, newPrefixCount)
 		closePopup()
 	end, opts)
 	keymap("n", mappings.delete, function()
@@ -112,9 +111,7 @@ function M.editInPopup(snip, mode)
 	a.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 	a.nvim_buf_set_name(bufnr, bufName)
 	a.nvim_buf_set_option(bufnr, "buftype", "nofile")
-
-	local ft = packageJson.determineFileType(snip.fullPath)
-	if ft then a.nvim_buf_set_option(bufnr, "filetype", ft) end
+	a.nvim_buf_set_option(bufnr, "filetype", snip.filetype)
 
 	local winnr = a.nvim_open_win(bufnr, true, {
 		relative = "win",

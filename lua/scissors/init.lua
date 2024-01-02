@@ -14,7 +14,7 @@ local function getSnippetDir()
 	local exists = stat and stat.type == "directory"
 	if exists then return snippetDir end
 
-	require("scissors.utils").notify("Snippet directory does not exist: " .. snippetDir, "error")
+	u.notify("Snippet directory does not exist: " .. snippetDir, "error")
 	return nil
 end
 
@@ -28,17 +28,21 @@ function M.editSnippet()
 	if not snippetDir then return end
 
 	local rw = require("scissors.read-write-operations")
-	local snipObj = require("scissors.vscode-snippet")
+	local vscodeFmt = require("scissors.vscode-format")
 
 	-- get all snippets
+	local bufferFt = vim.bo.filetype
 	local allSnippets = {} ---@type SnippetObj[]
-	for name, _ in vim.fs.dir(snippetDir, { depth = 3 }) do
-		if name:find("%.jsonc?$") and name ~= "package.json" then
-			local filepath = snippetDir .. "/" .. name
-			local vscodeJson = rw.readAndParseJson(filepath) ---@cast vscodeJson VSCodeSnippetDict
-			local snippetsInFileArr = snipObj.restructureVsCodeObj(vscodeJson, filepath)
-			vim.list_extend(allSnippets, snippetsInFileArr)
-		end
+
+	for _, absPath in pairs(vscodeFmt.getSnippetFilesForFt(bufferFt)) do
+		local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson VSCodeSnippetDict
+		local snipsInFile = vscodeFmt.restructureVsCodeObj(vscodeJson, absPath, bufferFt)
+		vim.list_extend(allSnippets, snipsInFile)
+	end
+	for _, absPath in pairs(vscodeFmt.getSnippetFilesForFt("all")) do
+		local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson VSCodeSnippetDict
+		local snipsInFile = vscodeFmt.restructureVsCodeObj(vscodeJson, absPath, "plaintext")
+		vim.list_extend(allSnippets, snipsInFile)
 	end
 
 	-- let user select
@@ -60,6 +64,8 @@ function M.addNewSnippet()
 	local snippetDir = getSnippetDir()
 	if not snippetDir then return end
 
+	local vscodeFmt = require("scissors.vscode-format")
+
 	-- visual mode: prefill body with selected text
 	local bodyPrefill = { "" }
 	local mode = vim.fn.mode()
@@ -72,25 +78,34 @@ function M.addNewSnippet()
 		bodyPrefill = u.dedent(bodyPrefill)
 	end
 
-	-- get list of all snippet JSON files
-	local jsonFiles = {}
-	for name, _ in vim.fs.dir(snippetDir, { depth = 3 }) do
-		if name:find("%.json$") and name ~= "package.json" then table.insert(jsonFiles, name) end
-	end
+	-- get list of all snippet files which matching filetype
+	local snipFilesForFt = vim.tbl_map(
+		function(file) return { path = file, ft = vim.bo.filetype } end,
+		vscodeFmt.getSnippetFilesForFt(vim.bo.filetype)
+	)
+	local snipFilesForAll = vim.tbl_map(
+		function(file) return { path = file, ft = "plaintext" } end,
+		vscodeFmt.getSnippetFilesForFt("all")
+	)
+	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
-	-- let user select
-	vim.ui.select(jsonFiles, {
+	-- let user select from
+	vim.ui.select(allSnipFiles, {
 		prompt = "Select file for new snippet:",
-		format_item = function(item) return item:gsub("%.json$", "") end,
+		format_item = function(item)
+			local relPath = item.path:sub(#snippetDir + 2)
+			return relPath:gsub("%.jsonc?$", "")
+		end,
 		kind = "nvim-scissors.fileSelect",
-	}, function(file)
-		if not file then return end
+	}, function(snipFile)
+		if not snipFile then return end
 
 		---@type SnippetObj
 		local snip = {
-			fullPath = snippetDir .. "/" .. file,
 			prefix = { "" },
 			body = bodyPrefill,
+			fullPath = snipFile.path,
+			filetype = snipFile.ft,
 		}
 		require("scissors.edit-popup").editInPopup(snip, "new")
 	end)
