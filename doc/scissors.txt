@@ -50,9 +50,9 @@ FEATURES                                    *scissors-nvim-scissors--features*
     `jq`. (Optional, but useful when version-controlling your snippet collection.)
 
 
-  [!NOTE] This plugin only _manages_ snippets. It does not provide a snippet
-  _engine_ to expand snippets, which is done by plugins like LuaSnip
-  <https://github.com/L3MON4D3/LuaSnip>.
+  [!TIP] You can use snippet-converter.nvim
+  <https://github.com/smjonas/snippet-converter.nvim> to convert your snippets to
+  the VSCode format.
 
 RATIONALE                                  *scissors-nvim-scissors--rationale*
 
@@ -69,10 +69,6 @@ RATIONALE                                  *scissors-nvim-scissors--rationale*
     manually. This plugin aims to alleviate that pain by automagically writing
     the JSON for you.
 
-
-  [!TIP] You can use snippet-converter.nvim
-  <https://github.com/smjonas/snippet-converter.nvim> to convert your snippets to
-  different formats.
 
 INSTALLATION                            *scissors-nvim-scissors--installation*
 
