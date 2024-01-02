@@ -26,22 +26,64 @@ local function getPrefixCount(prefixBodySep)
 end
 
 ---@param bufnr number
-local function insertNextToken(bufnr)
-	local bufText = table.concat(a.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
-	local numbers = {}
-	local tokenPattern = "${?(%d+)" -- match `$1`, `${2:word}`, or `${3|word|}`
-	for token in bufText:gmatch(tokenPattern) do
-		table.insert(numbers, tonumber(token))
+---@param winnr number
+---@param mode "new"|"update"
+---@param snip SnippetObj
+---@param prefixBodySep extMarkInfo
+local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
+	local keymap = vim.keymap.set
+	local opts = { buffer = bufnr, nowait = true, silent = true }
+	local mappings = config.editSnippetPopup.keymaps
+	local function closePopup()
+		a.nvim_win_close(winnr, true)
+		a.nvim_buf_delete(bufnr, { force = true })
 	end
-	local highestToken = #numbers > 0 and math.max(unpack(numbers)) or 1
 
-	local insertStr = ("${%s:}"):format(highestToken + 1)
-	local row, col = unpack(a.nvim_win_get_cursor(0))
-	a.nvim_buf_set_text(bufnr, row - 1, col, row - 1, col, { insertStr })
+	keymap("n", mappings.cancel, closePopup, opts)
+	keymap("n", mappings.saveChanges, function()
+		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
+		local newPrefixCount = getPrefixCount(prefixBodySep)
+		snipObj.updateSnippetFile(snip, editedLines, newPrefixCount)
+		closePopup()
+	end, opts)
+	keymap("n", mappings.delete, function()
+		if mode == "new" then
+			u.notify("Cannot delete a snippet that has not been saved yet.", "warn")
+			return
+		end
+		rw.deleteSnippet(snip)
+		closePopup()
+	end, opts)
+	keymap("n", mappings.openInFile, function()
+		closePopup()
+		local locationInFile = snip.originalKey:gsub(" ", [[\ ]])
+		vim.cmd(("edit +/%q %s"):format(locationInFile, snip.fullPath))
+	end, opts)
+	keymap({ "n", "i" }, mappings.insertNextToken, function()
+		local bufText = table.concat(a.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
+		local numbers = {}
+		local tokenPattern = "${?(%d+)" -- match `$1`, `${2:word}`, or `${3|word|}`
+		for token in bufText:gmatch(tokenPattern) do
+			table.insert(numbers, tonumber(token))
+		end
+		local highestToken = #numbers > 0 and math.max(unpack(numbers)) or 1
 
-	-- move cursor
-	a.nvim_win_set_cursor(0, { row, col + #insertStr - 1 })
-	vim.cmd.startinsert()
+		local insertStr = ("${%s:}"):format(highestToken + 1)
+		local row, col = unpack(a.nvim_win_get_cursor(0))
+		a.nvim_buf_set_text(bufnr, row - 1, col, row - 1, col, { insertStr })
+
+		-- move cursor
+		a.nvim_win_set_cursor(0, { row, col + #insertStr - 1 })
+		vim.cmd.startinsert()
+	end, opts)
+	keymap("n", mappings.goBackToSearch, function()
+		closePopup()
+		if mode == "new" then
+			require("scissors").addNewSnippet()
+		elseif mode == "update" then
+			require("scissors").editSnippet()
+		end
+	end, opts)
 end
 --------------------------------------------------------------------------------
 
@@ -144,45 +186,7 @@ function M.editInPopup(snip, mode)
 	})
 
 	-- keymaps
-	local function closePopup()
-		a.nvim_win_close(winnr, true)
-		a.nvim_buf_delete(bufnr, { force = true })
-	end
-	local opts = { buffer = bufnr, nowait = true, silent = true }
-	vim.keymap.set("n", conf.keymaps.cancel, closePopup, opts)
-	vim.keymap.set("n", conf.keymaps.saveChanges, function()
-		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
-		local newPrefixCount = getPrefixCount(prefixBodySep)
-		snipObj.updateSnippetFile(snip, editedLines, newPrefixCount)
-		closePopup()
-	end, opts)
-	vim.keymap.set("n", conf.keymaps.delete, function()
-		if mode == "new" then
-			u.notify("Cannot delete a snippet that has not been saved yet.", "warn")
-			return
-		end
-		rw.deleteSnippet(snip)
-		closePopup()
-	end, opts)
-	vim.keymap.set("n", conf.keymaps.openInFile, function()
-		closePopup()
-		local locationInFile = snip.originalKey:gsub(" ", [[\ ]])
-		vim.cmd(("edit +/%q %s"):format(locationInFile, snip.fullPath))
-	end, opts)
-	vim.keymap.set(
-		{ "n", "i" },
-		conf.keymaps.insertNextToken,
-		function() insertNextToken(bufnr) end,
-		opts
-	)
-	vim.keymap.set( "n", conf.keymaps.goBackToSearch, function()
-		closePopup()
-		if mode == "new" then
-			require("scissors").addNewSnippet()
-		elseif mode == "update" then
-			require("scissors").editSnippet()
-		end
-	end, opts)
+	setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 end
 
 --------------------------------------------------------------------------------
