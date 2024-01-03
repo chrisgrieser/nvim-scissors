@@ -6,7 +6,7 @@
 <img alt="badge" src="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors/shield"/></a>
 -->
 
-Automagical snippet management and creation.
+Automagical editing and creation of snippets in your snippet collection. 
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
 
@@ -58,6 +58,11 @@ Automagical snippet management and creation.
   the JSON for you.
 
 ## Installation
+
+> [!NOTE]
+> This plugin is only for editing and creating snippets.
+> It does not *expand* snippets, which is 
+> done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ```lua
 -- lazy.nvim
