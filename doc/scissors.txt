@@ -1,4 +1,4 @@
-*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 02
+*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 03
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -16,7 +16,7 @@ Table of Contents                                 *scissors-table-of-contents*
 ==============================================================================
 1. nvim-scissors                                     *scissors-nvim-scissors-*
 
-Automagicalsnippet management and creation.
+Automagicalediting and creation of snippets in your snippet collection.
 
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
@@ -72,6 +72,10 @@ RATIONALE                                  *scissors-nvim-scissors--rationale*
 
 INSTALLATION                            *scissors-nvim-scissors--installation*
 
+
+  [!NOTE] This plugin is only for editing and creating snippets. It does not
+  _expand_ snippets, which is done by snippet engines like LuaSnip
+  <https://github.com/L3MON4D3/LuaSnip>.
 >lua
     -- lazy.nvim
     {
