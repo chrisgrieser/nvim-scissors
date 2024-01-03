@@ -16,7 +16,7 @@ Table of Contents                                 *scissors-table-of-contents*
 ==============================================================================
 1. nvim-scissors                                     *scissors-nvim-scissors-*
 
-Automagicalediting and creation of snippets in your snippet collection.
+Automagicalediting and creation of snippets.
 
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
