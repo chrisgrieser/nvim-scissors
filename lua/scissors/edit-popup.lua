@@ -129,7 +129,7 @@ function M.editInPopup(snip, mode)
 
 	-- move cursor
 	if mode == "new" then
-		vim.cmd.startinsert()
+		vim.defer_fn(vim.cmd.startinsert, 1) -- for whatever reason needs to be deferred to work reliably
 	elseif mode == "update" then
 		local firstLineOfBody = #snip.prefix + 1
 		pcall(a.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
