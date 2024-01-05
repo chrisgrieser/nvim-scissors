@@ -4,7 +4,7 @@
 <a href="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors">
 <img alt="badge" src="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors/shield"/></a>
 
-Automagical editing and creation of snippets.
+Automagical editing and creation of snippets. Watch the demos to see what is so automagical about it:
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
 
@@ -25,7 +25,6 @@ Automagical editing and creation of snippets.
 <!-- tocstop -->
 
 ## Features
-- ℹ️ Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 - Add new snippets, edit snippets, delete snippets.
 - Syntax highlighting while you edit the snippet. Includes highlighting of
   tokens like `$0` or `${2:foobar}`.
@@ -37,6 +36,7 @@ Automagical editing and creation of snippets.
   `jq`. (Optional, but useful when version-controlling your snippet collection.)
 - Uses either `telescope` or `vim.ui.select` as pickers for snippet/file
   selection.
+- ℹ️ Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 
 > [!TIP]
 > You can use
@@ -45,13 +45,13 @@ Automagical editing and creation of snippets.
 
 ## Rationale
 - Regrettably, there are innumerable formats in which snippets can be saved. The
-  only format supported by several applications and the closest thing to
+  only format supported by several applications and thus the closest thing to
   a standard is the [VSCode snippet
   format](https://code.visualstudio.com/docs/editor/userdefinedsnippets). For
-  portability and to future-proof your snippet collection, it thus makes sense to
+  portability, and to future-proof your snippet collection, it can make sense to
   save your snippets in that format.
 - Most notably, the VSCode format is used by plugins like
-  [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and also
+  [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and
   supported by [LuaSnip](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
 - However, the snippets are stored as JSON files, which are a pain to modify
   manually. This plugin aims to alleviate that pain by automagically writing
@@ -89,7 +89,7 @@ use {
 When [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) is
 installed, automatically uses it as picker. If not, falls back to
 `vim.ui.select` (which is customizable with plugins like
-[dressing.nvim](https://github.com/stevearc/dressing.nvim).)
+[dressing.nvim](https://github.com/stevearc/dressing.nvim)).
 
 ## Usage
 The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
