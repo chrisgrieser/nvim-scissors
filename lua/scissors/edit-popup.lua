@@ -84,7 +84,20 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		end
 	end, opts)
 end
+
 --------------------------------------------------------------------------------
+
+---@param snipFile snipFile
+---@param bodyPrefill string[]
+function M.createNewSnipAndEdit(snipFile, bodyPrefill)
+	local snip = {
+		prefix = { "" },
+		body = bodyPrefill,
+		fullPath = snipFile.path,
+		filetype = snipFile.ft,
+	}
+	M.editInPopup(snip, "new")
+end
 
 ---@param snip SnippetObj
 ---@param mode "new"|"update"

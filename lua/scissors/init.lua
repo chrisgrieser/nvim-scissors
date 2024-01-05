@@ -45,19 +45,29 @@ function M.editSnippet()
 		vim.list_extend(allSnippets, snipsInFile)
 	end
 
-	-- let user select
-	vim.ui.select(allSnippets, {
-		prompt = "Select snippet:",
-		format_item = function(snip)
-			local snipName = u.snipDisplayName(snip)
-			local filename = vim.fs.basename(snip.fullPath):gsub("%.json$", "")
-			return ("%s\t\t[%s]"):format(snipName, filename)
-		end,
-		kind = "nvim-scissors.snippetSearch",
-	}, function(snip)
-		if not snip then return end
-		require("scissors.edit-popup").editInPopup(snip, "update")
-	end)
+	-- SELECT
+	---@param snip SnippetObj
+	---@return string
+	local function snipCreateDisplay(snip)
+		local snipName = u.snipDisplayName(snip)
+		local filename = vim.fs.basename(snip.fullPath):gsub("%.json$", "")
+		return ("%s\t\t[%s]"):format(snipName, filename)
+	end
+	local prompt = "Select Snippet:"
+
+	local hasTelescope, _ = pcall(require, "telescope")
+	if hasTelescope then
+		require("scissors.telescope").selectSnippet(allSnippets, snipCreateDisplay, prompt)
+	else
+		vim.ui.select(allSnippets, {
+			prompt = prompt,
+			format_item = snipCreateDisplay,
+			kind = "nvim-scissors.snippetSearch",
+		}, function(snip)
+			if not snip then return end
+			require("scissors.edit-popup").editInPopup(snip, "update")
+		end)
+	end
 end
 
 function M.addNewSnippet()
@@ -66,7 +76,7 @@ function M.addNewSnippet()
 
 	local vscodeFmt = require("scissors.vscode-format")
 
-	-- visual mode: prefill body with selected text
+	-- if visual mode, prefill body with selected text
 	local bodyPrefill = { "" }
 	local mode = vim.fn.mode()
 	if mode:find("[Vv]") then
@@ -87,28 +97,34 @@ function M.addNewSnippet()
 		function(file) return { path = file, ft = "plaintext" } end,
 		vscodeFmt.getSnippetFilesForFt("all")
 	)
-	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
-	-- let user select from
-	vim.ui.select(allSnipFiles, {
-		prompt = "Select file for new snippet:",
-		format_item = function(item)
-			local relPath = item.path:sub(#snippetDir + 2)
-			return relPath:gsub("%.jsonc?$", "")
-		end,
-		kind = "nvim-scissors.fileSelect",
-	}, function(snipFile)
-		if not snipFile then return end
+	---@alias snipFile {path: string, ft: string}
+	---@type snipFile[]
+	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll) 
 
-		---@type SnippetObj
-		local snip = {
-			prefix = { "" },
-			body = bodyPrefill,
-			fullPath = snipFile.path,
-			filetype = snipFile.ft,
-		}
-		require("scissors.edit-popup").editInPopup(snip, "new")
-	end)
+	-- SELECT
+	---@param item snipFile
+	---@return string
+	local function fileCreateDisplay(item)
+		local relPath = item.path:sub(#snippetDir + 2)
+		local shortened = relPath:gsub("%.jsonc?$", "")
+		return shortened
+	end
+	local prompt = "Select file for new snippet:"
+
+	local hasTelescope, _ = pcall(require, "telescope")
+	if hasTelescope then
+		require("scissors.telescope").addSnippet(allSnipFiles, fileCreateDisplay, prompt, bodyPrefill)
+	else
+		vim.ui.select(allSnipFiles, {
+			prompt = prompt,
+			format_item = fileCreateDisplay,
+			kind = "nvim-scissors.fileSelect",
+		}, function(snipFile)
+			if not snipFile then return end
+			require("scissors.edit-popup").createNewSnipAndEdit(snipFile, bodyPrefill)
+		end)
+	end
 end
 
 --------------------------------------------------------------------------------

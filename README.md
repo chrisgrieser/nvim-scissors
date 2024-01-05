@@ -32,11 +32,13 @@ Automagical editing and creation of snippets.
 - Syntax highlighting while you edit the snippet. Includes highlighting of
   tokens like `$0` or `${2:foobar}`.
 - Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
-- Intuitive UI for editing the snippet, dynamically adapt the number of
+- Intuitive UI for editing the snippet, dynamically adapting the number of
   prefixes.
 - Auto-reloading of the new/edited snippet (if using `LuaSnip`).
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
   `jq`. (Optional, but useful when version-controlling your snippet collection.)
+- Uses either `telescope` or `vim.ui.select` as pickers for snippet/file
+  selection.
 
 > [!TIP]
 > You can use
@@ -61,13 +63,14 @@ Automagical editing and creation of snippets.
 
 > [!NOTE]
 > This plugin is only for editing and creating snippets.
-> It does not *expand* snippets, which is 
+> It does not *expand* snippets, which is
 > done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ```lua
 -- lazy.nvim
 {
 	"chrisgrieser/nvim-scissors",
+	-- dependencies = "nvim-telescope/telescope.nvim",
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
 	} 
@@ -76,6 +79,7 @@ Automagical editing and creation of snippets.
 -- packer
 use {
 	"chrisgrieser/nvim-scissors",
+	-- dependencies = "nvim-telescope/telescope.nvim",
 	config = function()
 		require("scissors").setup ({
 			snippetDir = "path/to/your/snippetFolder",
@@ -84,13 +88,10 @@ use {
 }
 ```
 
-The snippet selection is implemented via `vim.ui.select`, so you need a plugin
-like
-[telescope-ui-select](https://github.com/nvim-telescope/telescope-ui-select.nvim)
-or [dressing.nvim](https://github.com/stevearc/dressing.nvim) for the nice UI.
-The notifications are implemented via `vim.notify`, so you require a plugin like
-[nvim-notify](https://github.com/rcarriga/nvim-notify) for the pretty
-notifications.
+When [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) is
+installed, automatically uses it as picker. If not, falls back to
+`vim.ui.select` (which is customizable with plugins like
+[dressing.nvim](https://github.com/stevearc/dressing.nvim).)
 
 ## Usage
 The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
@@ -144,6 +145,7 @@ require("scissors").setup {
 	-- `yq` and `jq` ensure formatted & sorted json files, which is relevant when
 	-- you are version control your snippets.
 	jsonFormatter = "none", -- "yq"|"jq"|"none"
+	picker = "vim.ui.select", -- "vim.ui.select"|"telescope"
 }
 ```
 
