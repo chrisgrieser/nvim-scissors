@@ -1,10 +1,8 @@
 <!-- LTeX: enabled=false -->
 # nvim-scissors ✂️
 <!-- LTeX: enabled=true -->
-<!-- TODO uncomment shields when available in dotfyle.com 
 <a href="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors">
 <img alt="badge" src="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors/shield"/></a>
--->
 
 Automagical editing and creation of snippets.
 
