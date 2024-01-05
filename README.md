@@ -99,16 +99,14 @@ code to create keymaps for them:
 vim.keymap.set(
 	"n",
 	"<leader>se",
-	function() require("scissors").editSnippet() end,
-	{ desc = " Edit snippets" }
+	function() require("scissors").editSnippet() end
 )
 
 -- when used in visual mode, will prefill the dedented selected text as body
 vim.keymap.set(
 	{ "n", "x" },
 	"<leader>sa",
-	function() require("scissors").addNewSnippet() end,
-	{ desc = " Add new snippet" }
+	function() require("scissors").addNewSnippet() end
 )
 ```
 
@@ -143,7 +141,6 @@ require("scissors").setup {
 	-- `yq` and `jq` ensure formatted & sorted json files, which is relevant when
 	-- you are version control your snippets.
 	jsonFormatter = "none", -- "yq"|"jq"|"none"
-	picker = "vim.ui.select", -- "vim.ui.select"|"telescope"
 }
 ```
 
@@ -157,21 +154,21 @@ the file in minified form, and also does not have a deterministic order of
 dictionary keys. That means that the JSON file can have a different order of
 keys before and after updating it via `nvim-scissors`.
 
-Both, minification, and unstable key order are of course problem if you version-control
+Both, minification and unstable key order, are of course problem if you version-control
 your snippet collection. To solve this problem, `nvim-scissors` can optionally
-unminify and sort the JSON files after updating it via `yq` or `jq`. (Both are
+unminify and sort the JSON files  via `yq` or `jq` after updating a snippet. (Both are
 also available via [mason.nvim](https://github.com/williamboman/mason.nvim).)
 
 It is recommended to run `yq`/`jq` once on all files in your snippet
-collection, since the first time you edit a file, you still get a large diff
-from the initial sorting. You can do so with `yq` with this command:
+collection, since the first time you edit a file, you would still get a large diff
+from the initial sorting. You can do so with `yq` using this command:
 
 ```bash
 cd "/your/snippet/dir"
 fd ".*\.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
 ```
 
-(How to do the same with `jq` is left as an exercise to the reader. 🙂)
+How to do the same with `jq` is left as an exercise to the reader.
 
 ## Credits
 <!-- vale Google.FirstPerson = NO -->
