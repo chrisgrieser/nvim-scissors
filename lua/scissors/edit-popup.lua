@@ -65,7 +65,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		for token in bufText:gmatch(tokenPattern) do
 			table.insert(numbers, tonumber(token))
 		end
-		local highestToken = #numbers > 0 and math.max(unpack(numbers)) or 1
+		local highestToken = #numbers > 0 and math.max(unpack(numbers)) or 0
 
 		local insertStr = ("${%s:}"):format(highestToken + 1)
 		local row, col = unpack(a.nvim_win_get_cursor(0))
