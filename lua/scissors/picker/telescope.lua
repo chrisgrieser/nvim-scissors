@@ -7,8 +7,10 @@ local conf = require("telescope.config").values
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 local finders = require("telescope.finders")
+local previewers = require("telescope.previewers")
 
 local edit = require("scissors.edit-popup")
+local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
 ---@param snippets SnippetObj[] entries
@@ -17,14 +19,16 @@ local edit = require("scissors.edit-popup")
 function M.selectSnippet(snippets, formatter, prompt)
 	pickers
 		.new({}, {
-			prompt_title = prompt:gsub(":$", ""),
+			prompt_title = prompt:gsub(": ?$", ""),
 			sorter = conf.generic_sorter {},
 
 			layout_strategy = "horizontal",
 			layout_config = {
 				horizontal = {
-					width = { 0.7, max = 60 },
-					height = { 0.6, max = 25 },
+					width = { 0.8, min = 90 },
+					height = { 0.5, min = 20 },
+					preview_cutoff = 40,
+					preview_width = { 0.5, min = 30 },
 				},
 			},
 
@@ -38,6 +42,23 @@ function M.selectSnippet(snippets, formatter, prompt)
 					}
 				end,
 			},
+
+			previewer = previewers.new_buffer_previewer {
+				dyn_title = function(_, entry)
+					local snip = entry.value
+					return u.snipDisplayName(snip)
+				end,
+				define_preview = function(self, entry)
+					local snip = entry.value
+					local bufnr = self.state.bufnr
+					vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, snip.body)
+
+					-- highlights
+					vim.api.nvim_buf_set_option(bufnr, "filetype", snip.filetype)
+					vim.defer_fn(function() u.tokenHighlight(bufnr) end, 1)
+				end,
+			},
+
 			attach_mappings = function(prompt_bufnr, _)
 				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
@@ -59,7 +80,7 @@ end
 function M.addSnippet(files, formatter, prompt, bodyPrefill)
 	pickers
 		.new({}, {
-			prompt_title = prompt:gsub(":$", ""),
+			prompt_title = prompt:gsub(": ?$", ""),
 			sorter = conf.generic_sorter {},
 
 			layout_strategy = "horizontal",

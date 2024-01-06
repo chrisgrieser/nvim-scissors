@@ -31,5 +31,16 @@ function M.leaveVisualMode()
 	vim.api.nvim_feedkeys(escKey, "nx", false)
 end
 
+---DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax
+---@param bufnr number
+function M.tokenHighlight(bufnr)
+	local hlgroup = "DiagnosticVirtualTextInfo"
+	vim.api.nvim_buf_call(bufnr, function()
+		vim.fn.matchadd(hlgroup, [[\$\d]]) -- tabstops
+		vim.fn.matchadd(hlgroup, [[\${\d:.\{-}}]]) -- placeholders
+		vim.fn.matchadd(hlgroup, [[\${\d|.\{-}|}]]) -- choice
+	end)
+end
+
 --------------------------------------------------------------------------------
 return M

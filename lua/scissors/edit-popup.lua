@@ -140,19 +140,14 @@ function M.editInPopup(snip, mode)
 	})
 	a.nvim_win_set_option(winnr, "signcolumn", "no")
 
-	-- move cursor
+	-- move cursor, highlight cursor positions
 	if mode == "new" then
 		vim.defer_fn(vim.cmd.startinsert, 1) -- for whatever reason needs to be deferred to work reliably
 	elseif mode == "update" then
 		local firstLineOfBody = #snip.prefix + 1
 		pcall(a.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
 	end
-
-	-- highlight cursor positions
-	-- DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax
-	vim.fn.matchadd("DiagnosticVirtualTextInfo", [[\$\d]]) -- tabstops
-	vim.fn.matchadd("DiagnosticVirtualTextInfo", [[\${\d:.\{-}}]]) -- placeholders
-	vim.fn.matchadd("DiagnosticVirtualTextInfo", [[\${\d|.\{-}|}]]) -- choice
+	u.tokenHighlight(bufnr)
 
 	-- prefixBodySeparator -> INFO its position determines number of prefixes
 	local winWidth = a.nvim_win_get_width(winnr)
