@@ -88,7 +88,7 @@ function M.addSnippet(files, formatter, prompt, bodyPrefill)
 			layout_config = {
 				horizontal = {
 					width = { 0.5, max = 60 },
-					height = { 0.4, max = 25 },
+					height = { 0.4, min = 12 },
 				},
 			},
 
