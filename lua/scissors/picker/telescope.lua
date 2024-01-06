@@ -105,8 +105,8 @@ function M.addSnippet(files, formatter, prompt, bodyPrefill)
 			attach_mappings = function(prompt_bufnr, _)
 				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
-					local filepath = actionState.get_selected_entry().value
-					edit.createNewSnipAndEdit(filepath, bodyPrefill)
+					local snipFile = actionState.get_selected_entry().value ---@type snipFile snipFile
+					edit.createNewSnipAndEdit(snipFile, bodyPrefill)
 				end)
 				return true
 			end,

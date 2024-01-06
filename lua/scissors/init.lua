@@ -50,9 +50,6 @@ function M.addNewSnippet()
 	local snippetDir = require("scissors.config").config.snippetDir
 	if not directoryIsValid(snippetDir) then return end
 
-	local vscodeFmt = require("scissors.vscode-format")
-	local picker = require("scissors.picker")
-
 	-- if visual mode, prefill body with selected text
 	local bodyPrefill = { "" }
 	local mode = vim.fn.mode()
@@ -66,9 +63,11 @@ function M.addNewSnippet()
 	end
 
 	-- get list of all snippet files which matching filetype
+	local vscodeFmt = require("scissors.vscode-format")
+	local ft = vim.bo.filetype
 	local snipFilesForFt = vim.tbl_map(
-		function(file) return { path = file, ft = vim.bo.filetype } end,
-		vscodeFmt.getSnippetFilesForFt(vim.bo.filetype)
+		function(file) return { path = file, ft = ft } end,
+		vscodeFmt.getSnippetFilesForFt(ft)
 	)
 	local snipFilesForAll = vim.tbl_map(
 		function(file) return { path = file, ft = "plaintext" } end,
@@ -79,8 +78,12 @@ function M.addNewSnippet()
 	---@type snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
-	-- SELECT
-	picker.addSnippet(allSnipFiles, bodyPrefill)
+	if #allSnipFiles == 1 then
+		-- if only one snippet file for the filetype, skip the picker and add directory
+		require("scissors.edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
+	else
+		require("scissors.picker").addSnippet(allSnipFiles, bodyPrefill)
+	end
 end
 
 --------------------------------------------------------------------------------
