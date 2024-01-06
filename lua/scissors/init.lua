@@ -41,8 +41,12 @@ function M.editSnippet()
 		local snipsInFile = vscodeFmt.restructureVsCodeObj(vscodeJson, absPath, "plaintext")
 		vim.list_extend(allSnippets, snipsInFile)
 	end
+	if #allSnippets == 0 then
+		u.notify("No snippets found for filetype: " .. bufferFt, "warn")
+		return
+	end
 
-	-- SELECT
+	-- select
 	picker.selectSnippet(allSnippets)
 end
 
@@ -78,7 +82,9 @@ function M.addNewSnippet()
 	---@type snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
-	if #allSnipFiles == 1 then
+	if #allSnipFiles == 0 then
+		u.notify("No snippet files found for filetype: " .. ft, "warn")
+	elseif #allSnipFiles == 1 then
 		-- if only one snippet file for the filetype, skip the picker and add directory
 		require("scissors.edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
 	else
