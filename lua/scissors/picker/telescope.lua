@@ -1,12 +1,5 @@
--- GUARD
-local hasTelescope, _ = pcall(require, "telescope")
-if not hasTelescope then
-	vim.notify("Failed to load telescope", vim.log.levels.ERROR, { title = "scissors.nvim" })
-	return
-end
---------------------------------------------------------------------------------
 -- DOCS https://github.com/nvim-telescope/telescope.nvim/blob/master/developers.md
-
+--------------------------------------------------------------------------------
 local M = {}
 
 local pickers = require("telescope.pickers")
@@ -16,7 +9,6 @@ local actions = require("telescope.actions")
 local finders = require("telescope.finders")
 
 local edit = require("scissors.edit-popup")
-
 --------------------------------------------------------------------------------
 
 ---@param snippets SnippetObj[] entries
@@ -51,17 +43,17 @@ end
 
 --------------------------------------------------------------------------------
 
----@param snippets SnippetObj[] entries
----@param formatter function(string): string formats fileparts into display text
+---@param files snipFile[]
+---@param formatter function(snipFile): string
 ---@param prompt string
 ---@param bodyPrefill string[] for the new snippet
-function M.addSnippet(snippets, formatter, prompt, bodyPrefill)
+function M.addSnippet(files, formatter, prompt, bodyPrefill)
 	pickers
 		.new({}, {
 			prompt_title = prompt:gsub(":$", ""),
 			sorter = conf.generic_sorter {},
 			finder = finders.new_table {
-				results = snippets,
+				results = files,
 				entry_maker = function(snip)
 					return {
 						value = snip,

@@ -1,8 +1,11 @@
+-- functions for converting from/to the VSCode Snippet Format
+--------------------------------------------------------------------------------
+local M = {}
+
 local rw = require("scissors.read-write-operations")
 local u = require("scissors.utils")
 local config = require("scissors.config").config
 
-local M = {}
 --------------------------------------------------------------------------------
 
 ---DOCS https://code.visualstudio.com/api/language-extensions/snippet-guide
