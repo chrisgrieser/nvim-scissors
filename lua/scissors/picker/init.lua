@@ -20,6 +20,7 @@ function M.selectSnippet(allSnippets)
 
 	require("scissors.picker." .. picker).selectSnippet(allSnippets, snipDisplay, prompt)
 end
+
 --------------------------------------------------------------------------------
 
 ---@param item snipFile

@@ -3,8 +3,8 @@
 local M = {}
 
 local pickers = require("telescope.pickers")
-local conf = require("telescope.config").values
-local action_state = require("telescope.actions.state")
+local telescopeConf = require("telescope.config").values
+local actionState = require("telescope.actions.state")
 local actions = require("telescope.actions")
 local finders = require("telescope.finders")
 local previewers = require("telescope.previewers")
@@ -20,7 +20,7 @@ function M.selectSnippet(snippets, formatter, prompt)
 	pickers
 		.new({}, {
 			prompt_title = prompt:gsub(": ?$", ""),
-			sorter = conf.generic_sorter {},
+			sorter = telescopeConf.generic_sorter {},
 
 			layout_strategy = "horizontal",
 			layout_config = {
@@ -43,6 +43,7 @@ function M.selectSnippet(snippets, formatter, prompt)
 				end,
 			},
 
+			-- DOCS `:help telescope.previewers`
 			previewer = previewers.new_buffer_previewer {
 				dyn_title = function(_, entry)
 					local snip = entry.value
@@ -62,7 +63,7 @@ function M.selectSnippet(snippets, formatter, prompt)
 			attach_mappings = function(prompt_bufnr, _)
 				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
-					local snip = action_state.get_selected_entry().value
+					local snip = actionState.get_selected_entry().value
 					edit.editInPopup(snip, "update")
 				end)
 				return true
@@ -81,7 +82,7 @@ function M.addSnippet(files, formatter, prompt, bodyPrefill)
 	pickers
 		.new({}, {
 			prompt_title = prompt:gsub(": ?$", ""),
-			sorter = conf.generic_sorter {},
+			sorter = telescopeConf.generic_sorter {},
 
 			layout_strategy = "horizontal",
 			layout_config = {
@@ -104,7 +105,7 @@ function M.addSnippet(files, formatter, prompt, bodyPrefill)
 			attach_mappings = function(prompt_bufnr, _)
 				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
-					local filepath = action_state.get_selected_entry().value
+					local filepath = actionState.get_selected_entry().value
 					edit.createNewSnipAndEdit(filepath, bodyPrefill)
 				end)
 				return true
