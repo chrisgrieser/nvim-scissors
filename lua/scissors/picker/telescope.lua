@@ -19,6 +19,15 @@ function M.selectSnippet(snippets, formatter, prompt)
 		.new({}, {
 			prompt_title = prompt:gsub(":$", ""),
 			sorter = conf.generic_sorter {},
+
+			layout_strategy = "horizontal",
+			layout_config = {
+				horizontal = {
+					width = { 0.7, max = 60 },
+					height = { 0.6, max = 25 },
+				},
+			},
+
 			finder = finders.new_table {
 				results = snippets,
 				entry_maker = function(snip)
@@ -52,6 +61,15 @@ function M.addSnippet(files, formatter, prompt, bodyPrefill)
 		.new({}, {
 			prompt_title = prompt:gsub(":$", ""),
 			sorter = conf.generic_sorter {},
+
+			layout_strategy = "horizontal",
+			layout_config = {
+				horizontal = {
+					width = { 0.5, max = 60 },
+					height = { 0.4, max = 25 },
+				},
+			},
+
 			finder = finders.new_table {
 				results = files,
 				entry_maker = function(snip)
