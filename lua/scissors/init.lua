@@ -4,18 +4,14 @@ local M = {}
 -- of the plugin on initialization instead of lazy-loading the parts when needed.
 local u = require("scissors.utils")
 
---------------------------------------------------------------------------------
-
----@return string|nil snippetDir nil when the directory does not exist
+---@param directoryPath string
+---@return boolean
 ---@nodiscard
-local function getSnippetDir()
-	local snippetDir = require("scissors.config").config.snippetDir
-	local stat = vim.loop.fs_stat(snippetDir)
-	local exists = stat and stat.type == "directory"
-	if exists then return snippetDir end
-
-	u.notify("Snippet directory does not exist: " .. snippetDir, "error")
-	return nil
+local function directoryIsValid(directoryPath)
+	local stat = vim.loop.fs_stat(directoryPath)
+	local exists = stat and stat.type == "directory" or false
+	if not exists then u.notify("Snippet directory does not exist: " .. directoryPath, "error") end
+	return exists
 end
 
 --------------------------------------------------------------------------------
@@ -24,8 +20,8 @@ end
 function M.setup(userConfig) require("scissors.config").setupPlugin(userConfig or {}) end
 
 function M.editSnippet()
-	local snippetDir = getSnippetDir()
-	if not snippetDir then return end
+	local snippetDir = require("scissors.config").config.snippetDir
+	if not directoryIsValid(snippetDir) then return end
 
 	local rw = require("scissors.read-write-operations")
 	local vscodeFmt = require("scissors.vscode-format")
@@ -51,8 +47,8 @@ function M.editSnippet()
 end
 
 function M.addNewSnippet()
-	local snippetDir = getSnippetDir()
-	if not snippetDir then return end
+	local snippetDir = require("scissors.config").config.snippetDir
+	if not directoryIsValid(snippetDir) then return end
 
 	local vscodeFmt = require("scissors.vscode-format")
 	local picker = require("scissors.picker")
@@ -81,7 +77,7 @@ function M.addNewSnippet()
 
 	---@alias snipFile {path: string, ft: string}
 	---@type snipFile[]
-	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll) 
+	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
 	-- SELECT
 	picker.addSnippet(allSnipFiles, bodyPrefill)
