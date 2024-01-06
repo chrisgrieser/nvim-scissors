@@ -18,14 +18,13 @@ Table of Contents                                 *scissors-table-of-contents*
 
 
 
-Automagicalediting and creation of snippets. Watch the demos to see what is so
-automagical about it:
+Automagicalediting and creation of snippets.
 
 
-<https://github.com/chrisgrieser/nvim-scissors/assets/73286100/13460b79-674f-4df4-b2ba-5bc984342a99>
+<https://github.com/chrisgrieser/nvim-scissors/assets/73286100/c620958a-eef6-46c2-957a-8504733e0312>
 
 
-<https://github.com/chrisgrieser/nvim-scissors/assets/73286100/97cd47b8-f055-4f70-b256-71fb85e921d5>
+<https://github.com/chrisgrieser/nvim-scissors/assets/73286100/de544b7e-20c3-4bec-b7aa-cbaaacca09ca>
 
 
 TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
