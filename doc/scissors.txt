@@ -1,4 +1,4 @@
-*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 06
+*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 07
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -164,8 +164,7 @@ The `.setup()` call is optional.
 <
 
 
-  [!TIP] `vim.fn.stdpath("config")` returns the path to your nvim config, so you
-  do not need to provide an absolute path to your snippet folder.
+  [!TIP] `vim.fn.stdpath("config")` returns the path to your nvim config.
 
 NOTE ON JSON-FORMATTING      *scissors-nvim-scissors--note-on-json-formatting*
 
