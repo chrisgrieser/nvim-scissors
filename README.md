@@ -145,8 +145,7 @@ require("scissors").setup {
 ```
 
 > [!TIP]
-> `vim.fn.stdpath("config")` returns the path to your nvim config, so you do not
-> need to provide an absolute path to your snippet folder.
+> `vim.fn.stdpath("config")` returns the path to your nvim config.
 
 ## Note on JSON-formatting
 This plugin writes JSON files via `vim.encode.json`. This method always writes
