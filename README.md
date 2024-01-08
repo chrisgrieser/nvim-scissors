@@ -81,7 +81,7 @@ use {
 ```
 
 When [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) is
-installed, it is automatically used it as picker. Otherwise, `nvim-scissors`
+installed, it is automatically used as picker. Otherwise, `nvim-scissors`
 falls back to `vim.ui.select`. (You can use
 [dressing.nvim](https://github.com/stevearc/dressing.nvim) to re-direct
 `vim.ui.select` to [fzf-lua](https://github.com/ibhagwan/fzf-lua), if you prefer
