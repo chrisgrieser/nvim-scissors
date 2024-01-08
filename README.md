@@ -4,7 +4,7 @@
 <a href="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors">
 <img alt="badge" src="https://dotfyle.com/plugins/chrisgrieser/nvim-scissors/shield"/></a>
 
-Automagical editing and creation of snippets. 
+Automagical editing and creation of snippets.
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/c620958a-eef6-46c2-957a-8504733e0312>
 
@@ -81,28 +81,21 @@ use {
 ```
 
 When [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) is
-installed, automatically uses it as picker. If not, falls back to
-`vim.ui.select` (which can be customized to use pickers like
-[fzf-lua](https://github.com/ibhagwan/fzf-lua) by using
-[dressing.nvim](https://github.com/stevearc/dressing.nvim)).
+installed, it is automatically used it as picker. Otherwise, `nvim-scissors`
+falls back to `vim.ui.select`. (You can use
+[dressing.nvim](https://github.com/stevearc/dressing.nvim) to re-direct
+`vim.ui.select` to [fzf-lua](https://github.com/ibhagwan/fzf-lua), if you prefer
+it over telescope.)
 
 ## Usage
 The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
 code to create keymaps for them:
 
 ```lua
-vim.keymap.set(
-	"n",
-	"<leader>se",
-	function() require("scissors").editSnippet() end
-)
+vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
 
 -- When used in visual mode prefills the selection as body.
-vim.keymap.set(
-	{ "n", "x" },
-	"<leader>sa",
-	function() require("scissors").addNewSnippet() end
-)
+vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
 
 The popup intelligently adapts to changes in the prefix area. Each new line
@@ -118,7 +111,6 @@ VSCode format.)
 > done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ## Configuration
-
 The `.setup()` call is optional.
 
 ```lua
@@ -126,7 +118,7 @@ The `.setup()` call is optional.
 require("scissors").setup {
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
-		height = 0.4, -- relative to the window, between 0-1
+		height = 0.4, -- relative to the window, number between 0 and 1
 		width = 0.6,
 		border = "rounded",
 		keymaps = {
@@ -135,12 +127,12 @@ require("scissors").setup {
 			goBackToSearch = "<BS>",
 			delete = "<C-BS>",
 			openInFile = "<C-o>",
-			insertNextToken = "<C-t>", -- insert & normal mode
+			insertNextToken = "<C-t>", -- works in insert & normal mode
 		},
 	},
 	-- `none` writes as a minified json file using `:h vim.encode.json`.
-	-- `yq` and `jq` ensure formatted & sorted json files, which is relevant when
-	-- you are version control your snippets.
+	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
+	-- you version control your snippets.
 	jsonFormatter = "none", -- "yq"|"jq"|"none"
 }
 ```
