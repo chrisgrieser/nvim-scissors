@@ -141,10 +141,9 @@ require("scissors").setup {
 > `vim.fn.stdpath("config")` returns the path to your nvim config.
 
 ## Note on JSON-formatting
-This plugin writes JSON files via `vim.encode.json`. This method minifies the
-JSON before writing, the file in minified form, and also does not have a
-deterministic order of dictionary keys. That means that the JSON file can have a
-different order of keys before and after updating it via `nvim-scissors`.
+This plugin writes JSON files via `vim.encode.json`. This method saves 
+the file in minified form, and does not have a
+deterministic order of dictionary keys. 
 
 Both, minification, and unstable key order, are of course problem if you
 version-control your snippet collection. To solve this problem, `nvim-scissors`
