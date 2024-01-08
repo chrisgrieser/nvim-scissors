@@ -25,7 +25,7 @@ Automagical editing and creation of snippets.
 <!-- tocstop -->
 
 ## Features
-- Add new snippets, edit snippets, delete snippets.
+- Add new snippets, edit snippets, or delete snippets on the fly.
 - Syntax highlighting while you edit the snippet. Includes highlighting of
   tokens like `$0` or `${2:foobar}`.
 - Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
@@ -33,10 +33,10 @@ Automagical editing and creation of snippets.
   prefixes.
 - Auto-reloading of the new/edited snippet (if using `LuaSnip`).
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
-  `jq`. (Optional, but useful when version-controlling your snippet collection.)
+  `jq`. (Optional, but [useful when version-controlling your snippet collection](#note-on-json-formatting).)
 - Uses either `telescope` or `vim.ui.select` as pickers for snippet/file
   selection.
-- ℹ️ Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
+- Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 
 > [!TIP]
 > You can use
@@ -45,11 +45,10 @@ Automagical editing and creation of snippets.
 
 ## Rationale
 - Regrettably, there are innumerable formats in which snippets can be saved. The
-  only format supported by several applications and thus the closest thing to
-  a standard is the [VSCode snippet
+  closest thing to a standard is the [VSCode snippet
   format](https://code.visualstudio.com/docs/editor/userdefinedsnippets). For
-  portability, and to future-proof your snippet collection, it can make sense to
-  save your snippets in that format.
+  portability, easier sharing, and to future-proof your snippet collection, it
+  can make sense to save your snippets in that format.
 - Most notably, the VSCode format is used by plugins like
   [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and
   supported by [LuaSnip](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
@@ -58,11 +57,6 @@ Automagical editing and creation of snippets.
   the JSON for you.
 
 ## Installation
-
-> [!NOTE]
-> This plugin is only for editing and creating snippets.
-> It does not *expand* snippets, which is
-> done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ```lua
 -- lazy.nvim
@@ -88,7 +82,8 @@ use {
 
 When [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) is
 installed, automatically uses it as picker. If not, falls back to
-`vim.ui.select` (which is customizable with plugins like
+`vim.ui.select` (which can be customized to use pickers like
+[fzf-lua](https://github.com/ibhagwan/fzf-lua) by using
 [dressing.nvim](https://github.com/stevearc/dressing.nvim)).
 
 ## Usage
@@ -102,7 +97,7 @@ vim.keymap.set(
 	function() require("scissors").editSnippet() end
 )
 
--- when used in visual mode, will prefill the dedented selected text as body
+-- When used in visual mode prefills the selection as body.
 vim.keymap.set(
 	{ "n", "x" },
 	"<leader>sa",
@@ -111,10 +106,16 @@ vim.keymap.set(
 ```
 
 The popup intelligently adapts to changes in the prefix area. Each new line
-represents one prefix, and creating or removing lines thus changes the number
-of prefixes.
+represents one prefix, and creating or removing lines thus changes
+the number of prefixes. ("Prefix" is how trigger words are referred to in the
+VSCode format.)
 
 <img alt="Showcase prefix change" width=70% src="https://github.com/chrisgrieser/nvim-scissors/assets/73286100/d54f96c2-6751-46e9-9185-77b63eb2664a">
+
+> [!NOTE]
+> This plugin is only for editing and creating snippets.
+> It does not *expand* snippets, which is
+> done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ## Configuration
 
@@ -148,15 +149,16 @@ require("scissors").setup {
 > `vim.fn.stdpath("config")` returns the path to your nvim config.
 
 ## Note on JSON-formatting
-This plugin writes JSON files via `vim.encode.json`. This method always writes
-the file in minified form, and also does not have a deterministic order of
-dictionary keys. That means that the JSON file can have a different order of
-keys before and after updating it via `nvim-scissors`.
+This plugin writes JSON files via `vim.encode.json`. This method minifies the
+JSON before writing, the file in minified form, and also does not have a
+deterministic order of dictionary keys. That means that the JSON file can have a
+different order of keys before and after updating it via `nvim-scissors`.
 
-Both, minification and unstable key order, are of course problem if you version-control
-your snippet collection. To solve this problem, `nvim-scissors` can optionally
-unminify and sort the JSON files  via `yq` or `jq` after updating a snippet. (Both are
-also available via [mason.nvim](https://github.com/williamboman/mason.nvim).)
+Both, minification, and unstable key order, are of course problem if you
+version-control your snippet collection. To solve this problem, `nvim-scissors`
+can optionally unminify and sort the JSON files via `yq` or `jq` after updating
+a snippet. (Both are also available via
+[mason.nvim](https://github.com/williamboman/mason.nvim).)
 
 It is recommended to run `yq`/`jq` once on all files in your snippet
 collection, since the first time you edit a file, you would still get a large diff
