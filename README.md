@@ -34,8 +34,8 @@ Automagical editing and creation of snippets.
 - Auto-reloading of the new/edited snippet (if using `LuaSnip`).
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
   `jq`. (Optional, but [useful when version-controlling your snippet collection](#note-on-json-formatting).)
-- Uses either `telescope` or `vim.ui.select` as pickers for snippet/file
-  selection.
+- Snippet/file
+  selection via `telescope` or `vim.ui.select`.  
 - Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 
 > [!TIP]
@@ -98,7 +98,7 @@ vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() e
 vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
 
-The popup intelligently adapts to changes in the prefix area. Each new line
+The popup intelligently adapts to changes in the prefix area. Each line
 represents one prefix, and creating or removing lines thus changes
 the number of prefixes. ("Prefix" is how trigger words are referred to in the
 VSCode format.)
