@@ -19,7 +19,11 @@ Automagical editing and creation of snippets.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration](#configuration)
-- [Note on JSON-formatting](#note-on-json-formatting)
+- [Cookbook & FAQ](#cookbook--faq)
+	* [Example for the VSCode-style snippet format](#example-for-the-vscode-style-snippet-format)
+	* [Note on JSON-formatting](#note-on-json-formatting)
+	* [Friendly Snippet](#friendly-snippet)
+	* [Add auto-triggered snippets](#add-auto-triggered-snippets)
 - [Credits](#credits)
 
 <!-- tocstop -->
@@ -36,6 +40,8 @@ Automagical editing and creation of snippets.
   `jq`. (Optional, but [useful when version-controlling your snippet collection](#note-on-json-formatting).)
 - Snippet/file
   selection via `telescope` or `vim.ui.select`.  
+- New snippet files and the files required for the VSCode-style snippets are
+  automatically bootstrapped if they do not already exist.
 - Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 
 > [!TIP]
@@ -57,12 +63,18 @@ Automagical editing and creation of snippets.
   the JSON for you.
 
 ## Installation
+The plugin **requires** that your snippet are saved in the VSCode-style snippet
+format. If your snippet folder is empty, this plugin bootstraps a simple
+snippet folder for you.
+
+For the specific requirements of the VSCode-style snippets, please see
+[the FAQ section on the VSCode format](#example-for-the-vscode-style-snippet-format).
 
 ```lua
 -- lazy.nvim
 {
 	"chrisgrieser/nvim-scissors",
-	-- dependencies = "nvim-telescope/telescope.nvim",
+	dependencies = "nvim-telescope/telescope.nvim", -- optional
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
 	} 
@@ -71,7 +83,7 @@ Automagical editing and creation of snippets.
 -- packer
 use {
 	"chrisgrieser/nvim-scissors",
-	-- dependencies = "nvim-telescope/telescope.nvim",
+	dependencies = "nvim-telescope/telescope.nvim", -- optional
 	config = function()
 		require("scissors").setup ({
 			snippetDir = "path/to/your/snippetFolder",
@@ -140,10 +152,79 @@ require("scissors").setup {
 > [!TIP]
 > `vim.fn.stdpath("config")` returns the path to your nvim config.
 
-## Note on JSON-formatting
-This plugin writes JSON files via `vim.encode.json`. This method saves 
+## Cookbook & FAQ
+
+### Example for the VSCode-style snippet format
+This plugin requires that you have a snippet folder with the files required by
+the VSCode snippet format. This means that there must a `package.json` at the
+root containing the necessary information for which snippet file works for which
+filetype.
+
+Example file structure
+
+```txt
+snippetFolder
+├── package.json
+├── lua.json
+├── foobar
+│   └── python.json
+└── javascript.json
+```
+
+Example `package.json`
+
+```json
+{
+	"contributes": {
+		"snippets": [
+			{
+				"language": "lua",
+				"path": "./lua.json"
+			},
+			{
+				"language": "python",
+				"path": "./foobar/python.json"
+			},
+			{
+				"language": "javascript",
+				"path": "./javascript.json"
+			},
+		]
+	},
+	"name": "my-snippets"
+}
+```
+
+Example snippet file (here: `lua.json`)
+
+```json
+{
+  "autocmd (Filetype)": {
+    "body": [
+      "vim.api.nvim_create_autocmd(\"FileType\", {",
+      "\tpattern = \"${1:ft}\",",
+      "\tcallback = function()",
+      "\t\t$0",
+      "\tend,",
+      "})"
+    ],
+    "prefix": "autocmd (Filetype)"
+  },
+  "check if file exists": {
+    "body": "local fileExists = vim.loop.fs_stat(\"${1:filepath}\") ~= nil",
+    "prefix": "check if file exists"
+  },
+}
+```
+
+For details, read the official VSCode snippet documentation:
+- [snippet files](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
+- [package.json](https://code.visualstudio.com/api/language-extensions/snippet-guide)
+
+### Note on JSON-formatting
+This plugin writes JSON files via `vim.encode.json`. This method saves
 the file in minified form, and does not have a
-deterministic order of dictionary keys. 
+deterministic order of dictionary keys.
 
 Both, minification, and unstable key order, are of course problem if you
 version-control your snippet collection. To solve this problem, `nvim-scissors`
@@ -162,18 +243,40 @@ fd ".*\.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
 
 How to do the same with `jq` is left as an exercise to the reader.
 
+### Friendly Snippet
+Even though the snippets from the [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
+repository are written in the VSCode-style format, editing them directly is not
+supported. The reason being that any changes made would be overwritten as soon
+as the `friendly-snippets` repository is updated (which happens fairly
+regularly), and there is little `nvim-scissors` can do about that.
+
+What you can do, however, is to copy individual snippets files from the
+`friendly-snippets` repository into your own snippet folder, and edit them then.
+
+### Add auto-triggered snippets
+While the VSCode snippet format does not support auto-triggered snippets, the
+`LuaSnip` plugin allows you to [specify auto-triggering in the VSCode-style JSON
+files by adding the `luasnip` key](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
+
+`nvim-scissors` does not touch any keys other than `prefix` and `body` in the
+JSON files, so any additions via the `luasnip` key are preserved.
+
+> [!TIP]
+> You can use the `openInFile` keymap to directory open JSON file at the
+> snippet's location to make edits there easier.
+
 ## Credits
 <!-- vale Google.FirstPerson = NO -->
-__About Me__  
+**About Me**  
 In my day job, I am a sociologist studying the social mechanisms underlying the
 digital economy. For my PhD project, I investigate the governance of the app
 economy and how software ecosystems manage the tension between innovation and
 compatibility. If you are interested in this subject, feel free to get in touch.
 
-__Blog__  
+**Blog**  
 I also occasionally blog about vim: [Nano Tips for Vim](https://nanotipsforvim.prose.sh)
 
-__Profiles__  
+**Profiles**  
 - [reddit](https://www.reddit.com/user/pseudometapseudo)
 - [Discord](https://discordapp.com/users/462774483044794368/)
 - [Academic Website](https://chris-grieser.de/)
