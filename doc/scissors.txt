@@ -1,4 +1,4 @@
-*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 08
+*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 09
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
