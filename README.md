@@ -200,7 +200,7 @@ Example `package.json`:
 			{
 				"language": "all",
 				"path": "./allFiletypes.json"
-			},
+			}
 		]
 	},
 	"name": "my-snippets"
