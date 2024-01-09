@@ -4,45 +4,6 @@ local M = {}
 -- of the plugin on initialization instead of lazy-loading the parts when needed.
 local u = require("scissors.utils")
 
----@param snipDir string
----@return boolean
----@nodiscard
-local function validateAndBootstrapSnipDir(snipDir)
-	local rw = require("scissors.read-write-operations")
-	local snipDirInfo = vim.loop.fs_stat(snipDir)
-	local packageJsonExists = vim.loop.fs_stat(snipDir .. "/package.json") ~= nil
-
-	-- validate
-	if snipDirInfo and snipDirInfo.type ~= "directory" then
-		u.notify(("%q is not a directory."):format(snipDir), "error")
-		return false
-	elseif snipDirInfo and packageJsonExists then
-		local packageJson = rw.readAndParseJson(snipDir .. "/package.json")
-		if
-			vim.tbl_isempty(packageJson)
-			or not (packageJson.contributes and packageJson.contributes.snippets)
-		then
-			u.notify(
-				"The `package.json` in your snippetDir is invalid.\n"
-					.. "Please make sure it follows the required specification for VSCode snippets.",
-				"error"
-			)
-			return false
-		end
-	elseif snipDir:find("/friendly%-snippets/") then
-		u.notify(
-			"Snippets from friendly-snippets should be edited directly, since any changes would be overwritten as soon as the repo is updated.\n" ..
-			"Copy the snippet files you want from the repo into your snippet directory and edit them there.",
-			"error"
-		)
-		return false
-	end
-
-	-- bootstrap if snippetDir or `package.json` does not exist
-	if not snipDirInfo then vim.fn.mkdir(snipDir, "p") end
-	return true
-end
-
 --------------------------------------------------------------------------------
 
 ---@param userConfig? pluginConfig
@@ -50,13 +11,14 @@ function M.setup(userConfig) require("scissors.config").setupPlugin(userConfig o
 
 function M.editSnippet()
 	local snippetDir = require("scissors.config").config.snippetDir
-	if not validateAndBootstrapSnipDir(snippetDir) then return end
 
 	local rw = require("scissors.read-write-operations")
 	local vscodeFmt = require("scissors.vscode-format")
 	local picker = require("scissors.picker")
+	local vb = require("scissors.validate-bootstrap-snipdir")
 
 	-- get all snippets
+	if not vb.validate(snippetDir) then return end
 	local bufferFt = vim.bo.filetype
 	local allSnippets = {} ---@type SnippetObj[]
 
@@ -81,7 +43,13 @@ end
 
 function M.addNewSnippet()
 	local snippetDir = require("scissors.config").config.snippetDir
-	if not validateAndBootstrapSnipDir(snippetDir) then return end
+
+	local vb = require("scissors.validate-bootstrap-snipdir")
+	local vscodeFmt = require("scissors.vscode-format")
+
+	-- validate & bootstrap
+	if not vb.validate(snippetDir) then return end
+	vb.bootstrapIfNeeded(snippetDir)
 
 	-- if visual mode, prefill body with selected text
 	local bodyPrefill = { "" }
@@ -96,7 +64,6 @@ function M.addNewSnippet()
 	end
 
 	-- get list of all snippet files which matching filetype
-	local vscodeFmt = require("scissors.vscode-format")
 	local ft = vim.bo.filetype
 	local snipFilesForFt = vim.tbl_map(
 		function(file) return { path = file, ft = ft } end,

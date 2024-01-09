@@ -31,6 +31,15 @@ function M.readAndParseJson(path)
 end
 
 ---@param filepath string
+---@param text string
+function M.writeFile(filepath, text)
+	local file, _ = io.open(filepath, "w")
+	assert(file, "Could not write to " .. filepath)
+	file:write(text)
+	file:close()
+end
+
+---@param filepath string
 ---@param snippetsInFile VSCodeSnippetDict
 ---@return boolean success
 ---@nodiscard
@@ -62,13 +71,8 @@ function M.writeAndFormatSnippetFile(filepath, snippetsInFile)
 		end
 	end
 
-	-- WRITE
-	local file, _ = io.open(filepath, "w")
-	assert(file, "Could not write to " .. filepath)
-	file:write(jsonStr)
-	file:close()
-
-	-- RELOAD
+	-- WRITE & RELOAD
+	M.writeFile(filepath, jsonStr)
 	reloadSnippetFile(filepath)
 
 	return true
