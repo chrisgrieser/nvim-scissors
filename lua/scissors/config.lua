@@ -42,6 +42,9 @@ M.config = defaultConfig -- in case user does not call `setup`
 
 ---@param userConfig pluginConfig
 function M.setupPlugin(userConfig)
+	-- normalizing e.g. expands `~` in provided snippetDir
+	if userConfig.snippetDir then userConfig.snippetDir = vim.fs.normalize(userConfig.snippetDir) end
+
 	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig)
 end
 
