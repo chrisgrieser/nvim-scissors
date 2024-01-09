@@ -10,7 +10,7 @@ Table of Contents                                 *scissors-table-of-contents*
   - Installation                        |scissors-nvim-scissors--installation|
   - Usage                                      |scissors-nvim-scissors--usage|
   - Configuration                      |scissors-nvim-scissors--configuration|
-  - Note on JSON-formatting  |scissors-nvim-scissors--note-on-json-formatting|
+  - Cookbook & FAQ                    |scissors-nvim-scissors--cookbook-&-faq|
   - Credits                                  |scissors-nvim-scissors--credits|
 
 ==============================================================================
@@ -34,7 +34,11 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 - |scissors-installation|
 - |scissors-usage|
 - |scissors-configuration|
-- |scissors-note-on-json-formatting|
+- |scissors-cookbook-&-faq|
+    - |scissors-example-for-the-vscode-style-snippet-format|
+    - |scissors-note-on-json-formatting|
+    - |scissors-friendly-snippet|
+    - |scissors-add-auto-triggered-snippets|
 - |scissors-credits|
 
 
@@ -51,6 +55,8 @@ FEATURES                                    *scissors-nvim-scissors--features*
     `jq`. (Optional, but |scissors-useful-when-version-controlling-your-snippet-collection|.)
 - Snippet/file
     selection via `telescope` or `vim.ui.select`.
+- New snippet files and the files required for the VSCode-style snippets are
+    automatically bootstrapped if they do not already exist.
 - Supports only VSCode-style snippets <https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets>.
 
 
@@ -75,11 +81,18 @@ RATIONALE                                  *scissors-nvim-scissors--rationale*
 
 INSTALLATION                            *scissors-nvim-scissors--installation*
 
+The plugin **requires** that your snippet are saved in the VSCode-style snippet
+format. If your snippet folder is empty, this plugin bootstraps a simple
+snippet folder for you.
+
+For the specific requirements of the VSCode-style snippets, please see
+|scissors-the-faq-section-on-the-vscode-format|.
+
 >lua
     -- lazy.nvim
     {
         "chrisgrieser/nvim-scissors",
-        -- dependencies = "nvim-telescope/telescope.nvim",
+        dependencies = "nvim-telescope/telescope.nvim", -- optional
         opts = {
             snippetDir = "path/to/your/snippetFolder",
         } 
@@ -88,7 +101,7 @@ INSTALLATION                            *scissors-nvim-scissors--installation*
     -- packer
     use {
         "chrisgrieser/nvim-scissors",
-        -- dependencies = "nvim-telescope/telescope.nvim",
+        dependencies = "nvim-telescope/telescope.nvim", -- optional
         config = function()
             require("scissors").setup ({
                 snippetDir = "path/to/your/snippetFolder",
@@ -160,7 +173,79 @@ The `.setup()` call is optional.
 
   [!TIP] `vim.fn.stdpath("config")` returns the path to your nvim config.
 
-NOTE ON JSON-FORMATTING      *scissors-nvim-scissors--note-on-json-formatting*
+COOKBOOK & FAQ                        *scissors-nvim-scissors--cookbook-&-faq*
+
+
+EXAMPLE FOR THE VSCODE-STYLE SNIPPET FORMAT ~
+
+This plugin requires that you have a snippet folder with the files required by
+the VSCode snippet format. This means that there must a `package.json` at the
+root containing the necessary information for which snippet file works for
+which filetype.
+
+Example file structure
+
+>txt
+    snippetFolder
+    ├── package.json
+    ├── lua.json
+    ├── foobar
+    │   └── python.json
+    └── javascript.json
+<
+
+Example `package.json`
+
+>json
+    {
+        "contributes": {
+            "snippets": [
+                {
+                    "language": "lua",
+                    "path": "./lua.json"
+                },
+                {
+                    "language": "python",
+                    "path": "./foobar/python.json"
+                },
+                {
+                    "language": "javascript",
+                    "path": "./javascript.json"
+                },
+            ]
+        },
+        "name": "my-snippets"
+    }
+<
+
+Example snippet file (here: `lua.json`)
+
+>json
+    {
+      "autocmd (Filetype)": {
+        "body": [
+          "vim.api.nvim_create_autocmd(\"FileType\", {",
+          "\tpattern = \"${1:ft}\",",
+          "\tcallback = function()",
+          "\t\t$0",
+          "\tend,",
+          "})"
+        ],
+        "prefix": "autocmd (Filetype)"
+      },
+      "check if file exists": {
+        "body": "local fileExists = vim.loop.fs_stat(\"${1:filepath}\") ~= nil",
+        "prefix": "check if file exists"
+      },
+    }
+<
+
+For details, read the official VSCode snippet documentation: - snippet files
+<https://code.visualstudio.com/docs/editor/userdefinedsnippets> - package.json
+<https://code.visualstudio.com/api/language-extensions/snippet-guide>
+
+
+NOTE ON JSON-FORMATTING ~
 
 This plugin writes JSON files via `vim.encode.json`. This method saves the file
 in minified form, and does not have a deterministic order of dictionary keys.
@@ -182,6 +267,34 @@ diff from the initial sorting. You can do so with `yq` using this command:
 
 How to do the same with `jq` is left as an exercise to the reader.
 
+
+FRIENDLY SNIPPET ~
+
+Even though the snippets from the friendly-snippets
+<https://github.com/rafamadriz/friendly-snippets> repository are written in the
+VSCode-style format, editing them directly is not supported. The reason being
+that any changes made would be overwritten as soon as the `friendly-snippets`
+repository is updated (which happens fairly regularly), and there is little
+`nvim-scissors` can do about that.
+
+What you can do, however, is to copy individual snippets files from the
+`friendly-snippets` repository into your own snippet folder, and edit them
+then.
+
+
+ADD AUTO-TRIGGERED SNIPPETS ~
+
+While the VSCode snippet format does not support auto-triggered snippets, the
+`LuaSnip` plugin allows you to specify auto-triggering in the VSCode-style JSON
+files by adding the `luasnip` key
+<https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code>.
+
+`nvim-scissors` does not touch any keys other than `prefix` and `body` in the
+JSON files, so any additions via the `luasnip` key are preserved.
+
+
+  [!TIP] You can use the `openInFile` keymap to directory open JSON file at the
+  snippet’s location to make edits there easier.
 
 CREDITS                                      *scissors-nvim-scissors--credits*
 
