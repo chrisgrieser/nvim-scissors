@@ -21,9 +21,9 @@ Automagical editing and creation of snippets.
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
 	* [Example for the VSCode-style snippet format](#example-for-the-vscode-style-snippet-format)
-	* [Note on JSON-formatting](#note-on-json-formatting)
-	* [Friendly Snippet](#friendly-snippet)
-	* [Add auto-triggered snippets](#add-auto-triggered-snippets)
+	* [Version Controlling Snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
+	* [`friendly-snippets`](#friendly-snippets)
+	* [Auto-triggered Snippets](#auto-triggered-snippets)
 - [Credits](#credits)
 
 <!-- tocstop -->
@@ -37,11 +37,11 @@ Automagical editing and creation of snippets.
   prefixes.
 - Auto-reloading of the new/edited snippet (if using `LuaSnip`).
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
-  `jq`. (Optional, but [useful when version-controlling your snippet collection](#note-on-json-formatting).)
+  `jq`. (Optional, but [useful when version-controlling your snippet collection](#version-controlling-snippets-json-formatting).)
 - Snippet/file
   selection via `telescope` or `vim.ui.select`.  
-- New snippet files and the files required for the VSCode-style snippets are
-  automatically bootstrapped if they do not already exist.
+- Automatic bootstrapping of the snippet folder, if it is empty or missing a
+  `package.json`.
 - Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 
 > [!TIP]
@@ -103,7 +103,7 @@ If you are not using VSCode-style snippets already, here is how you load them
 with `LuaSnip`:
 
 ```lua
-require("luasnip.loaders.from_vscode").lazy_load({ paths = { "path/to/your/snippetFolder" } })
+require("luasnip.loaders.from_vscode").lazy_load { paths = { "path/to/your/snippetFolder" } }
 ```
 
 ## Usage
@@ -117,7 +117,7 @@ vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() e
 vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
 
-The popup intelligently adapts to changes in the prefix area. Each line
+The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes
 the number of prefixes. ("Prefix" is how trigger words are referred to in the
 VSCode format.)
@@ -149,7 +149,7 @@ require("scissors").setup {
 			insertNextToken = "<C-t>", -- works in insert & normal mode
 		},
 	},
-	-- `none` writes as a minified json file using `:h vim.encode.json`.
+	-- `none` writes as a minified json file using `vim.encode.json`.
 	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
 	-- you version control your snippets.
 	jsonFormatter = "none", -- "yq"|"jq"|"none"
@@ -208,7 +208,8 @@ Example `package.json`:
 ```
 
 > [!NOTE]
-> The special filetype `all` enables the snippets from that file globally.
+> The special filetype `all` enables the snippets globally, regardless of
+> filetype.
 
 Example snippet file (here: `nvim-lua.json`):
 
@@ -233,11 +234,12 @@ Example snippet file (here: `nvim-lua.json`):
 ```
 
 For details, read the official VSCode snippet documentation:
-- [snippet files](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
-- [package.json](https://code.visualstudio.com/api/language-extensions/snippet-guide)
+- [Snippet file specification](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
+- [`package.json` specification](https://code.visualstudio.com/api/language-extensions/snippet-guide)
+- [LuaSnip-specific additions to the format](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code)
 
-### Note on JSON-formatting
-This plugin writes JSON files via `vim.encode.json`. This method saves
+### Version Controlling Snippets: JSON-formatting
+This plugin writes JSON files via `vim.encode.json`. That method saves
 the file in minified form, and does not have a
 deterministic order of dictionary keys.
 
@@ -258,7 +260,7 @@ fd ".*\.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
 
 How to do the same with `jq` is left as an exercise to the reader.
 
-### Friendly Snippet
+### `friendly-snippets`
 Even though the snippets from the [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
 repository are written in the VSCode-style format, editing them directly is not
 supported. The reason being that any changes made would be overwritten as soon
@@ -268,9 +270,9 @@ regularly), and there is little `nvim-scissors` can do about that.
 What you can do, however, is to copy individual snippets files from the
 `friendly-snippets` repository into your own snippet folder, and edit them then.
 
-### Add auto-triggered snippets
-While the VSCode snippet format does not support auto-triggered snippets, the
-`LuaSnip` plugin allows you to [specify auto-triggering in the VSCode-style JSON
+### Auto-triggered Snippets
+While the VSCode snippet format does not support auto-triggered snippets,
+`LuaSnip` allows you to [specify auto-triggering in the VSCode-style JSON
 files by adding the `luasnip` key](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
 
 `nvim-scissors` does not touch any keys other than `prefix` and `body` in the
