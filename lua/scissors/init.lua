@@ -15,7 +15,7 @@ function M.editSnippet()
 	local rw = require("scissors.read-write-operations")
 	local vscodeFmt = require("scissors.vscode-format")
 	local picker = require("scissors.picker")
-	local vb = require("scissors.validate-bootstrap-snipdir")
+	local vb = require("scissors.validate-and-bootstrap")
 
 	-- get all snippets
 	if not vb.validate(snippetDir) then return end
@@ -44,12 +44,12 @@ end
 function M.addNewSnippet()
 	local snippetDir = require("scissors.config").config.snippetDir
 
-	local vb = require("scissors.validate-bootstrap-snipdir")
+	local vb = require("scissors.validate-and-bootstrap")
 	local vscodeFmt = require("scissors.vscode-format")
 
 	-- validate & bootstrap
 	if not vb.validate(snippetDir) then return end
-	vb.bootstrapIfNeeded(snippetDir)
+	vb.bootstrapSnipDir(snippetDir)
 
 	-- if visual mode, prefill body with selected text
 	local bodyPrefill = { "" }
@@ -78,9 +78,13 @@ function M.addNewSnippet()
 	---@type snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
+	-- create new snippet file, if non exists for the directory
 	if #allSnipFiles == 0 then
-		u.notify("No snippet files found for filetype: " .. ft, "warn")
-	elseif #allSnipFiles == 1 then
+		local newSnipFile = vb.bootstrapSnippetFile(ft)
+		table.insert(allSnipFiles, newSnipFile)
+	end
+
+	if #allSnipFiles == 1 then
 		-- if only one snippet file for the filetype, skip the picker and add directory
 		require("scissors.edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
 	else

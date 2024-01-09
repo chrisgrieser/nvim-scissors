@@ -44,7 +44,7 @@ end
 
 -- bootstrap if snippetDir and/or `package.json` do not exist
 ---@param snipDir string
-function M.bootstrapIfNeeded(snipDir)
+function M.bootstrapSnipDir(snipDir)
 	local snipDirExists = vim.loop.fs_stat(snipDir) ~= nil
 	local packageJsonExists = vim.loop.fs_stat(snipDir .. "/package.json") ~= nil
 	local msg = ""
@@ -69,6 +69,37 @@ function M.bootstrapIfNeeded(snipDir)
 	end
 
 	if msg ~= "" then u.notify(vim.trim(msg)) end
+end
+
+---@param ft string
+---@return snipFile -- the newly created snippet file
+function M.bootstrapSnippetFile(ft)
+	u.notify("No snippet files found for filetype: " .. ft .. "\nBootstraping one.")
+
+	local snipDir = require("scissors.config").config.snippetDir
+	local newSnipName = ft .. ".json"
+
+	-- create empty snippet file
+	local newSnipFilepath
+	while true do
+		newSnipFilepath = snipDir .. "/" .. newSnipName
+		if vim.loop.fs_stat(newSnipFilepath) == nil then break end
+		newSnipName = newSnipName .. "-1"
+	end
+	rw.writeFile(newSnipFilepath, "{}")
+
+	-- update package.json
+	local packageJson = rw.readAndParseJson(snipDir .. "/package.json") ---@type packageJson
+	table.insert(packageJson.contributes.snippets, {
+		language = { ft },
+		path = "./" .. newSnipName,
+	})
+	local packageJsonStr = vim.json.encode(packageJson)
+	assert(packageJsonStr, "Could not encode package.json")
+	rw.writeFile(snipDir .. "/package.json", packageJsonStr)
+
+	-- return snipFile to directly add to it
+	return { ft = ft, path = newSnipFilepath }
 end
 
 --------------------------------------------------------------------------------
