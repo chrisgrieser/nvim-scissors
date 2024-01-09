@@ -94,9 +94,7 @@ function M.bootstrapSnippetFile(ft)
 		language = { ft },
 		path = "./" .. newSnipName,
 	})
-	local packageJsonStr = vim.json.encode(packageJson)
-	assert(packageJsonStr, "Could not encode package.json")
-	rw.writeFile(snipDir .. "/package.json", packageJsonStr)
+	rw.writeAndFormatSnippetFile(snipDir .. "/package.json", packageJson)
 
 	-- return snipFile to directly add to it
 	return { ft = ft, path = newSnipFilepath }

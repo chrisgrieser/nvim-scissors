@@ -40,11 +40,10 @@ function M.writeFile(filepath, text)
 end
 
 ---@param filepath string
----@param snippetsInFile VSCodeSnippetDict
+---@param jsonObj VSCodeSnippetDict|packageJson
 ---@return boolean success
----@nodiscard
-function M.writeAndFormatSnippetFile(filepath, snippetsInFile)
-	local ok, jsonStr = pcall(vim.json.encode, snippetsInFile)
+function M.writeAndFormatSnippetFile(filepath, jsonObj)
+	local ok, jsonStr = pcall(vim.json.encode, jsonObj)
 	assert(ok and jsonStr, "Could not encode JSON.")
 
 	-- FORMAT
@@ -73,7 +72,7 @@ function M.writeAndFormatSnippetFile(filepath, snippetsInFile)
 
 	-- WRITE & RELOAD
 	M.writeFile(filepath, jsonStr)
-	reloadSnippetFile(filepath)
+	if not vim.endswith(filepath, "package.json") then reloadSnippetFile(filepath) end
 
 	return true
 end
