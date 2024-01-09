@@ -99,6 +99,13 @@ falls back to `vim.ui.select`. (You can use
 `vim.ui.select` to [fzf-lua](https://github.com/ibhagwan/fzf-lua), if you prefer
 it over telescope.)
 
+If you are not using VSCode-style snippets already, here is how you load them
+with `LuaSnip`:
+
+```lua
+require("luasnip.loaders.from_vscode").lazy_load({ paths = { "path/to/your/snippetFolder" } })
+```
+
 ## Usage
 The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
 code to create keymaps for them:
@@ -160,34 +167,39 @@ the VSCode snippet format. This means that there must a `package.json` at the
 root containing the necessary information for which snippet file works for which
 filetype.
 
-Example file structure
+Example file structure inside the `snippetDir`:
 
 ```txt
-snippetFolder
+.
 ├── package.json
-├── lua.json
-├── foobar
-│   └── python.json
-└── javascript.json
+├── python.json
+├── project-specific
+│   └── nvim-lua.json
+├── javascript.json
+└── allFiletypes.json
 ```
 
-Example `package.json`
+Example `package.json`:
 
 ```json
 {
 	"contributes": {
 		"snippets": [
 			{
-				"language": "lua",
-				"path": "./lua.json"
+				"language": "python",
+				"path": "./python.json"
 			},
 			{
-				"language": "python",
-				"path": "./foobar/python.json"
+				"language": "lua",
+				"path": "./project-specific/nvim-lua.json"
 			},
 			{
 				"language": "javascript",
 				"path": "./javascript.json"
+			},
+			{
+				"language": "all",
+				"path": "./allFiletypes.json"
 			},
 		]
 	},
@@ -195,7 +207,10 @@ Example `package.json`
 }
 ```
 
-Example snippet file (here: `lua.json`)
+> [!NOTE]
+> The special filetype `all` enables the snippets from that file globally.
+
+Example snippet file (here: `nvim-lua.json`):
 
 ```json
 {
@@ -210,9 +225,9 @@ Example snippet file (here: `lua.json`)
     ],
     "prefix": "autocmd (Filetype)"
   },
-  "check if file exists": {
+  "file exists": {
     "body": "local fileExists = vim.loop.fs_stat(\"${1:filepath}\") ~= nil",
-    "prefix": "check if file exists"
+    "prefix": "file exists"
   },
 }
 ```
