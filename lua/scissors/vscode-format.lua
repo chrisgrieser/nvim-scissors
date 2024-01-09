@@ -132,6 +132,7 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	local originalKey = snip.originalKey
 	snip.originalKey = nil -- delete keys set by this plugin
 	snip.fullPath = nil
+	snip.filetype = nil
 	snip.body = #body == 1 and body[1] or body -- flatten if only one element
 	snip.prefix = #prefix == 1 and prefix[1] or prefix
 	---@diagnostic disable-next-line: cast-type-mismatch -- we are converting it here
