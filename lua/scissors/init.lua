@@ -17,8 +17,20 @@ function M.editSnippet()
 	local picker = require("scissors.picker")
 	local vb = require("scissors.validate-and-bootstrap")
 
-	-- get all snippets
+	-- validate
 	if not vb.validate(snippetDir) then return end
+	local packageJsonExist = vim.loop.fs_stat(snippetDir .. "/package.json") ~= nil
+	if not packageJsonExist then
+		u.notify(
+			"Your snippet directory is missing a `package.json`.\n"
+				.. "The file can be bootstrapped by adding a new snippet via:\n"
+				.. "`:lua require('scissors').addNewSnippet()`",
+			"warn"
+		)
+		return
+	end
+
+	-- get all snippets
 	local bufferFt = vim.bo.filetype
 	local allSnippets = {} ---@type SnippetObj[]
 
