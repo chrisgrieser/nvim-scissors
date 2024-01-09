@@ -20,7 +20,7 @@ local a = vim.api
 ---@nodiscard
 local function getPrefixCount(prefixBodySep)
 	local extM = prefixBodySep
-	local newCount = a.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1]
+	local newCount = a.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1] + 1
 	return newCount
 end
 
@@ -152,15 +152,14 @@ function M.editInPopup(snip, mode)
 	-- prefixBodySeparator -> INFO its position determines number of prefixes
 	local winWidth = a.nvim_win_get_width(winnr)
 	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type extMarkInfo
-	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, #snip.prefix, 0, {
+	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, #snip.prefix - 1, 0, {
 		virt_lines = {
 			{ { ("═"):rep(winWidth), "FloatBorder" } },
 		},
 		virt_lines_leftcol = true,
-		-- "above line n" instead of "below line n-1" ensures that creating a new
-		-- line at the last line above the virtual line places the line above the
-		-- virtual line and not below it.
-		virt_lines_above = true,
+		-- "above line n" instead of "below line n-1" changes where new lines
+		-- occur when creating them. The latter appears to be more intuitive.
+		virt_lines_above = false,
 	})
 
 	-- continuously update highlight prefix lines and add label
