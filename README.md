@@ -146,7 +146,8 @@ require("scissors").setup {
 			goBackToSearch = "<BS>",
 			delete = "<C-BS>",
 			openInFile = "<C-o>",
-			insertNextToken = "<C-t>", -- works in insert & normal mode
+			insertNextToken = "<C-t>", -- insert & normal mode
+			jumpBetweenBodyAndPrefix = "<Tab>", -- insert & normal mode
 		},
 	},
 	-- `none` writes as a minified json file using `vim.encode.json`.

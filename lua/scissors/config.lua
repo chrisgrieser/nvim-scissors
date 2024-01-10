@@ -13,6 +13,7 @@ local M = {}
 ---@field openInFile string
 ---@field insertNextToken string
 ---@field goBackToSearch string
+---@field jumpBetweenBodyAndPrefix string
 
 ---@type pluginConfig
 local defaultConfig = {
@@ -28,6 +29,7 @@ local defaultConfig = {
 			delete = "<C-BS>",
 			openInFile = "<C-o>",
 			insertNextToken = "<C-t>", -- insert & normal mode
+			jumpBetweenBodyAndPrefix = "<Tab>", -- insert & normal mode
 		},
 	},
 	-- `none` writes as a minified json file using `:h vim.encode.json`.
