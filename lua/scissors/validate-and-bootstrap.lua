@@ -74,7 +74,7 @@ end
 ---@param ft string
 ---@return snipFile -- the newly created snippet file
 function M.bootstrapSnippetFile(ft)
-	u.notify("No snippet files found for filetype: " .. ft .. "\nBootstraping one.")
+	u.notify("No snippet files found for filetype: " .. ft .. "\nBootstrapping one.")
 
 	local snipDir = require("scissors.config").config.snippetDir
 	local newSnipName = ft .. ".json"
