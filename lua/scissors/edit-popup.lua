@@ -99,12 +99,12 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		local currentLine = a.nvim_win_get_cursor(0)[1]
 		local isInBody = currentLine > prefixCount
 		local moveToLine = isInBody and 1 or currentLine + 1
-		a.nvim_win_set_cursor(winnr, {moveToLine, 0})
+		a.nvim_win_set_cursor(winnr, { moveToLine, 0 })
 	end, opts)
 
 	-- HACK workaround to deal with prefix-deletion on last prefix line (see issue #6)
 	-- (no other configuration of the virtual line fixes this, could be nvim-bug?)
-	keymap("n", "dd", function ()
+	keymap("n", "dd", function()
 		local prefixCount = getPrefixCount(prefixBodySep)
 		local currentLine = a.nvim_win_get_cursor(0)[1]
 		if currentLine == prefixCount then return "^DkJ" end
