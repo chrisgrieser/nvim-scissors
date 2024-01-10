@@ -142,7 +142,7 @@ require("scissors").setup {
 		border = "rounded",
 		keymaps = {
 			cancel = "q",
-			saveChanges = "<CR>",
+			saveChanges = "<CR>", -- can also use `:w`
 			goBackToSearch = "<BS>",
 			delete = "<C-BS>",
 			openInFile = "<C-o>",

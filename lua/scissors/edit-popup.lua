@@ -37,15 +37,20 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		a.nvim_win_close(winnr, true)
 		a.nvim_buf_delete(bufnr, { force = true })
 	end
-
-	keymap("n", mappings.cancel, closePopup, opts)
-
-	keymap("n", mappings.saveChanges, function()
+	local function confirmChanges()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
 		local newPrefixCount = getPrefixCount(prefixBodySep)
 		vscodeFmt.updateSnippetFile(snip, editedLines, newPrefixCount)
 		closePopup()
-	end, opts)
+	end
+
+	keymap("n", mappings.cancel, closePopup, opts)
+
+	keymap("n", mappings.saveChanges, confirmChanges, opts)
+	-- so people in the habit of saving via `:w` do not get an error
+	vim.cmd.cnoreabbrev("<buffer> w ScissorsSave")
+	vim.cmd.cnoreabbrev("<buffer> write ScissorsSave")
+	vim.api.nvim_buf_create_user_command(bufnr, "ScissorsSave", confirmChanges, {})
 
 	keymap("n", mappings.delete, function()
 		if mode == "new" then
