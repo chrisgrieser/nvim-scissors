@@ -24,12 +24,12 @@ local defaultConfig = {
 		border = "rounded",
 		keymaps = {
 			cancel = "q",
-			saveChanges = "<CR>", -- can also use `:w`
+			saveChanges = "<CR>", -- alternatively, can also use `:w`
 			goBackToSearch = "<BS>",
 			delete = "<C-BS>",
 			openInFile = "<C-o>",
 			insertNextToken = "<C-t>", -- insert & normal mode
-			jumpBetweenBodyAndPrefix = "<Tab>", -- insert & normal mode
+			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
 		},
 	},
 	-- `none` writes as a minified json file using `:h vim.encode.json`.
