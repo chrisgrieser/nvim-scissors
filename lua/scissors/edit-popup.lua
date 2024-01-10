@@ -83,6 +83,15 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 			require("scissors").editSnippet()
 		end
 	end, opts)
+
+	-- HACK workaround to deal with prefix-deletion on last prefix line (see issue #6)
+	-- (no other configuration of the virtual line fixes this, could be nvim-bug?)
+	keymap("n", "dd", function ()
+		local prefixCount = getPrefixCount(prefixBodySep)
+		local currentLine = a.nvim_win_get_cursor(0)[1]
+		if currentLine == prefixCount then return "^DkJ" end
+		return "dd"
+	end, vim.tbl_extend("keep", opts, { expr = true }))
 end
 
 --------------------------------------------------------------------------------
@@ -152,7 +161,8 @@ function M.editInPopup(snip, mode)
 	end
 	u.tokenHighlight(bufnr)
 
-	-- prefixBodySeparator -> INFO its position determines number of prefixes
+	-- PREFIX-BODY-SEPARATOR
+	-- (INFO its position determines number of prefixes)
 	local winWidth = a.nvim_win_get_width(winnr)
 	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type extMarkInfo
 	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, #snip.prefix - 1, 0, {
