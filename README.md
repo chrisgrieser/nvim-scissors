@@ -162,10 +162,10 @@ require("scissors").setup {
 ## Cookbook & FAQ
 
 ### Example for the VSCode-style snippet format
-This plugin requires that you have a snippet folder with the files required by
-the VSCode snippet format. This means that there must a `package.json` at the
-root containing the necessary information for which snippet file works for which
-filetype.
+This plugin requires that you have a valid VSCode snippet folder. In addition to
+saving the snippets in the required JSON format, there must also be a
+`package.json` at the root of the snippet folder, specifying which files are
+should be used for which languages.
 
 Example file structure inside the `snippetDir`:
 
@@ -194,7 +194,7 @@ Example `package.json`:
 				"path": "./project-specific/nvim-lua.json"
 			},
 			{
-				"language": "javascript",
+				"language": ["javascript", "typescript"],
 				"path": "./javascript.json"
 			},
 			{
