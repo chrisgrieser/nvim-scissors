@@ -34,8 +34,8 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	local opts = { buffer = bufnr, nowait = true, silent = true }
 	local mappings = config.editSnippetPopup.keymaps
 	local function closePopup()
-		a.nvim_win_close(winnr, true)
-		a.nvim_buf_delete(bufnr, { force = true })
+		if a.nvim_win_is_valid(winnr) then a.nvim_win_close(winnr, true) end
+		if a.nvim_buf_is_valid(bufnr) then a.nvim_buf_delete(bufnr, { force = true }) end
 	end
 	local function confirmChanges()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
@@ -45,6 +45,14 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	end
 
 	keymap("n", mappings.cancel, closePopup, opts)
+
+	-- also close the popup on leaving buffer, ensures there is not leftover
+	-- buffer when user closes popup in a different way, such as `:close`.
+	vim.api.nvim_create_autocmd("BufLeave", {
+		buffer = bufnr,
+		once = true,
+		callback = closePopup,
+	})
 
 	keymap("n", mappings.saveChanges, confirmChanges, opts)
 	-- so people in the habit of saving via `:w` do not get an error
