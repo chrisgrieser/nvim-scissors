@@ -39,12 +39,14 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	end
 
 	keymap("n", mappings.cancel, closePopup, opts)
+
 	keymap("n", mappings.saveChanges, function()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
 		local newPrefixCount = getPrefixCount(prefixBodySep)
 		vscodeFmt.updateSnippetFile(snip, editedLines, newPrefixCount)
 		closePopup()
 	end, opts)
+
 	keymap("n", mappings.delete, function()
 		if mode == "new" then
 			u.notify("Cannot delete a snippet that has not been saved yet.", "warn")
@@ -53,11 +55,13 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		rw.deleteSnippet(snip)
 		closePopup()
 	end, opts)
+
 	keymap("n", mappings.openInFile, function()
 		closePopup()
 		local locationInFile = snip.originalKey:gsub(" ", [[\ ]])
 		vim.cmd(("edit +/%q %s"):format(locationInFile, snip.fullPath))
 	end, opts)
+
 	keymap({ "n", "i" }, mappings.insertNextToken, function()
 		local bufText = table.concat(a.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
 		local numbers = {}
@@ -75,6 +79,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		a.nvim_win_set_cursor(0, { row, col + #insertStr - 1 })
 		vim.cmd.startinsert()
 	end, opts)
+
 	keymap("n", mappings.goBackToSearch, function()
 		closePopup()
 		if mode == "new" then
