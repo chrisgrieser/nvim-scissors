@@ -125,11 +125,14 @@ function M.editInPopup(snip, mode)
 	a.nvim_buf_set_name(bufnr, bufName)
 	a.nvim_buf_set_option(bufnr, "buftype", "nofile")
 	a.nvim_buf_set_option(bufnr, "filetype", snip.filetype)
+	local supportsFooter = vim.fn.has("nvim-0.10") == 1
 
 	local winnr = a.nvim_open_win(bufnr, true, {
 		relative = "win",
 		title = winTitle,
+		footer = supportsFooter and snip.description or nil,
 		title_pos = "center",
+		footer_pos = supportsFooter and "left" or nil,
 		border = conf.border,
 		-- centered window
 		width = math.floor(conf.width * a.nvim_win_get_width(0)),
