@@ -17,6 +17,7 @@ local u = require("scissors.utils")
 ---@param formatter function(SnippetObj): string formats SnippetObj into display text
 ---@param prompt string
 function M.selectSnippet(snippets, formatter, prompt)
+	local alsoMatchBody = require("scissors.config").config.telescope.alsoSearchSnippetBody
 	pickers
 		.new({}, {
 			prompt_title = prompt:gsub(": ?$", ""),
@@ -35,10 +36,12 @@ function M.selectSnippet(snippets, formatter, prompt)
 			finder = finders.new_table {
 				results = snippets,
 				entry_maker = function(snip)
+					local matcher = table.concat(snip.prefix, " ")
+					if alsoMatchBody then matcher = matcher .. " " .. table.concat(snip.body, "\n") end
 					return {
 						value = snip,
 						display = formatter(snip),
-						ordinal = formatter(snip),
+						ordinal = matcher,
 					}
 				end,
 			},

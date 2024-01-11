@@ -4,6 +4,7 @@ local M = {}
 ---@class (exact) pluginConfig
 ---@field snippetDir string
 ---@field editSnippetPopup { height: number, width: number, border: string, keymaps: popupKeymaps }
+---@field telescope telescopeConfig
 ---@field jsonFormatter "yq"|"jq"|"none"
 
 ---@class (exact) popupKeymaps
@@ -14,6 +15,9 @@ local M = {}
 ---@field insertNextToken string
 ---@field goBackToSearch string
 ---@field jumpBetweenBodyAndPrefix string
+
+---@class (exact) telescopeConfig
+---@field alsoSearchSnippetBody boolean
 
 ---@type pluginConfig
 local defaultConfig = {
@@ -31,6 +35,11 @@ local defaultConfig = {
 			insertNextToken = "<C-t>", -- insert & normal mode
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
 		},
+	},
+	telescope = {
+		-- By default, the query only searches snippet prefixes. Set this to
+		-- `true` to also search the body of the snippets.
+		alsoSearchSnippetBody = false,
 	},
 	-- `none` writes as a minified json file using `:h vim.encode.json`.
 	-- `yq` and `jq` ensure formatted & sorted json files, which is relevant when
