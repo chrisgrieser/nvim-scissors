@@ -17,7 +17,7 @@ function M.editSnippet()
 	local picker = require("scissors.picker")
 	local vb = require("scissors.validate-and-bootstrap")
 
-	-- validate
+	-- GUARD
 	if not vb.validate(snippetDir) then return end
 	local packageJsonExist = vim.loop.fs_stat(snippetDir .. "/package.json") ~= nil
 	if not packageJsonExist then
@@ -44,14 +44,9 @@ function M.editSnippet()
 		local snipsInFile = vscodeFmt.restructureVsCodeObj(vscodeJson, absPath, "plaintext")
 		vim.list_extend(allSnippets, snipsInFile)
 	end
-	if #allSnippets == 0 and bufferFt == "" then
-		u.notify(
-			"Buffer has no filetype, and no snippet file for the special filetype 'all' could be found.\n\n"
-				.. "Aborting.",
-			"error"
-		)
-		return
-	elseif #allSnippets == 0 and bufferFt ~= "" then
+
+	-- GUARD
+	if #allSnippets == 0 then
 		u.notify("No snippets found for filetype: " .. bufferFt, "warn")
 		return
 	end
@@ -67,7 +62,7 @@ function M.addNewSnippet()
 	local vscodeFmt = require("scissors.vscode-format")
 	local bufferFt = vim.bo.filetype
 
-	-- validate & bootstrap
+	-- GUARD & bootstrap
 	if not vb.validate(snippetDir) then return end
 	vb.bootstrapSnipDir(snippetDir)
 
@@ -97,22 +92,15 @@ function M.addNewSnippet()
 	---@type snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
-	-- create new snippet file, if non exists for the directory
-	if #allSnipFiles == 0 and bufferFt == "" then
-		u.notify(
-			"Buffer has no filetype, and no snippet file for the special filetype 'all' could be found.\n\n"
-				.. "Aborting. Please switch to a buffer with a filetype.",
-			"error"
-		)
-		return
-	elseif #allSnipFiles == 0 and bufferFt ~= "" then
+	-- bootstrap new snippet file, if none exists
+	if #allSnipFiles == 0 then
 		local newSnipFile = vb.bootstrapSnippetFile(bufferFt)
 		if not newSnipFile then return end
 		table.insert(allSnipFiles, newSnipFile)
 	end
 
+	-- if only one snippet file for the filetype, skip the picker and add directory
 	if #allSnipFiles == 1 then
-		-- if only one snippet file for the filetype, skip the picker and add directory
 		require("scissors.edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
 	else
 		require("scissors.picker").addSnippet(allSnipFiles, bodyPrefill)

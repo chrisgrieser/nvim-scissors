@@ -18,8 +18,6 @@ local config = require("scissors.config").config
 ---@param filetype "all"|string
 ---@return string[] absPathsOfSnipFileForThisFt
 function M.getSnippetFilesForFt(filetype)
-	if filetype == "" then return {} end
-
 	local packageJson = rw.readAndParseJson(config.snippetDir .. "/package.json")
 	---@cast packageJson packageJson
 

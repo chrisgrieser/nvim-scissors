@@ -8,15 +8,23 @@ local M = {}
 ---@return boolean
 ---@nodiscard
 function M.validate(snipDir)
+	-- empty filetype
+	if vim.bo.filetype == "" then
+		u.notify("nvim-scissors requires the current buffer to have a filetype.", "warn")
+		return false
+	end
+
 	local snipDirInfo = vim.loop.fs_stat(snipDir)
 	local packageJsonExists = vim.loop.fs_stat(snipDir .. "/package.json") ~= nil
 	local isFriendlySnippetsDir = snipDir:find("/friendly%-snippets/")
 		and not vim.startswith(snipDir, vim.fn.stdpath("config"))
 
-	-- validate
+	-- snippetDir invalid
 	if snipDirInfo and snipDirInfo.type ~= "directory" then
 		u.notify(("%q is not a directory."):format(snipDir), "error")
 		return false
+
+	-- package.json invalid
 	elseif snipDirInfo and packageJsonExists then
 		local packageJson = rw.readAndParseJson(snipDir .. "/package.json")
 		if
@@ -30,6 +38,8 @@ function M.validate(snipDir)
 			)
 			return false
 		end
+
+	-- using friendly-snippets
 	elseif isFriendlySnippetsDir then
 		u.notify(
 			"Snippets from friendly-snippets should be edited directly, since any changes would be overwritten as soon as the repo is updated.\n"
