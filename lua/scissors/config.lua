@@ -9,7 +9,7 @@ local M = {}
 ---@class (exact) popupKeymaps
 ---@field cancel string
 ---@field saveChanges string
----@field delete string
+---@field deleteSnippet string
 ---@field openInFile string
 ---@field insertNextToken string
 ---@field goBackToSearch string
@@ -26,7 +26,7 @@ local defaultConfig = {
 			cancel = "q",
 			saveChanges = "<CR>", -- alternatively, can also use `:w`
 			goBackToSearch = "<BS>",
-			delete = "<C-BS>",
+			deleteSnippet = "<C-BS>",
 			openInFile = "<C-o>",
 			insertNextToken = "<C-t>", -- insert & normal mode
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
@@ -46,6 +46,13 @@ M.config = defaultConfig -- in case user does not call `setup`
 function M.setupPlugin(userConfig)
 	-- normalizing e.g. expands `~` in provided snippetDir
 	if userConfig.snippetDir then userConfig.snippetDir = vim.fs.normalize(userConfig.snippetDir) end
+
+	---@deprecated keymap.delete
+	if userConfig.editSnippetPopup and userConfig.editSnippetPopup.keymaps and userConfig.editSnippetPopup.keymaps.delete then ---@diagnostic disable-line: undefined-field
+		local notify = require("scissors.utils").notify
+		notify("`keymap.delete` is deprecated. Use `keymap.deleteSnippet instead.", "warn")
+		userConfig.editSnippetPopup.keymaps.deleteSnippet = userConfig.editSnippetPopup.keymaps.delete ---@diagnostic disable-line: undefined-field
+	end
 
 	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig)
 end
