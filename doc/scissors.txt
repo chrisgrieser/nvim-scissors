@@ -1,4 +1,4 @@
-*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 10
+*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 11
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -170,6 +170,11 @@ The `.setup()` call is optional.
                 insertNextToken = "<C-t>", -- insert & normal mode
                 jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
             },
+        },
+        telescope = {
+            -- By default, the query only searches snippet prefixes. Set this to
+            -- `true` to also search the body of the snippets.
+            alsoSearchSnippetBody = false,
         },
         -- `none` writes as a minified json file using `vim.encode.json`.
         -- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
