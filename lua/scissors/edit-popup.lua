@@ -60,7 +60,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	vim.cmd.cnoreabbrev("<buffer> write ScissorsSave")
 	vim.api.nvim_buf_create_user_command(bufnr, "ScissorsSave", confirmChanges, {})
 
-	keymap("n", mappings.delete, function()
+	keymap("n", mappings.deleteSnippet, function()
 		if mode == "new" then
 			u.notify("Cannot delete a snippet that has not been saved yet.", "warn")
 			return
