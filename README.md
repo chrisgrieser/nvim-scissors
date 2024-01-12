@@ -144,7 +144,7 @@ require("scissors").setup {
 			cancel = "q",
 			saveChanges = "<CR>", -- alternatively, can also use `:w`
 			goBackToSearch = "<BS>",
-			delete = "<C-BS>",
+			deleteSnippet = "<C-BS>",
 			openInFile = "<C-o>",
 			insertNextToken = "<C-t>", -- insert & normal mode
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
