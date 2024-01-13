@@ -1,7 +1,7 @@
 local config = require("scissors.config").config
-local rw = require("scissors.read-write-operations")
+local rw = require("scissors.vscode-format.read-write")
 local u = require("scissors.utils")
-local vscodeFmt = require("scissors.vscode-format")
+local convert = require("scissors.vscode-format.convert-object")
 
 local M = {}
 local a = vim.api
@@ -40,7 +40,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	local function confirmChanges()
 		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
 		local newPrefixCount = getPrefixCount(prefixBodySep)
-		vscodeFmt.updateSnippetFile(snip, editedLines, newPrefixCount)
+		convert.updateSnippetFile(snip, editedLines, newPrefixCount)
 		closePopup()
 	end
 

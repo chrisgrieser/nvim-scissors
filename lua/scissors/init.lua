@@ -12,10 +12,10 @@ function M.setup(userConfig) require("scissors.config").setupPlugin(userConfig o
 function M.editSnippet()
 	local snippetDir = require("scissors.config").config.snippetDir
 
-	local rw = require("scissors.read-write-operations")
-	local vscodeFmt = require("scissors.vscode-format")
-	local picker = require("scissors.picker")
-	local vb = require("scissors.validate-and-bootstrap")
+	local rw = require("scissors.vscode-format.read-write")
+	local convert = require("scissors.vscode-format.convert-object")
+	local picker = require("scissors.picker.picker-choice")
+	local vb = require("scissors.vscode-format.validate-bootstrap")
 
 	-- GUARD
 	if not vb.validate(snippetDir) then return end
@@ -34,14 +34,14 @@ function M.editSnippet()
 	local bufferFt = vim.bo.filetype
 	local allSnippets = {} ---@type SnippetObj[]
 
-	for _, absPath in pairs(vscodeFmt.getSnippetFilesForFt(bufferFt)) do
+	for _, absPath in pairs(convert.getSnippetFilesForFt(bufferFt)) do
 		local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson VSCodeSnippetDict
-		local snipsInFile = vscodeFmt.restructureVsCodeObj(vscodeJson, absPath, bufferFt)
+		local snipsInFile = convert.restructureVsCodeObj(vscodeJson, absPath, bufferFt)
 		vim.list_extend(allSnippets, snipsInFile)
 	end
-	for _, absPath in pairs(vscodeFmt.getSnippetFilesForFt("all")) do
+	for _, absPath in pairs(convert.getSnippetFilesForFt("all")) do
 		local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson VSCodeSnippetDict
-		local snipsInFile = vscodeFmt.restructureVsCodeObj(vscodeJson, absPath, "plaintext")
+		local snipsInFile = convert.restructureVsCodeObj(vscodeJson, absPath, "plaintext")
 		vim.list_extend(allSnippets, snipsInFile)
 	end
 
@@ -58,8 +58,8 @@ end
 function M.addNewSnippet()
 	local snippetDir = require("scissors.config").config.snippetDir
 
-	local vb = require("scissors.validate-and-bootstrap")
-	local vscodeFmt = require("scissors.vscode-format")
+	local vb = require("scissors.vscode-format.validate-bootstrap")
+	local convert = require("scissors.vscode-format.convert-object")
 	local bufferFt = vim.bo.filetype
 
 	-- GUARD & bootstrap
@@ -81,11 +81,11 @@ function M.addNewSnippet()
 	-- get list of all snippet files which matching filetype
 	local snipFilesForFt = vim.tbl_map(
 		function(file) return { path = file, ft = bufferFt } end,
-		vscodeFmt.getSnippetFilesForFt(bufferFt)
+		convert.getSnippetFilesForFt(bufferFt)
 	)
 	local snipFilesForAll = vim.tbl_map(
 		function(file) return { path = file, ft = "plaintext" } end,
-		vscodeFmt.getSnippetFilesForFt("all")
+		convert.getSnippetFilesForFt("all")
 	)
 
 	---@alias snipFile {path: string, ft: string}
@@ -103,7 +103,7 @@ function M.addNewSnippet()
 	if #allSnipFiles == 1 then
 		require("scissors.edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
 	else
-		require("scissors.picker").addSnippet(allSnipFiles, bodyPrefill)
+		require("scissors.picker.picker-choice").addSnippet(allSnipFiles, bodyPrefill)
 	end
 end
 

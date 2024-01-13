@@ -1,4 +1,4 @@
-local rw = require("scissors.read-write-operations")
+local rw = require("scissors.vscode-format.read-write")
 local u = require("scissors.utils")
 
 local M = {}
