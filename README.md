@@ -106,6 +106,11 @@ with `LuaSnip`:
 require("luasnip.loaders.from_vscode").lazy_load { paths = { "path/to/your/snippetFolder" } }
 ```
 
+> [!NOTE]
+> This plugin is only for editing and creating snippets.
+> It does not *expand* snippets, which is
+> done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
+
 ## Usage
 The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
 code to create keymaps for them:
@@ -117,17 +122,17 @@ vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() e
 vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
 
+> [!TIP]
+> A quick method for creating a new snippet that is similar to an existing
+> snippet is to search for a snippet via `editSnippet`, and then use the
+> `duplicateSnippet` command (default keymap: `<C-d>`). 
+
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes
 the number of prefixes. ("Prefix" is how trigger words are referred to in the
 VSCode format.)
 
 <img alt="Showcase prefix change" width=70% src="https://github.com/chrisgrieser/nvim-scissors/assets/73286100/d54f96c2-6751-46e9-9185-77b63eb2664a">
-
-> [!NOTE]
-> This plugin is only for editing and creating snippets.
-> It does not *expand* snippets, which is
-> done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ## Configuration
 The `.setup()` call is optional.
@@ -145,6 +150,7 @@ require("scissors").setup {
 			saveChanges = "<CR>", -- alternatively, can also use `:w`
 			goBackToSearch = "<BS>",
 			deleteSnippet = "<C-BS>",
+			duplicateSnippet = "<C-d>",
 			openInFile = "<C-o>",
 			insertNextToken = "<C-t>", -- insert & normal mode
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode

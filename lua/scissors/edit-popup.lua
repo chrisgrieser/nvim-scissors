@@ -1,7 +1,7 @@
 local config = require("scissors.config").config
+local convert = require("scissors.vscode-format.convert-object")
 local rw = require("scissors.vscode-format.read-write")
 local u = require("scissors.utils")
-local convert = require("scissors.vscode-format.convert-object")
 
 local M = {}
 local a = vim.api
@@ -67,6 +67,18 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		end
 		rw.deleteSnippet(snip)
 		closePopup()
+	end, opts)
+
+	keymap("n", mappings.duplicateSnippet, function()
+		if mode == "new" then
+			u.notify("Cannot duplicate a snippet that has not been saved yet.", "warn")
+			return
+		end
+		u.notify(("Duplicating snippet %q"):format(u.snipDisplayName(snip)))
+		local currentBody = a.nvim_buf_get_lines(bufnr, getPrefixCount(prefixBodySep), -1, false)
+		closePopup()
+		local snipFile = { path = snip.fullPath, ft = snip.filetype } ---@type snipFile
+		M.createNewSnipAndEdit(snipFile, currentBody)
 	end, opts)
 
 	keymap("n", mappings.openInFile, function()

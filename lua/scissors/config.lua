@@ -11,6 +11,7 @@ local M = {}
 ---@field cancel string
 ---@field saveChanges string
 ---@field deleteSnippet string
+---@field duplicateSnippet string
 ---@field openInFile string
 ---@field insertNextToken string
 ---@field goBackToSearch string
@@ -31,6 +32,7 @@ local defaultConfig = {
 			saveChanges = "<CR>", -- alternatively, can also use `:w`
 			goBackToSearch = "<BS>",
 			deleteSnippet = "<C-BS>",
+			duplicateSnippet = "<C-d>",
 			openInFile = "<C-o>",
 			insertNextToken = "<C-t>", -- insert & normal mode
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
