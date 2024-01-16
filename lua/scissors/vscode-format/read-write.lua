@@ -4,12 +4,22 @@ local config = require("scissors.config").config
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
+local hasNotifiedOnRestartRequirement = false
 ---Currently only supports luasnip
 ---@param path string
 local function reloadSnippetFile(path)
 	-- DOCS https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
 	local ok, luasnipLoaders = pcall(require, "luasnip.loaders")
-	if ok and luasnipLoaders then luasnipLoaders.reload_file(path) end
+	if ok and luasnipLoaders then
+		luasnipLoaders.reload_file(path)
+	elseif not hasNotifiedOnRestartRequirement then
+		u.notify(
+			"Restart nvim for changes to take effect.\n"
+				.. "(Hot-reload is only supported for LuaSnip.)",
+			"info"
+		)
+		hasNotifiedOnRestartRequirement = true
+	end
 end
 
 --------------------------------------------------------------------------------
