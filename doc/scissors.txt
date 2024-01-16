@@ -1,4 +1,4 @@
-*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 13
+*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 16
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -125,10 +125,14 @@ with `LuaSnip`
 <
 
 
+  [!NOTE] Thisplugin is only for editing and creating snippets. It does not
+  _expand_ snippets, which is done by snippet engines like LuaSnip
+  <https://github.com/L3MON4D3/LuaSnip>.
+
 USAGE                                          *scissors-nvim-scissors--usage*
 
-Theplugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
-code to create keymaps for them:
+The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is
+the code to create keymaps for them:
 
 >lua
     vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
@@ -137,6 +141,10 @@ code to create keymaps for them:
     vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 <
 
+
+  [!TIP] A quick method for creating a new snippet that is similar to an existing
+  snippet is to search for a snippet via `editSnippet`, and then use the
+  `duplicateSnippet` command (default keymap: `<C-d>`).
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes the number
 of prefixes. ("Prefix" is how trigger words are referred to in the VSCode
@@ -144,10 +152,6 @@ format.)
 
 
 
-
-  [!NOTE] This plugin is only for editing and creating snippets. It does not
-  _expand_ snippets, which is done by snippet engines like LuaSnip
-  <https://github.com/L3MON4D3/LuaSnip>.
 
 CONFIGURATION                          *scissors-nvim-scissors--configuration*
 
@@ -166,6 +170,7 @@ The `.setup()` call is optional.
                 saveChanges = "<CR>", -- alternatively, can also use `:w`
                 goBackToSearch = "<BS>",
                 deleteSnippet = "<C-BS>",
+                duplicateSnippet = "<C-d>",
                 openInFile = "<C-o>",
                 insertNextToken = "<C-t>", -- insert & normal mode
                 jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
