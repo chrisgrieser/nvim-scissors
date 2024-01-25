@@ -39,6 +39,39 @@ function M.tokenHighlight(bufnr)
 		vim.fn.matchadd(hlgroup, [[\$\d]]) -- tabstops
 		vim.fn.matchadd(hlgroup, [[\${\d:.\{-}}]]) -- placeholders
 		vim.fn.matchadd(hlgroup, [[\${\d|.\{-}|}]]) -- choice
+		local vars = {
+			"TM_SELECTED_TEXT",
+			"TM_CURRENT_LINE",
+			"TM_CURRENT_WORD",
+			"TM_LINE_INDEX",
+			"TM_LINE_NUMBER",
+			"TM_FILENAME",
+			"TM_FILENAME_BASE",
+			"TM_DIRECTORY",
+			"TM_FILEPATH",
+			"CLIPBOARD",
+			"CURRENT_YEAR",
+			"CURRENT_YEAR_SHORT",
+			"CURRENT_MONTH",
+			"CURRENT_MONTH_NAME",
+			"CURRENT_MONTH_NAME_SHORT",
+			"CURRENT_DATE",
+			"CURRENT_DAY_NAME",
+			"CURRENT_DAY_NAME_SHORT",
+			"CURRENT_HOUR",
+			"CURRENT_MINUTE",
+			"CURRENT_SECOND",
+			"CURRENT_SECONDS_UNIX",
+			"CURRENT_TIMEZONE_OFFSET",
+			"RANDOM",
+			"RANDOM_HEX",
+			"UUID",
+			"LINE_COMMENT",
+			"BLOCK_COMMENT_START",
+			"BLOCK_COMMENT_END",
+		}
+		local varsStr = [[\v\$(]] .. table.concat(vars, "|") .. ")"
+		vim.fn.matchadd(hlgroup, varsStr)
 	end)
 end
 
