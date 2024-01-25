@@ -108,9 +108,7 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	local isNewSnippet = snip.originalKey == nil
 
 	-- LINT
-	-- trim (only trailing for body, since leading there is indentation)
 	prefix = vim.tbl_map(function(line) return vim.trim(line) end, prefix)
-	body = vim.tbl_map(function(line) return line:gsub("%s+$", "") end, body)
 	-- remove deleted prefixes
 	prefix = vim.tbl_filter(function(line) return line ~= "" end, prefix)
 	-- trim trailing empty lines from body
