@@ -186,6 +186,8 @@ function M.editInPopup(snip, mode)
 		zindex = 1, -- below nvim-notify floats
 	})
 	a.nvim_win_set_option(winnr, "signcolumn", "no")
+	a.nvim_win_set_option(winnr, "list", true)
+	a.nvim_win_set_option(winnr, "listchars", "trail:·")
 
 	-- move cursor, highlight cursor positions
 	if mode == "new" then
