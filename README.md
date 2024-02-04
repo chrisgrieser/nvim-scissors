@@ -116,10 +116,19 @@ The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
 code to create keymaps for them:
 
 ```lua
-vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
+vim.keymap.set("n", "<leader>se", require("scissors").editSnippet)
 
 -- When used in visual mode prefills the selection as body.
-vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
+vim.keymap.set({ "n", "x" }, "<leader>sa", require("scissors").addNewSnippet)
+```
+
+And here is the code to create user commands:
+
+```lua
+vim.api.nvim_create_user_command('SnippetEdit', require("scissors").editSnippet, {})
+
+-- When used in visual mode (or range is supplied) prefills the selection as body.
+vim.api.nvim_create_user_command('SnippetAdd', require("scissors").addNewSnippet, { range = true })
 ```
 
 > [!TIP]
