@@ -112,23 +112,18 @@ require("luasnip.loaders.from_vscode").lazy_load { paths = { "path/to/your/snipp
 > done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ## Usage
-The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
-code to create keymaps for them:
+The plugin provides two commands, `:ScissorsAddSnippet` and
+`ScissorsEditSnippet`. You can pass range to `:ScissorsAddSnippet` command to
+prefill snippet body (e.g. `:'<,'>ScissorsAddSnippet`, `:3ScissorsAddSnippet`, etc).
+
+Also, plugin's API provides two functions `addNewSnippet` and `editSnippet`.
+Here is the code to create keymaps for them:
 
 ```lua
-vim.keymap.set("n", "<leader>se", require("scissors").editSnippet)
+vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
 
 -- When used in visual mode prefills the selection as body.
-vim.keymap.set({ "n", "x" }, "<leader>sa", require("scissors").addNewSnippet)
-```
-
-And here is the code to create user commands:
-
-```lua
-vim.api.nvim_create_user_command('SnippetEdit', require("scissors").editSnippet, {})
-
--- When used in visual mode (or range is supplied) prefills the selection as body.
-vim.api.nvim_create_user_command('SnippetAdd', require("scissors").addNewSnippet, { range = true })
+vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
 
 > [!TIP]
