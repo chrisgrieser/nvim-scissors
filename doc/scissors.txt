@@ -1,4 +1,4 @@
-*scissors.txt*           For NVIM v0.8.0          Last change: 2024 January 31
+*scissors.txt*          For NVIM v0.8.0          Last change: 2024 February 04
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -131,8 +131,13 @@ with `LuaSnip`
 
 USAGE                                          *scissors-nvim-scissors--usage*
 
-The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is
-the code to create keymaps for them:
+The plugin provides two commands, `:ScissorsAddSnippet` and
+`ScissorsEditSnippet`. You can pass range to `:ScissorsAddSnippet` command to
+prefill snippet body (e.g. `:'<,'>ScissorsAddSnippet`, `:3ScissorsAddSnippet`,
+etc).
+
+Also, plugin’s API provides two functions `addNewSnippet` and `editSnippet`.
+Here is the code to create keymaps for them:
 
 >lua
     vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
