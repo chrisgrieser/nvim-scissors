@@ -55,7 +55,8 @@ function M.editSnippet()
 	picker.selectSnippet(allSnippets)
 end
 
-function M.addNewSnippet()
+function M.addNewSnippet(args)
+	args = args or {}
 	local snippetDir = require("scissors.config").config.snippetDir
 
 	local vb = require("scissors.vscode-format.validate-bootstrap")
@@ -75,6 +76,10 @@ function M.addNewSnippet()
 		local endRow, endCol = unpack(vim.api.nvim_buf_get_mark(0, ">"))
 		endCol = mode:find("V") and -1 or (endCol + 1)
 		bodyPrefill = vim.api.nvim_buf_get_text(0, startRow - 1, startCol, endRow - 1, endCol, {})
+		bodyPrefill = u.dedent(bodyPrefill)
+	elseif type(args.range) == "number" and args.range > 0 then
+		local endRow = args.range == 2 and args.line2 or args.line1
+		bodyPrefill = vim.api.nvim_buf_get_text(0, args.line1 - 1, 0, endRow - 1, -1, {})
 		bodyPrefill = u.dedent(bodyPrefill)
 	end
 

@@ -112,8 +112,12 @@ require("luasnip.loaders.from_vscode").lazy_load { paths = { "path/to/your/snipp
 > done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
 
 ## Usage
-The plugin provides two commands, `addNewSnippet` and `editSnippet`. Here is the
-code to create keymaps for them:
+The plugin provides two commands, `:ScissorsAddSnippet` and
+`ScissorsEditSnippet`. You can pass range to `:ScissorsAddSnippet` command to
+prefill snippet body (e.g. `:'<,'>ScissorsAddSnippet`, `:3ScissorsAddSnippet`, etc).
+
+Also, plugin's API provides two functions `addNewSnippet` and `editSnippet`.
+Here is the code to create keymaps for them:
 
 ```lua
 vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
