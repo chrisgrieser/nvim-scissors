@@ -59,7 +59,11 @@ function M.setupPlugin(userConfig)
 	if userConfig.snippetDir then userConfig.snippetDir = vim.fs.normalize(userConfig.snippetDir) end
 
 	---@deprecated keymap.delete
-	if userConfig.editSnippetPopup and userConfig.editSnippetPopup.keymaps and userConfig.editSnippetPopup.keymaps.delete then ---@diagnostic disable-line: undefined-field
+	if
+		userConfig.editSnippetPopup
+		and userConfig.editSnippetPopup.keymaps
+		and userConfig.editSnippetPopup.keymaps.delete ---@diagnostic disable-line: undefined-field
+	then
 		local notify = require("scissors.utils").notify
 		notify("`keymap.delete` is deprecated. Use `keymap.deleteSnippet instead.", "warn")
 		userConfig.editSnippetPopup.keymaps.deleteSnippet = userConfig.editSnippetPopup.keymaps.delete ---@diagnostic disable-line: undefined-field
