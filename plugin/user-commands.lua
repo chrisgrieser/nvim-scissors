@@ -1,5 +1,5 @@
 vim.api.nvim_create_user_command(
-	"ScissorsAddSnippet",
+	"ScissorsAddNewSnippet",
 	function(args) require("scissors").addNewSnippet(args) end,
 	{ desc = "Add new snippet", range = true }
 )
