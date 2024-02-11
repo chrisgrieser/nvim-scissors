@@ -65,7 +65,11 @@ function M.setupPlugin(userConfig)
 		and userConfig.editSnippetPopup.keymaps.delete ---@diagnostic disable-line: undefined-field
 	then
 		local notify = require("scissors.utils").notify
-		notify("`keymap.delete` is deprecated. Use `keymap.deleteSnippet instead.", "warn")
+		notify(
+			"The setting `editSnippetPopup.keymap.delete` is deprecated.\n"
+				.. "Use `editSnippetPopup.keymap.deleteSnippet` instead.",
+			"warn"
+		)
 		userConfig.editSnippetPopup.keymaps.deleteSnippet = userConfig.editSnippetPopup.keymaps.delete ---@diagnostic disable-line: undefined-field
 	end
 
