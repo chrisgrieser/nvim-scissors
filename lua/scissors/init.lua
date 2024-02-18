@@ -70,6 +70,8 @@ function M.addNewSnippet(args)
 	-- if visual mode, prefill body with selected text
 	local bodyPrefill = { "" }
 	local mode = vim.fn.mode()
+
+	-- visual mode: prefill with selection
 	if mode:find("[Vv]") then
 		u.leaveVisualMode() -- necessary so `<` and `>` marks are set
 		local startRow, startCol = unpack(vim.api.nvim_buf_get_mark(0, "<"))
@@ -77,6 +79,8 @@ function M.addNewSnippet(args)
 		endCol = mode:find("V") and -1 or (endCol + 1)
 		bodyPrefill = vim.api.nvim_buf_get_text(0, startRow - 1, startCol, endRow - 1, endCol, {})
 		bodyPrefill = u.dedent(bodyPrefill)
+
+	-- called with arguments (`:ScissorsAddNewSnippet`)
 	elseif type(args.range) == "number" and args.range > 0 then
 		local endRow = args.range == 2 and args.line2 or args.line1
 		bodyPrefill = vim.api.nvim_buf_get_text(0, args.line1 - 1, 0, endRow - 1, -1, {})
