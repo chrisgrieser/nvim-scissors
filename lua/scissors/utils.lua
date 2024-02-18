@@ -36,9 +36,13 @@ end
 function M.tokenHighlight(bufnr)
 	local hlgroup = "DiagnosticVirtualTextInfo"
 	vim.api.nvim_buf_call(bufnr, function()
-		vim.fn.matchadd(hlgroup, [[\$\d]]) -- tabstops
-		vim.fn.matchadd(hlgroup, [[\${\d:.\{-}}]]) -- placeholders
-		vim.fn.matchadd(hlgroup, [[\${\d|.\{-}|}]]) -- choice
+		-- do not highlights dollars signs after a backslash (negative lookbehind)
+		-- https://neovim.io/doc/user/pattern.html#%2F%5C%40%3C%21
+		local unescapedDollarSign = [[\(\\\)\@<!\$]]
+
+		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[\d]]) -- tabstops
+		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[{\d:.\{-}}]]) -- placeholders
+		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[{\d|.\{-}|}]]) -- choice
 		local vars = {
 			"TM_SELECTED_TEXT",
 			"TM_CURRENT_LINE",
@@ -70,7 +74,7 @@ function M.tokenHighlight(bufnr)
 			"BLOCK_COMMENT_START",
 			"BLOCK_COMMENT_END",
 		}
-		local varsStr = [[\v\$(]] .. table.concat(vars, "|") .. ")"
+		local varsStr = unescapedDollarSign .. [[\(]] .. table.concat(vars, [[\|]]) .. [[\)]]
 		vim.fn.matchadd(hlgroup, varsStr)
 	end)
 end
