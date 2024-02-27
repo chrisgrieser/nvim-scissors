@@ -1,4 +1,4 @@
-*scissors.txt*          For NVIM v0.8.0          Last change: 2024 February 18
+*scissors.txt*          For NVIM v0.8.0          Last change: 2024 February 27
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -37,6 +37,7 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 - |scissors-cookbook-&-faq|
     - |scissors-example-for-the-vscode-style-snippet-format|
     - |scissors-version-controlling-snippets:-json-formatting|
+    - |scissors-snippets-on-visual-selection|
     - |scissors-`friendly-snippets`|
     - |scissors-auto-triggered-snippets|
 - |scissors-credits|
@@ -300,6 +301,25 @@ diff from the initial sorting. You can do so with `yq` using this command:
 <
 
 How to do the same with `jq` is left as an exercise to the reader.
+
+
+SNIPPETS ON VISUAL SELECTION ~
+
+With `Luasnip`, this is an opt-in feature, enabled via:
+
+>lua
+    require("luasnip").setup {
+        store_selection_keys = "<Tab>",
+    }
+<
+
+In your VSCode-style snippet, use the token `$TM_SELECTED_TEXT` at the location
+where you want the selection to be inserted. (It’s roughly the equivalent of
+`LS_SELECT_RAW` in the `Luasnip` syntax.)
+
+Then, in visual mode, press the key from `store_selection_keys`. The selection
+disappears, and you are put in insert mode. The next snippet you now trigger is
+going to have `$TM_SELECTED_TEXT` replaced with your selection.
 
 
 FRIENDLY-SNIPPETS ~
