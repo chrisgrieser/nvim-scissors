@@ -22,6 +22,7 @@ Automagical editing and creation of snippets.
 - [Cookbook & FAQ](#cookbook--faq)
 	* [Example for the VSCode-style snippet format](#example-for-the-vscode-style-snippet-format)
 	* [Version Controlling Snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
+	* [Snippets on Visual Selection](#snippets-on-visual-selection)
 	* [`friendly-snippets`](#friendly-snippets)
 	* [Auto-triggered Snippets](#auto-triggered-snippets)
 - [Credits](#credits)
@@ -129,7 +130,7 @@ vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNew
 > [!TIP]
 > A quick method for creating a new snippet that is similar to an existing
 > snippet is to search for a snippet via `editSnippet`, and then use the
-> `duplicateSnippet` command (default keymap: `<C-d>`). 
+> `duplicateSnippet` command (default keymap: `<C-d>`).
 
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes
@@ -275,6 +276,23 @@ fd ".*\.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
 ```
 
 How to do the same with `jq` is left as an exercise to the reader.
+
+### Snippets on Visual Selection
+With `Luasnip`, this is an opt-in feature, enabled via:
+
+```lua
+require("luasnip").setup {
+	store_selection_keys = "<Tab>",
+}
+```
+
+In your VSCode-style snippet, use the token `$TM_SELECTED_TEXT` at the location
+where you want the selection to be inserted. (It's roughly the equivalent of
+`LS_SELECT_RAW` in the `Luasnip` syntax.)
+
+Then, in visual mode, press the key from `store_selection_keys`. The selection
+disappears, and you are put in insert mode. The next snippet you now trigger
+is going to have `$TM_SELECTED_TEXT` replaced with your selection.
 
 ### `friendly-snippets`
 Even though the snippets from the [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
