@@ -83,8 +83,11 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 
 	keymap("n", mappings.openInFile, function()
 		closePopup()
-		local locationInFile = snip.originalKey:gsub(" ", [[\ ]])
-		vim.cmd(("edit +/%q %s"):format(locationInFile, snip.fullPath))
+		-- since there seem to be various escaping issues, simply using `.` to
+		-- match any char instead, since a rare wrong location is preferable to
+		-- the opening failing
+		local locationInFile = snip.originalKey:gsub("[/()%[%] ]", ".")
+		vim.cmd(("edit +/%q: %s"):format(locationInFile, snip.fullPath))
 	end, opts)
 
 	keymap({ "n", "i" }, mappings.insertNextToken, function()
