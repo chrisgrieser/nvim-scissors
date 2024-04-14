@@ -256,12 +256,12 @@ For details, read the official VSCode snippet documentation:
 - [LuaSnip-specific additions to the format](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code)
 
 ### Version Controlling Snippets: JSON-formatting
-This plugin writes JSON files via `vim.encode.json`. That method saves
+This plugin writes JSON files via `vim.encode.json()`. That method saves
 the file in minified form, and does not have a
 deterministic order of dictionary keys.
 
-Both, minification, and unstable key order, are of course problem if you
-version-control your snippet collection. To solve this problem, `nvim-scissors`
+Both, minification, and unstable key order, are a problem if you
+version-control your snippet collection. To solve this issue, `nvim-scissors`
 can optionally unminify and sort the JSON files via `yq` or `jq` after updating
 a snippet. (Both are also available via
 [mason.nvim](https://github.com/williamboman/mason.nvim).)
