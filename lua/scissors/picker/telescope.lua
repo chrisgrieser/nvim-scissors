@@ -34,16 +34,6 @@ function M.selectSnippet(snippets, formatter, prompt)
 			prompt_title = prompt:gsub(": ?$", ""),
 			sorter = telescopeConf.generic_sorter {},
 
-			layout_strategy = "horizontal",
-			layout_config = {
-				horizontal = {
-					width = { 0.8, min = 90 },
-					height = { 0.5, min = 20 },
-					preview_cutoff = 40,
-					preview_width = { 0.5, min = 30 },
-				},
-			},
-
 			finder = finders.new_table {
 				results = snippets,
 				entry_maker = function(snip)
