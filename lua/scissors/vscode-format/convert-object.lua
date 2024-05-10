@@ -8,13 +8,6 @@ local config = require("scissors.config").config
 
 --------------------------------------------------------------------------------
 
----DOCS https://code.visualstudio.com/api/language-extensions/snippet-guide
----@alias packageJson { contributes: { snippets: snippetFileMetadata[] } }
-
----@class (exact) snippetFileMetadata
----@field language string|string[]
----@field path string
-
 ---@param filetype "all"|string
 ---@return string[] absPathsOfSnipFileForThisFt
 function M.getSnippetFilesForFt(filetype)
@@ -36,22 +29,6 @@ function M.getSnippetFilesForFt(filetype)
 end
 
 --------------------------------------------------------------------------------
-
----@class SnippetObj used by this plugin
----@field fullPath string (key only set by this plugin)
----@field filetype string (key only set by this plugin)
----@field originalKey? string if not set, is a new snippet (key only set by this plugin)
----@field prefix string[] -- VS Code allows single string, but this plugin converts to array on read
----@field body string[] -- VS Code allows single string, but this plugin converts to array on read
----@field description? string
-
----DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets
----@alias VSCodeSnippetDict table<string, VSCodeSnippet>
-
----@class VSCodeSnippet
----@field prefix string|string[]
----@field body string|string[]
----@field description? string
 
 ---1. convert dictionary to array for `vim.ui.select`
 ---2. make body & prefix consistent array for nvim-api functions

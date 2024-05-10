@@ -97,7 +97,6 @@ function M.addNewSnippet(args)
 		convert.getSnippetFilesForFt("all")
 	)
 
-	---@alias snipFile {path: string, ft: string}
 	---@type snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
