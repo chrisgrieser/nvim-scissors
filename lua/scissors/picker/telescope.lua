@@ -18,6 +18,17 @@ local u = require("scissors.utils")
 ---@param prompt string
 function M.selectSnippet(snippets, formatter, prompt)
 	local alsoMatchBody = require("scissors.config").config.telescope.alsoSearchSnippetBody
+
+	-- HACK color parent as comment, see `snipDisplay` using `\t\t`
+	-- TODO figure out coloring without using this autocmd
+	vim.api.nvim_create_autocmd("FileType", {
+		once = true,
+		pattern = "TelescopeResults",
+		callback = function(ctx)
+			vim.api.nvim_buf_call(ctx.buf, function() vim.fn.matchadd("Comment", "\t\t.*$") end)
+		end,
+	})
+
 	pickers
 		.new({}, {
 			prompt_title = prompt:gsub(": ?$", ""),
