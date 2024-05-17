@@ -90,7 +90,6 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	prefix = vim.tbl_filter(function(line) return line ~= "" end, prefix)
 	-- trim trailing empty lines from body
 	while body[#body] == "" do
-		vim.notify("🪚 body: " .. vim.inspect(body))
 		table.remove(body)
 	end
 	-- GUARD validate
@@ -105,13 +104,11 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 
 	-- convert snipObj to VSCodeSnippet
 	local originalKey = snip.originalKey
-	snip.originalKey = nil -- delete keys set by this plugin
-	snip.fullPath = nil
-	snip.filetype = nil
-	snip.body = #body == 1 and body[1] or body -- flatten if only one element
-	snip.prefix = #prefix == 1 and prefix[1] or prefix
-	---@diagnostic disable-next-line: cast-type-mismatch -- we are converting it here
-	---@cast snip VSCodeSnippet
+	---@type VSCodeSnippet
+	local vsCodeSnip = {
+		body = #body == 1 and body[1] or body, -- flatten if only one element
+		prefix = #prefix == 1 and prefix[1] or prefix,
+	}
 
 	-- move item to new key
 	if originalKey ~= nil then snippetsInFile[originalKey] = nil end -- remove from old key
@@ -119,12 +116,12 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	while snippetsInFile[key] ~= nil do -- ensure new key is unique
 		key = key .. "-1"
 	end
-	snippetsInFile[key] = snip -- insert at new key
+	snippetsInFile[key] = vsCodeSnip -- insert at new key
 
 	-- write & notify
 	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
 	if success then
-		local snipName = u.snipDisplayName(snip)
+		local snipName = u.snipDisplayName(vsCodeSnip)
 		local action = isNewSnippet and "created" or "updated"
 		u.notify(("%q %s."):format(snipName, action))
 	end
