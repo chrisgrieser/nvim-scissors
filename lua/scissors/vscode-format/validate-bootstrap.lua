@@ -1,7 +1,7 @@
+local M = {}
+
 local rw = require("scissors.vscode-format.read-write")
 local u = require("scissors.utils")
-
-local M = {}
 --------------------------------------------------------------------------------
 
 ---@param snipDir string
@@ -17,7 +17,7 @@ function M.validate(snipDir)
 	local snipDirInfo = vim.loop.fs_stat(snipDir)
 	local packageJsonExists = vim.loop.fs_stat(snipDir .. "/package.json") ~= nil
 	local isFriendlySnippetsDir = snipDir:find("/friendly%-snippets/")
-		and not vim.startswith(snipDir, vim.fn.stdpath("config"))
+		and not vim.startswith(snipDir, vim.fn.stdpath("config")) ---@diagnostic disable-line: param-type-mismatch
 
 	-- snippetDir invalid
 	if snipDirInfo and snipDirInfo.type ~= "directory" then

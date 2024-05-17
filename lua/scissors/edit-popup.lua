@@ -173,8 +173,8 @@ function M.editInPopup(snip, mode)
 	local bufnr = a.nvim_create_buf(false, true)
 	a.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 	a.nvim_buf_set_name(bufnr, bufName)
-	a.nvim_buf_set_option(bufnr, "buftype", "nofile")
-	a.nvim_buf_set_option(bufnr, "filetype", snip.filetype)
+	a.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
+	a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr })
 
 	local winnr = a.nvim_open_win(bufnr, true, {
 		relative = "win",
@@ -188,9 +188,9 @@ function M.editInPopup(snip, mode)
 		col = math.floor((1 - conf.width) * a.nvim_win_get_width(0) / 2),
 		zindex = 1, -- below nvim-notify floats
 	})
-	a.nvim_win_set_option(winnr, "signcolumn", "no")
-	a.nvim_win_set_option(winnr, "list", true)
-	a.nvim_win_set_option(winnr, "listchars", vim.wo.listchars .. ",trail:·")
+	a.nvim_set_option_value("signcolumn", "no", { win = winnr })
+	a.nvim_set_option_value("list", true, { win = winnr })
+	a.nvim_set_option_value("listchars", vim.wo.listchars .. ",trail:·", { win = winnr })
 
 	-- move cursor, highlight cursor positions
 	if mode == "new" then

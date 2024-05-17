@@ -73,11 +73,14 @@ function M.writeAndFormatSnippetFile(filepath, jsonObj)
 			-- DOCS https://jqlang.github.io/jq/manual/#invoking-jq
 			jq = { "jq", "--sort-keys", "--monochrome-output" },
 		}
-		jsonStr = vim.fn.system(cmds[config.jsonFormatter], jsonStr)
-		if vim.v.shell_error ~= 0 then
-			u.notify("JSON formatting failed: " .. jsonStr, "error")
+		local shellCmd = cmds[config.jsonFormatter]
+		table.insert(shellCmd, jsonStr)
+		local result = vim.system(shellCmd):wait()
+		if result.code ~= 0 or not result.stdout then
+			u.notify("JSON formatting failed: " .. result.stderr, "error")
 			return false
 		end
+		jsonStr = result.stdout ---@cast jsonStr string
 	end
 
 	-- WRITE & RELOAD

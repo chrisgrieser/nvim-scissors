@@ -59,7 +59,7 @@ function M.selectSnippet(snippets, formatter, prompt)
 					vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, snip.body)
 
 					-- highlights
-					vim.api.nvim_buf_set_option(bufnr, "filetype", snip.filetype)
+					vim.api.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr })
 					vim.defer_fn(function() u.tokenHighlight(bufnr) end, 1)
 				end,
 			},

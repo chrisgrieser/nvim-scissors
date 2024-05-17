@@ -64,6 +64,8 @@ Automagical editing and creation of snippets.
   the JSON for you.
 
 ## Installation
+The plugin requires at least nvim 0.10.
+
 The plugin **requires** that your snippet are saved in the VSCode-style snippet
 format. If your snippet folder is empty, this plugin bootstraps a simple
 snippet folder for you.
