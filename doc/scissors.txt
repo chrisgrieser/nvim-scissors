@@ -1,4 +1,4 @@
-*scissors.txt*             For NVIM v0.8.0            Last change: 2024 May 10
+*scissors.txt*             For NVIM v0.8.0            Last change: 2024 May 17
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -81,6 +81,8 @@ RATIONALE                                  *scissors-nvim-scissors--rationale*
 
 
 INSTALLATION                            *scissors-nvim-scissors--installation*
+
+The plugin requires at least nvim 0.10.
 
 The plugin **requires** that your snippet are saved in the VSCode-style snippet
 format. If your snippet folder is empty, this plugin bootstraps a simple
