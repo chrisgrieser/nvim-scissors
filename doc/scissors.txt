@@ -135,8 +135,8 @@ with `LuaSnip`
 USAGE                                          *scissors-nvim-scissors--usage*
 
 The plugin provides two commands, `:ScissorsAddNewSnippet` and
-`:ScissorsEditSnippet`. You can pass range to `:ScissorsAddSnippet` command to
-prefill snippet body (for example `:'<,'>ScissorsAddSnippet` or
+`:ScissorsEditSnippet`. You can pass a range to `:ScissorsAddSnippet` command
+to prefill snippet body (for example `:'<,'>ScissorsAddSnippet` or
 `:3ScissorsAddSnippet`).
 
 The plugin also provides two lua functions `addNewSnippet` and `editSnippet`,
@@ -336,7 +336,7 @@ repository is updated (which happens fairly regularly), and there is little
 
 What you can do, however, is to copy individual snippets files from the
 `friendly-snippets` repository into your own snippet folder, and edit them
-then.
+there.
 
 
 AUTO-TRIGGERED SNIPPETS ~
