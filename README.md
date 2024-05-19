@@ -116,7 +116,7 @@ require("luasnip.loaders.from_vscode").lazy_load { paths = { "path/to/your/snipp
 
 ## Usage
 The plugin provides two commands, `:ScissorsAddNewSnippet` and
-`:ScissorsEditSnippet`. You can pass range to `:ScissorsAddSnippet` command to
+`:ScissorsEditSnippet`. You can pass a range to `:ScissorsAddSnippet` command to
 prefill snippet body (for example `:'<,'>ScissorsAddSnippet` or `:3ScissorsAddSnippet`).
 
 The plugin also provides two lua functions `addNewSnippet` and `editSnippet`,
@@ -304,7 +304,7 @@ as the `friendly-snippets` repository is updated (which happens fairly
 regularly), and there is little `nvim-scissors` can do about that.
 
 What you can do, however, is to copy individual snippets files from the
-`friendly-snippets` repository into your own snippet folder, and edit them then.
+`friendly-snippets` repository into your own snippet folder, and edit them there.
 
 ### Auto-triggered Snippets
 While the VSCode snippet format does not support auto-triggered snippets,
