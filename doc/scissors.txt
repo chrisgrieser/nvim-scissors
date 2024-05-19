@@ -1,4 +1,4 @@
-*scissors.txt*             For NVIM v0.8.0            Last change: 2024 May 18
+*scissors.txt*             For NVIM v0.8.0            Last change: 2024 May 19
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -364,10 +364,8 @@ feel free to get in touch.
 **Blog** I also occasionally blog about vim: Nano Tips for Vim
 <https://nanotipsforvim.prose.sh>
 
-**Profiles** - reddit <https://www.reddit.com/user/pseudometapseudo> - Discord
-<https://discordapp.com/users/462774483044794368/> - Academic Website
-<https://chris-grieser.de/> - Twitter <https://twitter.com/pseudo_meta> -
-Mastodon <https://pkm.social/@pseudometa> - ResearchGate
+**Profiles** - Academic Website <https://chris-grieser.de/> - Mastodon
+<https://pkm.social/@pseudometa> - ResearchGate
 <https://www.researchgate.net/profile/Christopher-Grieser> - LinkedIn
 <https://www.linkedin.com/in/christopher-grieser-ba693b17a/>
 
