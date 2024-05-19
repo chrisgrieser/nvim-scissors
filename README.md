@@ -318,8 +318,8 @@ JSON files, so any additions via the `luasnip` key are preserved.
 > You can use the `openInFile` keymap to directory open JSON file at the
 > snippet's location to make edits there easier.
 
-## Credits
 <!-- vale Google.FirstPerson = NO -->
+## Credits
 **About Me**  
 In my day job, I am a sociologist studying the social mechanisms underlying the
 digital economy. For my PhD project, I investigate the governance of the app
@@ -330,10 +330,7 @@ compatibility. If you are interested in this subject, feel free to get in touch.
 I also occasionally blog about vim: [Nano Tips for Vim](https://nanotipsforvim.prose.sh)
 
 **Profiles**  
-- [reddit](https://www.reddit.com/user/pseudometapseudo)
-- [Discord](https://discordapp.com/users/462774483044794368/)
 - [Academic Website](https://chris-grieser.de/)
-- [Twitter](https://twitter.com/pseudo_meta)
 - [Mastodon](https://pkm.social/@pseudometa)
 - [ResearchGate](https://www.researchgate.net/profile/Christopher-Grieser)
 - [LinkedIn](https://www.linkedin.com/in/christopher-grieser-ba693b17a/)
