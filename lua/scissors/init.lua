@@ -1,9 +1,8 @@
 local M = {}
 
 -- PERF do not require other submodules here, since that loads the entire codebase
--- of the plugin on initialization instead of lazy-loading the parts when needed.
+-- of the plugin on initialization instead of lazy-loading the code only when needed.
 local u = require("scissors.utils")
-
 --------------------------------------------------------------------------------
 
 ---@param userConfig? pluginConfig
@@ -24,7 +23,7 @@ function M.editSnippet()
 		u.notify(
 			"Your snippet directory is missing a `package.json`.\n"
 				.. "The file can be bootstrapped by adding a new snippet via:\n"
-				.. "`:lua require('scissors').addNewSnippet()`",
+				.. ":ScissorsAddNewSnippet",
 			"warn"
 		)
 		return
@@ -87,7 +86,7 @@ function M.addNewSnippet(args)
 		bodyPrefill = u.dedent(bodyPrefill)
 	end
 
-	-- get list of all snippet files which matching filetype
+	-- get list of all snippet files with matching filetype
 	local snipFilesForFt = vim.tbl_map(
 		function(file) return { path = file, ft = bufferFt } end,
 		convert.getSnippetFilesForFt(bufferFt)
@@ -107,7 +106,7 @@ function M.addNewSnippet(args)
 		table.insert(allSnipFiles, newSnipFile)
 	end
 
-	-- if only one snippet file for the filetype, skip the picker and add directory
+	-- if only one snippet file for the filetype, skip picker and add directly
 	if #allSnipFiles == 1 then
 		require("scissors.edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
 	else
