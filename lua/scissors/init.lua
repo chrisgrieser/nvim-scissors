@@ -1,3 +1,10 @@
+local version = vim.version()
+if version.major == 0 and version.minor < 10 then
+	vim.notify("nvim-scissors requires at least nvim 0.10.", vim.log.levels.WARN)
+	return
+end
+--------------------------------------------------------------------------------
+
 local M = {}
 
 -- PERF do not require other submodules here, since that loads the entire codebase
