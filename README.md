@@ -246,7 +246,7 @@ Example snippet file (here: `nvim-lua.json`):
     "prefix": "autocmd (Filetype)"
   },
   "file exists": {
-    "body": "local fileExists = vim.loop.fs_stat(\"${1:filepath}\") ~= nil",
+    "body": "local fileExists = vim.uv.fs_stat(\"${1:filepath}\") ~= nil",
     "prefix": "file exists"
   },
 }
