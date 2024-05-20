@@ -25,7 +25,7 @@ function M.editSnippet()
 
 	-- GUARD
 	if not vb.validate(snippetDir) then return end
-	local packageJsonExist = vim.loop.fs_stat(snippetDir .. "/package.json") ~= nil
+	local packageJsonExist = u.fileExists(snippetDir .. "/package.json")
 	if not packageJsonExist then
 		u.notify(
 			"Your snippet directory is missing a `package.json`.\n"

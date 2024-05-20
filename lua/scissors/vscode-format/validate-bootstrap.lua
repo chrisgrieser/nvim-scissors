@@ -15,7 +15,7 @@ function M.validate(snipDir)
 	end
 
 	local snipDirInfo = vim.uv.fs_stat(snipDir)
-	local packageJsonExists = vim.uv.fs_stat(snipDir .. "/package.json") ~= nil
+	local packageJsonExists = u.fileExists(snipDir .. "/package.json")
 	local isFriendlySnippetsDir = snipDir:find("/friendly%-snippets/")
 		and not vim.startswith(snipDir, vim.fn.stdpath("config")) ---@diagnostic disable-line: param-type-mismatch
 
@@ -55,8 +55,8 @@ end
 -- bootstrap if snippetDir and/or `package.json` do not exist
 ---@param snipDir string
 function M.bootstrapSnipDir(snipDir)
-	local snipDirExists = vim.uv.fs_stat(snipDir) ~= nil
-	local packageJsonExists = vim.uv.fs_stat(snipDir .. "/package.json") ~= nil
+	local snipDirExists = u.fileExists(snipDir)
+	local packageJsonExists = u.fileExists(snipDir .. "/package.json")
 	local msg = ""
 
 	if not snipDirExists then
@@ -93,7 +93,7 @@ function M.bootstrapSnippetFile(ft)
 	local newSnipFilepath
 	while true do
 		newSnipFilepath = snipDir .. "/" .. newSnipName
-		if vim.loop.fs_stat(newSnipFilepath) == nil then break end
+		if u.fileExists(newSnipFilepath) then break end
 		newSnipName = newSnipName .. "-1"
 	end
 	rw.writeFile(newSnipFilepath, "{}")

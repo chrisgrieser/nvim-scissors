@@ -17,6 +17,11 @@ function M.snipDisplayName(snip)
 	return snipName
 end
 
+---@nodiscard
+---@param path string
+---@return boolean
+function M.fileExists(path) return vim.uv.fs_stat(path) ~= nil end
+
 ---@param lines string[]
 ---@return string[] dedentedLines
 function M.dedent(lines)
