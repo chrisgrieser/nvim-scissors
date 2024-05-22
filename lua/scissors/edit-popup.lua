@@ -175,14 +175,20 @@ function M.editInPopup(snip, mode)
 	a.nvim_buf_set_name(bufnr, bufName)
 	a.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
 	a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr })
+	local width = math.floor(conf.width * a.nvim_win_get_width(0))
+	local footer = snip.description
+		and {
+			{ " " .. snip.description:sub(1, width - 4) .. " ", "Comment" },
+		}
 
 	local winnr = a.nvim_open_win(bufnr, true, {
 		relative = "win",
 		title = winTitle,
+		footer = footer,
 		title_pos = "center",
 		border = conf.border,
 		-- centered window
-		width = math.floor(conf.width * a.nvim_win_get_width(0)),
+		width = width,
 		height = math.floor(conf.height * a.nvim_win_get_height(0)),
 		row = math.floor((1 - conf.height) * a.nvim_win_get_height(0) / 2),
 		col = math.floor((1 - conf.width) * a.nvim_win_get_width(0) / 2),
