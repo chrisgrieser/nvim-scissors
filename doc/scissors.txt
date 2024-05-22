@@ -7,6 +7,7 @@ Table of Contents                                 *scissors-table-of-contents*
   - Table of Contents              |scissors-nvim-scissors--table-of-contents|
   - Features                                |scissors-nvim-scissors--features|
   - Rationale                              |scissors-nvim-scissors--rationale|
+  - Requirements                        |scissors-nvim-scissors--requirements|
   - Installation                        |scissors-nvim-scissors--installation|
   - Usage                                      |scissors-nvim-scissors--usage|
   - Configuration                      |scissors-nvim-scissors--configuration|
@@ -31,6 +32,7 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 
 - |scissors-features|
 - |scissors-rationale|
+- |scissors-requirements|
 - |scissors-installation|
 - |scissors-usage|
 - |scissors-configuration|
@@ -48,10 +50,10 @@ FEATURES                                    *scissors-nvim-scissors--features*
 - Add new snippets, edit snippets, or delete snippets on the fly.
 - Syntax highlighting while you edit the snippet. Includes highlighting of
     tokens like `$0` or `${2:foobar}`.
-- Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
+- Automagical conversion from buffer text to JSON string (quotes are escaped, etc.).
 - Intuitive UI for editing the snippet, dynamically adapting the number of
     prefixes.
-- Auto-reloading of the new/edited snippet (if using `LuaSnip`).
+- Hot-reloading of the new/edited snippet.
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
     `jq`. (Optional, but |scissors-useful-when-version-controlling-your-snippet-collection|.)
 - Snippet/file
@@ -80,22 +82,24 @@ RATIONALE                                  *scissors-nvim-scissors--rationale*
     the JSON for you.
 
 
+REQUIREMENTS                            *scissors-nvim-scissors--requirements*
+
+- nvim 0.10
+- Snippets saved in the |scissors-vscode-style-snippet-format|.
+- Telescope <https://github.com/nvim-telescope/telescope.nvim> OR (dressing.nvim <http://github.com/stevearc/dressing.nvim> and
+    fzf-lua <https://github.com/ibhagwan/fzf-lua>).
+- A snippet engine that can load VSCode-style snippets, such as
+    LuaSnip <https://github.com/L3MON4D3/LuaSnip> or
+    nvim-snippets <https://github.com/garymjr/nvim-snippets>.
+
+
 INSTALLATION                            *scissors-nvim-scissors--installation*
-
-The plugin requires at least nvim 0.10.
-
-The plugin **requires** that your snippet are saved in the VSCode-style snippet
-format. If your snippet folder is empty, this plugin bootstraps a simple
-snippet folder for you.
-
-For the specific requirements of the VSCode-style snippets, please see
-|scissors-the-faq-section-on-the-vscode-format|.
 
 >lua
     -- lazy.nvim
     {
         "chrisgrieser/nvim-scissors",
-        dependencies = "nvim-telescope/telescope.nvim", -- optional
+        dependencies = { "nvim-telescope/telescope.nvim", "L3MON4D3/LuaSnip" }, 
         opts = {
             snippetDir = "path/to/your/snippetFolder",
         } 
@@ -104,7 +108,7 @@ For the specific requirements of the VSCode-style snippets, please see
     -- packer
     use {
         "chrisgrieser/nvim-scissors",
-        dependencies = "nvim-telescope/telescope.nvim", -- optional
+        dependencies = { "nvim-telescope/telescope.nvim", "L3MON4D3/LuaSnip" }, 
         config = function()
             require("scissors").setup ({
                 snippetDir = "path/to/your/snippetFolder",
@@ -113,24 +117,15 @@ For the specific requirements of the VSCode-style snippets, please see
     }
 <
 
-When telescope.nvim <https://github.com/nvim-telescope/telescope.nvim> is
-installed, it is automatically used as picker. Otherwise, `nvim-scissors` falls
-back to `vim.ui.select`. (You can use dressing.nvim
-<https://github.com/stevearc/dressing.nvim> to re-direct `vim.ui.select` to
-fzf-lua <https://github.com/ibhagwan/fzf-lua>, if you prefer it over
-telescope.)
-
-If you are not using VSCode-style snippets already, here is how you load them
-with `LuaSnip`
+If you use `LuaSnip`, load the snippets in your `snippetDir` with:
 
 >lua
     require("luasnip.loaders.from_vscode").lazy_load { paths = { "path/to/your/snippetFolder" } }
 <
 
+If you are using `nvim-snippets`, set its `search_path` setting to the same
+path as the `snippetDir` from `nvim-scissors`.
 
-  [!NOTE] Thisplugin is only for editing and creating snippets. It does not
-  _expand_ snippets, which is done by snippet engines like LuaSnip
-  <https://github.com/L3MON4D3/LuaSnip>.
 
 USAGE                                          *scissors-nvim-scissors--usage*
 
