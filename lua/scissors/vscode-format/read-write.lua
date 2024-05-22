@@ -8,16 +8,16 @@ local hasNotifiedOnRestartRequirement = false
 ---Currently only supports luasnip
 ---@param path string
 local function reloadSnippetFile(path)
-	-- DOCS https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
-	local ok, luasnipLoaders = pcall(require, "luasnip.loaders")
-	if ok and luasnipLoaders then
-		luasnipLoaders.reload_file(path)
+	local luasnipInstalled, luasnipLoaders = pcall(require, "luasnip.loaders")
+	local nvimSnippetsInstalled, snippetUtils = pcall(require, "snippets.utils")
+	if luasnipInstalled then
+		luasnipLoaders.reload_file(path) -- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
+	elseif nvimSnippetsInstalled then
+		snippetUtils.reload_file(path) -- https://github.com/garymjr/nvim-snippets/issues/13#issuecomment-2125658450
 	elseif not hasNotifiedOnRestartRequirement then
-		u.notify(
-			"Restart nvim for changes to take effect.\n"
-				.. "(Hot-reload is only supported for LuaSnip.)",
-			"info"
-		)
+		local msg = "Restart nvim for changes to take effect.\n"
+			.. "(Hot-reload is only supported for LuaSnip and nvim-snippets.)"
+		u.notify(msg("info"))
 		hasNotifiedOnRestartRequirement = true
 	end
 end
