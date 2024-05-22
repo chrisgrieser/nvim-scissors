@@ -16,6 +16,7 @@ Automagical editing and creation of snippets.
 
 - [Features](#features)
 - [Rationale](#rationale)
+- [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration](#configuration)
@@ -33,14 +34,14 @@ Automagical editing and creation of snippets.
 - Add new snippets, edit snippets, or delete snippets on the fly.
 - Syntax highlighting while you edit the snippet. Includes highlighting of
   tokens like `$0` or `${2:foobar}`.
-- Automagical conversion from buffer text to JSON string (quotes are escaped, etc.)
+- Automagical conversion from buffer text to JSON string (quotes are escaped, etc.).
 - Intuitive UI for editing the snippet, dynamically adapting the number of
   prefixes.
-- Auto-reloading of the new/edited snippet (if using `LuaSnip`).
+- Hot-reloading of the new/edited snippet.
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
   `jq`. (Optional, but [useful when version-controlling your snippet collection](#version-controlling-snippets-json-formatting).)
 - Snippet/file
-  selection via `telescope` or `vim.ui.select`.  
+  selection via `telescope` or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder, if it is empty or missing a
   `package.json`.
 - Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
@@ -63,21 +64,22 @@ Automagical editing and creation of snippets.
   manually. This plugin aims to alleviate that pain by automagically writing
   the JSON for you.
 
+## Requirements
+- nvim 0.10
+- Snippets saved in the [VSCode-style snippet format](#example-for-the-vscode-style-snippet-format).
+- [Telescope](https://github.com/nvim-telescope/telescope.nvim) OR ([dressing.nvim](http://github.com/stevearc/dressing.nvim) and
+  [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
+- A snippet engine that can load VSCode-style snippets, such as
+  [LuaSnip](https://github.com/L3MON4D3/LuaSnip) or
+  [nvim-snippets](https://github.com/garymjr/nvim-snippets).
+
 ## Installation
-The plugin requires at least nvim 0.10.
-
-The plugin **requires** that your snippet are saved in the VSCode-style snippet
-format. If your snippet folder is empty, this plugin bootstraps a simple
-snippet folder for you.
-
-For the specific requirements of the VSCode-style snippets, please see
-[the FAQ section on the VSCode format](#example-for-the-vscode-style-snippet-format).
 
 ```lua
 -- lazy.nvim
 {
 	"chrisgrieser/nvim-scissors",
-	dependencies = "nvim-telescope/telescope.nvim", -- optional
+	dependencies = { "nvim-telescope/telescope.nvim", "L3MON4D3/LuaSnip" }, 
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
 	} 
@@ -86,7 +88,7 @@ For the specific requirements of the VSCode-style snippets, please see
 -- packer
 use {
 	"chrisgrieser/nvim-scissors",
-	dependencies = "nvim-telescope/telescope.nvim", -- optional
+	dependencies = { "nvim-telescope/telescope.nvim", "L3MON4D3/LuaSnip" }, 
 	config = function()
 		require("scissors").setup ({
 			snippetDir = "path/to/your/snippetFolder",
@@ -95,24 +97,14 @@ use {
 }
 ```
 
-When [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) is
-installed, it is automatically used as picker. Otherwise, `nvim-scissors`
-falls back to `vim.ui.select`. (You can use
-[dressing.nvim](https://github.com/stevearc/dressing.nvim) to re-direct
-`vim.ui.select` to [fzf-lua](https://github.com/ibhagwan/fzf-lua), if you prefer
-it over telescope.)
-
-If you are not using VSCode-style snippets already, here is how you load them
-with `LuaSnip`:
+If you use `LuaSnip`, load the snippets in your `snippetDir` with:
 
 ```lua
 require("luasnip.loaders.from_vscode").lazy_load { paths = { "path/to/your/snippetFolder" } }
 ```
 
-> [!NOTE]
-> This plugin is only for editing and creating snippets.
-> It does not *expand* snippets, which is
-> done by snippet engines like [LuaSnip](https://github.com/L3MON4D3/LuaSnip).
+If you are using `nvim-snippets`, set its `search_path` setting to the same path
+as the `snippetDir` from `nvim-scissors`.
 
 ## Usage
 The plugin provides two commands, `:ScissorsAddNewSnippet` and
