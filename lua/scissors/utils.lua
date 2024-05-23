@@ -48,6 +48,7 @@ function M.tokenHighlight(bufnr)
 		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[\d]]) -- tabstops
 		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[{\d:.\{-}}]]) -- placeholders
 		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[{\d|.\{-}|}]]) -- choice
+
 		local vars = {
 			"TM_SELECTED_TEXT",
 			"TM_CURRENT_LINE",
@@ -80,9 +81,10 @@ function M.tokenHighlight(bufnr)
 			"BLOCK_COMMENT_END",
 		}
 		local bracedVars = vim.tbl_map(function(var) return "{" .. var .. "}" end, vars)
-		vim.list_extend(vars, bracedVars)
+		local wordBoundaried = vim.tbl_map(function(var) return [[\<]] .. var .. [[\>]] end, vars)
+		local both = vim.list_extend(bracedVars, wordBoundaried)
 
-		local varsStr = unescapedDollarSign .. [[\(]] .. table.concat(vars, [[\|]]) .. [[\)]]
+		local varsStr = unescapedDollarSign .. [[\(]] .. table.concat(both, [[\|]]) .. [[\)]]
 		vim.fn.matchadd(hlgroup, varsStr)
 	end)
 end
