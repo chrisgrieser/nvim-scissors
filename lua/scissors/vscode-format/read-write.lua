@@ -13,7 +13,7 @@ local function reloadSnippetFile(path)
 	if luasnipInstalled then
 		luasnipLoaders.reload_file(path) -- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
 	elseif nvimSnippetsInstalled then
-		snippetUtils.reload_file(path) -- https://github.com/garymjr/nvim-snippets/issues/13#issuecomment-2125658450
+		snippetUtils.reload_file(path, "silent") -- https://github.com/garymjr/nvim-snippets/issues/13#issuecomment-2125658450
 	elseif not hasNotifiedOnRestartRequirement then
 		local msg = "Restart nvim for changes to take effect.\n"
 			.. "(Hot-reload is only supported for LuaSnip and nvim-snippets.)"
