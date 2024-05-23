@@ -79,6 +79,9 @@ function M.tokenHighlight(bufnr)
 			"BLOCK_COMMENT_START",
 			"BLOCK_COMMENT_END",
 		}
+		local bracedVars = vim.tbl_map(function(var) return "{" .. var .. "}" end, vars)
+		vim.list_extend(vars, bracedVars)
+
 		local varsStr = unescapedDollarSign .. [[\(]] .. table.concat(vars, [[\|]]) .. [[\)]]
 		vim.fn.matchadd(hlgroup, varsStr)
 	end)
