@@ -39,15 +39,15 @@ end
 ---DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax
 ---@param bufnr number
 function M.tokenHighlight(bufnr)
-	local hlgroup = "DiagnosticVirtualTextInfo"
 	vim.api.nvim_buf_call(bufnr, function()
 		-- do not highlights dollars signs after a backslash (negative lookbehind)
 		-- https://neovim.io/doc/user/pattern.html#%2F%5C%40%3C%21
-		local unescapedDollarSign = [[\(\\\)\@<!\$]]
+		local unescapedDollar = [[\(\\\)\@<!\$]]
+		local hlgroup = "DiagnosticVirtualTextInfo"
 
-		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[\d]]) -- tabstops
-		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[{\d:.\{-}}]]) -- placeholders
-		vim.fn.matchadd(hlgroup, unescapedDollarSign .. [[{\d|.\{-}|}]]) -- choice
+		vim.fn.matchadd(hlgroup, unescapedDollar .. [[\d]]) -- tabstops
+		vim.fn.matchadd(hlgroup, unescapedDollar .. [[{\d:.\{-}}]]) -- placeholders
+		vim.fn.matchadd(hlgroup, unescapedDollar .. [[{\d|.\{-}|}]]) -- choice
 
 		local vars = {
 			"TM_SELECTED_TEXT",
@@ -80,12 +80,10 @@ function M.tokenHighlight(bufnr)
 			"BLOCK_COMMENT_START",
 			"BLOCK_COMMENT_END",
 		}
-		local bracedVars = vim.tbl_map(function(var) return "{" .. var .. "}" end, vars)
-		local wordBoundariedVars = vim.tbl_map(function(var) return var .. [[\>]] end, vars)
-		local both = vim.list_extend(bracedVars, wordBoundariedVars)
-
-		local varsStr = unescapedDollarSign .. [[\(]] .. table.concat(both, [[\|]]) .. [[\)]]
-		vim.fn.matchadd(hlgroup, varsStr)
+		local bracedVars = unescapedDollar .. [[{\(]] .. table.concat(vars, [[\|]]) .. [[\)}]]
+		vim.fn.matchadd(hlgroup, bracedVars)
+		local wordBoundariedVars = unescapedDollar .. [[\(]] .. table.concat(vars, [[\|]]) .. [[\)\>]]
+		vim.fn.matchadd(hlgroup, wordBoundariedVars)
 	end)
 end
 
