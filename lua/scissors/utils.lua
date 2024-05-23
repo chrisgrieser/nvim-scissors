@@ -81,8 +81,8 @@ function M.tokenHighlight(bufnr)
 			"BLOCK_COMMENT_END",
 		}
 		local bracedVars = vim.tbl_map(function(var) return "{" .. var .. "}" end, vars)
-		local wordBoundaried = vim.tbl_map(function(var) return [[\<]] .. var .. [[\>]] end, vars)
-		local both = vim.list_extend(bracedVars, wordBoundaried)
+		local wordBoundariedVars = vim.tbl_map(function(var) return var .. [[\>]] end, vars)
+		local both = vim.list_extend(bracedVars, wordBoundariedVars)
 
 		local varsStr = unescapedDollarSign .. [[\(]] .. table.concat(both, [[\|]]) .. [[\)]]
 		vim.fn.matchadd(hlgroup, varsStr)
