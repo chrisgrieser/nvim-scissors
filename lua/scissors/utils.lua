@@ -80,8 +80,14 @@ function M.tokenHighlight(bufnr)
 			"BLOCK_COMMENT_START",
 			"BLOCK_COMMENT_END",
 		}
-		local bracedVars = unescapedDollar .. [[{\(]] .. table.concat(vars, [[\|]]) .. [[\)}]]
+		local bracedVars = unescapedDollar
+			.. [[{\(]]
+			.. table.concat(vars, [[\|]])
+			.. [[\)]]
+			.. [[\(.\{-}\)\?]] -- optional default value like `${TM_FILENAME:foobar}`
+			.. "}"
 		vim.fn.matchadd(hlgroup, bracedVars)
+
 		local wordBoundariedVars = unescapedDollar .. [[\(]] .. table.concat(vars, [[\|]]) .. [[\)\>]]
 		vim.fn.matchadd(hlgroup, wordBoundariedVars)
 	end)
