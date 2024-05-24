@@ -40,6 +40,9 @@ end
 ---@param bufnr number
 function M.tokenHighlight(bufnr)
 	vim.api.nvim_buf_call(bufnr, function()
+		-- escaped dollar
+		vim.fn.matchadd("@string.escape", [[\\\$]])
+
 		-- do not highlights dollars signs after a backslash (negative lookbehind)
 		-- https://neovim.io/doc/user/pattern.html#%2F%5C%40%3C%21
 		local unescapedDollar = [[\(\\\)\@<!\$]]

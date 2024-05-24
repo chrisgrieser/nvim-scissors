@@ -21,7 +21,8 @@ Automagical editing and creation of snippets.
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
-	* [Example for the VSCode-style snippet format](#example-for-the-vscode-style-snippet-format)
+	* [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
+	* [Variables and Tabstops](#variables-and-tabstops)
 	* [Version Controlling Snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
 	* [Snippets on Visual Selection](#snippets-on-visual-selection)
 	* [`friendly-snippets`](#friendly-snippets)
@@ -172,7 +173,7 @@ require("scissors").setup {
 
 ## Cookbook & FAQ
 
-### Example for the VSCode-style snippet format
+### Introduction to the VSCode-style snippet format
 This plugin requires that you have a valid VSCode snippet folder. In addition to
 saving the snippets in the required JSON format, there must also be a
 `package.json` at the root of the snippet folder, specifying which files are
@@ -249,6 +250,18 @@ For details, read the official VSCode snippet documentation:
 - [`package.json` specification](https://code.visualstudio.com/api/language-extensions/snippet-guide)
 - [LuaSnip-specific additions to the format](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code)
 
+### Variables and Tabstops
+- There are various variables you can use, such as `$TM_FILENAME` or
+  `$LINE_COMMENT`. [See here for a full list of
+  variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
+- [Tabstops](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_tabstops)
+  are denoted by `$1`, `$2`, `$3`, with `$0` being the last tabstop. They
+  support placeholders such `${1:foobar}`.
+
+> [!TIP]
+> Due to the use of `$` in the snippet syntax, any *literal* `$` need to be
+> escaped as `\$`.
+
 ### Version Controlling Snippets: JSON-formatting
 This plugin writes JSON files via `vim.encode.json()`. That method saves
 the file in minified form, and does not have a
@@ -271,7 +284,7 @@ fd ".*\.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
 
 How to do the same with `jq` is left as an exercise to the reader.
 
-### Snippets on Visual Selection
+### Snippets on visual selections
 With `Luasnip`, this is an opt-in feature, enabled via:
 
 ```lua
