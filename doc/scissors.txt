@@ -37,7 +37,8 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 - |scissors-usage|
 - |scissors-configuration|
 - |scissors-cookbook-&-faq|
-    - |scissors-example-for-the-vscode-style-snippet-format|
+    - |scissors-introduction-to-the-vscode-style-snippet-format|
+    - |scissors-variables-and-tabstops|
     - |scissors-version-controlling-snippets:-json-formatting|
     - |scissors-snippets-on-visual-selection|
     - |scissors-`friendly-snippets`|
@@ -197,7 +198,7 @@ The `.setup()` call is optional.
 COOKBOOK & FAQ                        *scissors-nvim-scissors--cookbook-&-faq*
 
 
-EXAMPLE FOR THE VSCODE-STYLE SNIPPET FORMAT ~
+INTRODUCTION TO THE VSCODE-STYLE SNIPPET FORMAT ~
 
 This plugin requires that you have a valid VSCode snippet folder. In addition
 to saving the snippets in the required JSON format, there must also be a
@@ -277,6 +278,19 @@ LuaSnip-specific additions to the format
 <https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code>
 
 
+VARIABLES AND TABSTOPS ~
+
+- There are various variables you can use, such as `$TM_FILENAME` or
+    `$LINE_COMMENT`. See here for a full list of
+    variables <https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables>.
+- Tabstops <https://code.visualstudio.com/docs/editor/userdefinedsnippets#_tabstops>
+    are denoted by `$1`, `$2`, `$3`, with `$0` being the last tabstop. They
+    support placeholders such `${1:foobar}`.
+
+
+  [!TIP] Due to the use of `$` in the snippet syntax, any _literal_ `$` need to
+  be escaped as `\$`.
+
 VERSION CONTROLLING SNIPPETS: JSON-FORMATTING ~
 
 This plugin writes JSON files via `vim.encode.json()`. That method saves the
@@ -301,7 +315,7 @@ diff from the initial sorting. You can do so with `yq` using this command:
 How to do the same with `jq` is left as an exercise to the reader.
 
 
-SNIPPETS ON VISUAL SELECTION ~
+SNIPPETS ON VISUAL SELECTIONS ~
 
 With `Luasnip`, this is an opt-in feature, enabled via:
 
