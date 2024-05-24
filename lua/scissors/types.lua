@@ -1,3 +1,4 @@
+---@meta
 
 ---@alias snipFile {path: string, ft: string}
 
