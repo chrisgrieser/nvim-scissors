@@ -93,7 +93,7 @@ function M.bootstrapSnippetFile(ft)
 	local newSnipFilepath
 	while true do
 		newSnipFilepath = snipDir .. "/" .. newSnipName
-		if u.fileExists(newSnipFilepath) then break end
+		if not u.fileExists(newSnipFilepath) then break end
 		newSnipName = newSnipName .. "-1"
 	end
 	rw.writeFile(newSnipFilepath, "{}")
