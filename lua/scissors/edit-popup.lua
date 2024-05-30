@@ -162,8 +162,9 @@ function M.editInPopup(snip, mode)
 
 	local bufName, winTitle
 	if mode == "update" then
-		bufName = u.snipDisplayName(snip)
-		winTitle = (" Editing %q [%s] "):format(bufName, nameOfSnippetFile)
+		local displayName = u.snipDisplayName(snip)
+		bufName = ("Edit Snippet %s"):format(displayName)
+		winTitle = (" Editing %q [%s] "):format(displayName, nameOfSnippetFile)
 	else
 		bufName = "New Snippet"
 		winTitle = (" New Snippet in %q "):format(nameOfSnippetFile)
