@@ -106,6 +106,14 @@ function M.addNewSnippet(args)
 	---@type snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
+	-- Create files that are specified in `package.json` but do not exist
+	for _, snipFile in ipairs(allSnipFiles) do
+		if not u.fileExists(snipFile.path) then
+			local readwrite = require("scissors.vscode-format.read-write")
+			readwrite.writeFile(snipFile.path, "{}")
+		end
+	end
+
 	-- bootstrap new snippet file, if none exists
 	if #allSnipFiles == 0 then
 		local newSnipFile = vb.bootstrapSnippetFile(bufferFt)
