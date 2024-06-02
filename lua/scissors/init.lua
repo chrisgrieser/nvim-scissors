@@ -103,6 +103,8 @@ function M.addNewSnippet(exCmdArgs)
 	-- Bootstrap #1: Create files that are specified in `package.json` but do not exist
 	for _, snipFile in ipairs(allSnipFiles) do
 		if not u.fileExists(snipFile.path) then
+			-- not using `vim.uv.fs_mkdir` since it does not create intermediate dirs
+			vim.fn.mkdir(vim.fs.dirname(snipFile.path), "p")
 			local rw = require("scissors.vscode-format.read-write")
 			rw.writeFile(snipFile.path, "{}")
 		end
