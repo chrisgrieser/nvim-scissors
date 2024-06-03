@@ -88,6 +88,8 @@ function M.addNewSnippet(exCmdArgs)
 	end
 	if calledFromExCmd or calledFromVisualMode then
 		bodyPrefill = u.dedentAndTrimBlanks(bodyPrefill)
+		-- escape `$`
+		bodyPrefill = vim.tbl_map(function(line) return line:gsub("%$", "\\$") end, bodyPrefill)
 	end
 
 	-- GET LIST OF ALL SNIPPET FILES WITH MATCHING FILETYPE
