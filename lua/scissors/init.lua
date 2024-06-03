@@ -73,13 +73,14 @@ function M.addNewSnippet(exCmdArgs)
 
 	-- VISUAL MODE: prefill body with selected text
 	local bodyPrefill = { "" }
-	local calledFromVisualMode = vim.fn.mode():find("[vV]")
+	local mode = vim.fn.mode()
+	local calledFromVisualMode = mode:find("[vV]")
 	local calledFromExCmd = type(exCmdArgs.range) == "number" and exCmdArgs.range > 0
 	if calledFromVisualMode then
 		u.leaveVisualMode() -- necessary so `<` and `>` marks are set
 		local startRow, startCol = unpack(vim.api.nvim_buf_get_mark(0, "<"))
 		local endRow, endCol = unpack(vim.api.nvim_buf_get_mark(0, ">"))
-		endCol = vim.fn.mode():find("V") and -1 or (endCol + 1)
+		endCol = mode:find("V") and -1 or (endCol + 1)
 		bodyPrefill = vim.api.nvim_buf_get_text(0, startRow - 1, startCol, endRow - 1, endCol, {})
 		bodyPrefill = u.dedent(bodyPrefill)
 	elseif calledFromExCmd then
