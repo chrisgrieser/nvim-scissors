@@ -82,11 +82,12 @@ function M.addNewSnippet(exCmdArgs)
 		local endRow, endCol = unpack(vim.api.nvim_buf_get_mark(0, ">"))
 		endCol = mode:find("V") and -1 or (endCol + 1)
 		bodyPrefill = vim.api.nvim_buf_get_text(0, startRow - 1, startCol, endRow - 1, endCol, {})
-		bodyPrefill = u.dedent(bodyPrefill)
 	elseif calledFromExCmd then
 		local endRow = exCmdArgs.range == 2 and exCmdArgs.line2 or exCmdArgs.line1
 		bodyPrefill = vim.api.nvim_buf_get_text(0, exCmdArgs.line1 - 1, 0, endRow - 1, -1, {})
-		bodyPrefill = u.dedent(bodyPrefill)
+	end
+	if calledFromExCmd or calledFromVisualMode then
+		bodyPrefill = u.dedentAndTrimBlanks(bodyPrefill)
 	end
 
 	-- GET LIST OF ALL SNIPPET FILES WITH MATCHING FILETYPE

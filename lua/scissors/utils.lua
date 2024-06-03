@@ -24,7 +24,14 @@ function M.fileExists(path) return vim.uv.fs_stat(path) ~= nil end
 
 ---@param lines string[]
 ---@return string[] dedentedLines
-function M.dedent(lines)
+function M.dedentAndTrimBlanks(lines)
+	while lines[1] == "" do
+		table.remove(lines, 1)
+	end
+	while lines[#lines] == "" do
+		table.remove(lines)
+	end
+
 	local indentAmounts = vim.tbl_map(function(line) return #(line:match("^%s*")) end, lines)
 	local smallestIndent = math.min(unpack(indentAmounts))
 	local dedentedLines = vim.tbl_map(function(line) return line:sub(smallestIndent + 1) end, lines)
