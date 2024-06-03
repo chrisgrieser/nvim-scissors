@@ -17,9 +17,9 @@ jobs:
       - uses: kdheepak/panvimdoc@main
         with:
           vimdoc: scissors
-          toc: true
-          treesitter: true
           demojify: true
+          treesitter: true
+          version: "" # by default adds nvim 0.8 as version number…
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "chore: Auto-generate vimdocs"
