@@ -259,7 +259,7 @@ For details, read the official VSCode snippet documentation:
   support placeholders such `${1:foobar}`.
 
 > [!TIP]
-> Due to the use of `$` in the snippet syntax, any *literal* `$` need to be
+> Due to the use of `$` in the snippet syntax, any *literal* `$` needs to be
 > escaped as `\$`.
 
 ### Version Controlling Snippets: JSON-formatting
@@ -306,7 +306,7 @@ Even though the snippets from the [friendly-snippets](https://github.com/rafamad
 repository are written in the VSCode-style format, editing them directly is not
 supported. The reason being that any changes made would be overwritten as soon
 as the `friendly-snippets` repository is updated (which happens fairly
-regularly), and there is little `nvim-scissors` can do about that.
+regularly). Unfortunately, there is little `nvim-scissors` can do about that.
 
 What you can do, however, is to copy individual snippets files from the
 `friendly-snippets` repository into your own snippet folder, and edit them there.
@@ -325,16 +325,13 @@ JSON files, so any additions via the `luasnip` key are preserved.
 
 <!-- vale Google.FirstPerson = NO -->
 ## Credits
-**About Me**  
 In my day job, I am a sociologist studying the social mechanisms underlying the
 digital economy. For my PhD project, I investigate the governance of the app
 economy and how software ecosystems manage the tension between innovation and
 compatibility. If you are interested in this subject, feel free to get in touch.
 
-**Blog**  
 I also occasionally blog about vim: [Nano Tips for Vim](https://nanotipsforvim.prose.sh)
 
-**Profiles**  
 - [Academic Website](https://chris-grieser.de/)
 - [Mastodon](https://pkm.social/@pseudometa)
 - [ResearchGate](https://www.researchgate.net/profile/Christopher-Grieser)
