@@ -1,4 +1,4 @@
-*scissors.txt*            For NVIM v0.8.0            Last change: 2024 June 01
+*scissors.txt*Auto-generated from the README.md. Do not make PRs to this file.
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
@@ -288,7 +288,7 @@ VARIABLES AND TABSTOPS ~
     support placeholders such `${1:foobar}`.
 
 
-  [!TIP] Due to the use of `$` in the snippet syntax, any _literal_ `$` need to
+  [!TIP] Due to the use of `$` in the snippet syntax, any _literal_ `$` needs to
   be escaped as `\$`.
 
 VERSION CONTROLLING SNIPPETS: JSON-FORMATTING ~
@@ -340,8 +340,8 @@ Even though the snippets from the friendly-snippets
 <https://github.com/rafamadriz/friendly-snippets> repository are written in the
 VSCode-style format, editing them directly is not supported. The reason being
 that any changes made would be overwritten as soon as the `friendly-snippets`
-repository is updated (which happens fairly regularly), and there is little
-`nvim-scissors` can do about that.
+repository is updated (which happens fairly regularly). Unfortunately, there is
+little `nvim-scissors` can do about that.
 
 What you can do, however, is to copy individual snippets files from the
 `friendly-snippets` repository into your own snippet folder, and edit them
@@ -364,19 +364,19 @@ JSON files, so any additions via the `luasnip` key are preserved.
 
 CREDITS                                      *scissors-nvim-scissors--credits*
 
-**About Me** In my day job, I am a sociologist studying the social mechanisms
-underlying the digital economy. For my PhD project, I investigate the
-governance of the app economy and how software ecosystems manage the tension
-between innovation and compatibility. If you are interested in this subject,
-feel free to get in touch.
+In my day job, I am a sociologist studying the social mechanisms underlying the
+digital economy. For my PhD project, I investigate the governance of the app
+economy and how software ecosystems manage the tension between innovation and
+compatibility. If you are interested in this subject, feel free to get in
+touch.
 
-**Blog** I also occasionally blog about vim: Nano Tips for Vim
+I also occasionally blog about vim: Nano Tips for Vim
 <https://nanotipsforvim.prose.sh>
 
-**Profiles** - Academic Website <https://chris-grieser.de/> - Mastodon
-<https://pkm.social/@pseudometa> - ResearchGate
-<https://www.researchgate.net/profile/Christopher-Grieser> - LinkedIn
-<https://www.linkedin.com/in/christopher-grieser-ba693b17a/>
+- Academic Website <https://chris-grieser.de/>
+- Mastodon <https://pkm.social/@pseudometa>
+- ResearchGate <https://www.researchgate.net/profile/Christopher-Grieser>
+- LinkedIn <https://www.linkedin.com/in/christopher-grieser-ba693b17a/>
 
 
 
