@@ -1,4 +1,4 @@
-*scissors.txt*Auto-generated from the README.md. Do not make PRs to this file.
+*scissors.txt*    Auto-generated from README.md. Do not make PRs to this file.
 
 ==============================================================================
 Table of Contents                                 *scissors-table-of-contents*
