@@ -79,8 +79,14 @@ Automagical editing and creation of snippets.
 ```lua
 -- lazy.nvim
 {
-	"chrisgrieser/nvim-scissors",
-	dependencies = { "nvim-telescope/telescope.nvim", "L3MON4D3/LuaSnip" }, 
+	'chrisgrieser/nvim-scissors',
+	dependencies = {
+		'nvim-telescope/telescope.nvim',
+		{
+			'L3MON4D3/LuaSnip',
+			build = 'make install_jsregexp',
+		},
+	},
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
 	} 
