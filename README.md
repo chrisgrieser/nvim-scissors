@@ -24,7 +24,7 @@ Automagical editing and creation of snippets.
 	* [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
 	* [Variables and Tabstops](#variables-and-tabstops)
 	* [Version Controlling Snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
-	* [Snippets on Visual Selection](#snippets-on-visual-selection)
+	* [Snippets on visual selections](#snippets-on-visual-selections)
 	* [`friendly-snippets`](#friendly-snippets)
 	* [Auto-triggered Snippets](#auto-triggered-snippets)
 - [Credits](#credits)
@@ -80,7 +80,7 @@ Automagical editing and creation of snippets.
 -- lazy.nvim
 {
 	"chrisgrieser/nvim-scissors",
-	dependencies = { "nvim-telescope/telescope.nvim", "L3MON4D3/LuaSnip" }, 
+	dependencies = { "nvim-telescope/telescope.nvim", "garymjr/nvim-snippets" }, 
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
 	} 
@@ -89,7 +89,7 @@ Automagical editing and creation of snippets.
 -- packer
 use {
 	"chrisgrieser/nvim-scissors",
-	dependencies = { "nvim-telescope/telescope.nvim", "L3MON4D3/LuaSnip" }, 
+	dependencies = { "nvim-telescope/telescope.nvim", "garymjr/nvim-snippets" }, 
 	config = function()
 		require("scissors").setup ({
 			snippetDir = "path/to/your/snippetFolder",
