@@ -170,7 +170,7 @@ function M.editInPopup(snip, mode)
 		winTitle = (" New Snippet in %q "):format(nameOfSnippetFile)
 	end
 
-	-- create buffer and window
+	-- CREATE BUFFER
 	local bufnr = a.nvim_create_buf(false, true)
 	a.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 	a.nvim_buf_set_name(bufnr, bufName)
@@ -178,15 +178,27 @@ function M.editInPopup(snip, mode)
 	a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr })
 	local width = math.floor(conf.width * a.nvim_win_get_width(0))
 
+	-- KEYMAP HINTS
+	-- insert as many hints as there is space for in the footer
 	local maps = config.editSnippetPopup.keymaps
-	local footerStr = ("%s: Save  %s: Back  %s: Duplicate  %s: Delete  %s: Token"):format(
-		maps.saveChanges,
-		maps.goBackToSearch,
-		maps.duplicateSnippet,
-		maps.deleteSnippet,
-		maps.insertNextToken
-	)
+	local keymapHints = ("%s: Save  %s: Cancel"):format(maps.saveChanges, maps.cancel)
+	local extraHints = {
+		maps.goBackToSearch .. ": Back",
+		maps.duplicateSnippet .. ": Duplicate",
+		maps.deleteSnippet .. ": Delete",
+		maps.insertNextToken .. ": Token",
+		maps.jumpBetweenBodyAndPrefix .. ": Jump",
+		maps.openInFile .. ": Open File",
+	}
+	local borderAndPadding = 2 + 2 + 2
+	repeat
+		-- shuffle hints, so user sees different ones when there is not enough space
+		local nextHint = extraHints[math.random(#extraHints)]
+		if #keymapHints + #nextHint + borderAndPadding > width then break end
+		keymapHints = keymapHints .. "  " .. nextHint
+	until #extraHints == 0
 
+	-- CREATE WINDOW
 	local winnr = a.nvim_open_win(bufnr, true, {
 		relative = "win",
 		title = winTitle,
@@ -198,7 +210,7 @@ function M.editInPopup(snip, mode)
 		row = math.floor((1 - conf.height) * a.nvim_win_get_height(0) / 2),
 		col = math.floor((1 - conf.width) * a.nvim_win_get_width(0) / 2),
 		zindex = 1, -- below nvim-notify floats
-		footer = { { " " .. footerStr .. " ", "Comment" } },
+		footer = { { " " .. keymapHints .. " ", "Comment" } },
 	})
 	a.nvim_set_option_value("signcolumn", "no", { win = winnr })
 	a.nvim_set_option_value("list", true, { win = winnr })
