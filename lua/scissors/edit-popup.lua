@@ -210,7 +210,7 @@ function M.editInPopup(snip, mode)
 		row = math.floor((1 - conf.height) * a.nvim_win_get_height(0) / 2),
 		col = math.floor((1 - conf.width) * a.nvim_win_get_width(0) / 2),
 		zindex = 1, -- below nvim-notify floats
-		footer = { { " " .. keymapHints .. " ", "Comment" } },
+		footer = { { " " .. keymapHints .. " ", "FloatBorder" } },
 	})
 	a.nvim_set_option_value("signcolumn", "no", { win = winnr })
 	a.nvim_set_option_value("list", true, { win = winnr })
