@@ -176,7 +176,12 @@ function M.editInPopup(snip, mode)
 	a.nvim_buf_set_name(bufnr, bufName)
 	a.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
 	a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr })
-	local width = math.floor(conf.width * a.nvim_win_get_width(0))
+
+	-- WINDOW STATS
+	local vimWidth = vim.o.columns - 2
+	local vimHeight = vim.o.lines - 2
+	local width = math.floor(conf.width * vimWidth)
+	local height = math.floor(conf.height * vimHeight)
 
 	-- KEYMAP HINTS
 	-- insert as many hints as there is space for in the footer
@@ -198,17 +203,17 @@ function M.editInPopup(snip, mode)
 		keymapHints = keymapHints .. "  " .. nextHint
 	until #extraHints == 0
 
-	-- CREATE WINDOW
 	local winnr = a.nvim_open_win(bufnr, true, {
-		relative = "win",
+		-- centered window
+		relative = "editor",
+		width = width,
+		height = height,
+		row = math.floor((1 - conf.height) * vimHeight / 2),
+		col = math.floor((1 - conf.width) * vimWidth / 2),
+
 		title = winTitle,
 		title_pos = "center",
 		border = conf.border,
-		-- centered window
-		width = width,
-		height = math.floor(conf.height * a.nvim_win_get_height(0)),
-		row = math.floor((1 - conf.height) * a.nvim_win_get_height(0) / 2),
-		col = math.floor((1 - conf.width) * a.nvim_win_get_width(0) / 2),
 		zindex = 1, -- below nvim-notify floats
 		footer = { { " " .. keymapHints .. " ", "FloatBorder" } },
 	})

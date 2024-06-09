@@ -142,7 +142,7 @@ The `.setup()` call is optional.
 require("scissors").setup {
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
-		height = 0.4, -- relative to the window, number between 0 and 1
+		height = 0.4, -- relative to the editor, number between 0 and 1
 		width = 0.6,
 		border = "rounded",
 		keymaps = {
