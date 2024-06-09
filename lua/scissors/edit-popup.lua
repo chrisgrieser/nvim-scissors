@@ -176,6 +176,9 @@ function M.editInPopup(snip, mode)
 	a.nvim_buf_set_name(bufnr, bufName)
 	a.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
 	a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr })
+	-- some LSPs attach to the buffer, so we disable diagnostics here
+	vim.diagnostic.enable(false, { buf = bufnr })
+	vim.diagnostic.reset(ns, bufnr)
 
 	-- WINDOW STATS
 	local vimWidth = vim.o.columns - 2
