@@ -24,6 +24,22 @@ local function getPrefixCount(prefixBodySep)
 	return newCount
 end
 
+---@param hint string
+---@return string
+local function shortenKeymapHintsWithSymbols(hint)
+	-- using only utf symbols, so they work for users without nerd fonts
+	local shortened = hint
+		:gsub("<[Cc][Rr]>", "↩")
+		:gsub("<[dD]own>", "↓")
+		:gsub("<[Uu]p>", "↑")
+		:gsub("<[Rr]ight>", "→")
+		:gsub("<[Ll]eft>", "←")
+		:gsub("<[Tt]ab>", "⭾ ")
+		:gsub("<[Ss]pace>", "⎵")
+		:gsub("<[Bb][Ss]>", "⌫")
+	return shortened
+end
+
 ---@param bufnr number
 ---@param winnr number
 ---@param mode "new"|"update"
@@ -198,6 +214,8 @@ function M.editInPopup(snip, mode)
 		maps.jumpBetweenBodyAndPrefix .. ": Jump",
 		maps.openInFile .. ": Open File",
 	}
+	keymapHints = shortenKeymapHintsWithSymbols(keymapHints)
+	extraHints = vim.tbl_map(shortenKeymapHintsWithSymbols, extraHints)
 	local borderAndPadding = 2 + 2 + 2
 	repeat
 		-- shuffle hints, so user sees different ones when there is not enough space
