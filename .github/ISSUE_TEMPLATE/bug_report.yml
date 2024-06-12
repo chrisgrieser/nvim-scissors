@@ -41,5 +41,5 @@ body:
       options:
         - label: I have updated to the latest version of the plugin.
           required: true
-        - label: I have read [the plugin's FAQ](https://github.com/chrisgrieser/nvim-scissors#cookbook--faq).
+        - label: I have read [docs, and in particular the FAQ](https://github.com/chrisgrieser/nvim-scissors#table-of-contents).
           required: true
