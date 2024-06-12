@@ -191,10 +191,12 @@ function M.editInPopup(snip, mode)
 	a.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 	a.nvim_buf_set_name(bufnr, bufName)
 	a.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
-	a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr })
-	-- some LSPs attach to the buffer, so we disable diagnostics here
-	vim.diagnostic.enable(false, { buf = bufnr })
-	vim.diagnostic.reset(ns, bufnr)
+
+	-- prefer only starting treesitter as opposed to setting the buffer filetype,
+	-- as this avoid triggering the filetype plugin, which can sometimes entail
+	-- undesired effects like LSPs attaching
+	local hasTsParser = pcall(vim.treesitter.start, bufnr, snip.filetype)
+	if not hasTsParser then a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr }) end
 
 	-- WINDOW STATS
 	local vimWidth = vim.o.columns - 2
@@ -283,6 +285,7 @@ function M.editInPopup(snip, mode)
 		end
 	end
 	updatePrefixLabel(#snip.prefix) -- initialize
+
 	-- update in case prefix count changes due to user input
 	a.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
 		buffer = bufnr,
