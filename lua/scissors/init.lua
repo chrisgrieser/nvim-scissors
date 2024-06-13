@@ -12,7 +12,7 @@ local M = {}
 --------------------------------------------------------------------------------
 
 ---@param userConfig? pluginConfig
-function M.setup(userConfig) require("scissors.config").setupPlugin(userConfig or {}) end
+function M.setup(userConfig) require("scissors.config").setupPlugin(userConfig) end
 
 function M.editSnippet()
 	local u = require("scissors.utils")

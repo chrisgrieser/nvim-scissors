@@ -53,12 +53,20 @@ local defaultConfig = {
 
 M.config = defaultConfig -- in case user does not call `setup`
 
----@param userConfig pluginConfig
+---@param userConfig? pluginConfig
 function M.setupPlugin(userConfig)
-	-- normalizing e.g. expands `~` in provided snippetDir
-	if userConfig.snippetDir then userConfig.snippetDir = vim.fs.normalize(userConfig.snippetDir) end
+	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig or {})
 
-	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig)
+	-- normalizing e.g. expands `~` in provided snippetDir
+	M.config.snippetDir = vim.fs.normalize(M.config.snippetDir)
+
+	-- VALIDATE border `none` does not work with and title/footer used by this plugin
+	if M.config.editSnippetPopup.border == "none" then
+		local fallback = defaultConfig.editSnippetPopup.border
+		M.config.editSnippetPopup.border = fallback
+		local msg = ('Border type "none" is not supported, falling back to %q'):format(fallback)
+		require("scissors.utils").notify(msg, "warn")
+	end
 end
 
 --------------------------------------------------------------------------------
