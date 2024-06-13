@@ -58,21 +58,6 @@ function M.setupPlugin(userConfig)
 	-- normalizing e.g. expands `~` in provided snippetDir
 	if userConfig.snippetDir then userConfig.snippetDir = vim.fs.normalize(userConfig.snippetDir) end
 
-	---@deprecated keymap.delete
-	if
-		userConfig.editSnippetPopup
-		and userConfig.editSnippetPopup.keymaps
-		and userConfig.editSnippetPopup.keymaps.delete ---@diagnostic disable-line: undefined-field
-	then
-		local notify = require("scissors.utils").notify
-		notify(
-			"The setting `editSnippetPopup.keymap.delete` is deprecated.\n"
-				.. "Use `editSnippetPopup.keymap.deleteSnippet` instead.",
-			"warn"
-		)
-		userConfig.editSnippetPopup.keymaps.deleteSnippet = userConfig.editSnippetPopup.keymaps.delete ---@diagnostic disable-line: undefined-field
-	end
-
 	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig)
 end
 
