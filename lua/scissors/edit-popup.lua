@@ -222,7 +222,8 @@ function M.editInPopup(snip, mode)
 	repeat
 		-- shuffle hints, so user sees different ones when there is not enough space
 		local nextHint = extraHints[math.random(#extraHints)]
-		if #keymapHints + #nextHint + borderAndPadding > width then break end
+		local hintLen = vim.api.nvim_strwidth(keymapHints) + #nextHint + borderAndPadding
+		if hintLen > width then break end
 		keymapHints = keymapHints .. "  " .. nextHint
 	until #extraHints == 0
 
