@@ -210,18 +210,19 @@ function M.editInPopup(snip, mode)
 	local keymapHints = ("%s: Save  %s: Cancel"):format(maps.saveChanges, maps.cancel)
 	local extraHints = {
 		maps.goBackToSearch .. ": Back",
-		maps.duplicateSnippet .. ": Duplicate",
 		maps.deleteSnippet .. ": Delete",
 		maps.insertNextToken .. ": Token",
 		maps.jumpBetweenBodyAndPrefix .. ": Jump",
 		maps.openInFile .. ": Open File",
 	}
+	if mode ~= "new" then table.insert(extraHints, maps.duplicateSnippet .. ": Duplicate") end
+
 	keymapHints = shortenKeymapHintsWithSymbols(keymapHints)
 	extraHints = vim.tbl_map(shortenKeymapHintsWithSymbols, extraHints)
 	local borderAndPadding = 2 + 2 + 2
 	repeat
 		-- shuffle hints, so user sees different ones when there is not enough space
-		local nextHint = extraHints[math.random(#extraHints)]
+		local nextHint = table.remove(extraHints, math.random(#extraHints))
 		local hintLen = vim.api.nvim_strwidth(keymapHints) + #nextHint + borderAndPadding
 		if hintLen > width then break end
 		keymapHints = keymapHints .. "  " .. nextHint
