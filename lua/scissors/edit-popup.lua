@@ -1,4 +1,3 @@
-local config = require("scissors.config").config
 local convert = require("scissors.vscode-format.convert-object")
 local rw = require("scissors.vscode-format.read-write")
 local u = require("scissors.utils")
@@ -24,10 +23,10 @@ local function getPrefixCount(prefixBodySep)
 	return newCount
 end
 
+---using only utf symbols, so they work for users without nerd fonts
 ---@param hint string
 ---@return string
 local function shortenKeymapHintsWithSymbols(hint)
-	-- using only utf symbols, so they work for users without nerd fonts
 	local shortened = hint
 		:gsub("<[Cc][Rr]>", "↩")
 		:gsub("<[dD]own>", "↓")
@@ -40,15 +39,43 @@ local function shortenKeymapHintsWithSymbols(hint)
 	return shortened
 end
 
+---@param mode "new"|"update"
+---@param maxLength number
+---@return string
+local function generateKeymapHints(mode, maxLength)
+	local mappings = require("scissors.config").config.editSnippetPopup.keymaps
+	local keymapHints = ("%s: Save  %s: Cancel"):format(mappings.saveChanges, mappings.cancel)
+	local extraHints = {
+		mappings.goBackToSearch .. ": Back",
+		mappings.deleteSnippet .. ": Delete",
+		mappings.insertNextToken .. ": Token",
+		mappings.jumpBetweenBodyAndPrefix .. ": Jump",
+		mappings.openInFile .. ": Open File",
+	}
+	if mode ~= "new" then table.insert(extraHints, mappings.duplicateSnippet .. ": Duplicate") end
+
+	keymapHints = shortenKeymapHintsWithSymbols(keymapHints)
+	extraHints = vim.tbl_map(shortenKeymapHintsWithSymbols, extraHints)
+	local borderAndPadding = 2 + 2 + 2
+	repeat
+		-- shuffle hints, so user sees different ones when there is not enough space
+		local nextHint = table.remove(extraHints, math.random(#extraHints))
+		local hintLen = vim.api.nvim_strwidth(keymapHints) + #nextHint + borderAndPadding
+		if hintLen > maxLength then break end
+		keymapHints = keymapHints .. "  " .. nextHint
+	until #extraHints == 0
+	return keymapHints
+end
+
 ---@param bufnr number
 ---@param winnr number
 ---@param mode "new"|"update"
 ---@param snip SnippetObj
 ---@param prefixBodySep extMarkInfo
 local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
+	local mappings = require("scissors.config").config.editSnippetPopup.keymaps
 	local keymap = vim.keymap.set
 	local opts = { buffer = bufnr, nowait = true, silent = true }
-	local mappings = config.editSnippetPopup.keymaps
 	local function closePopup()
 		if a.nvim_win_is_valid(winnr) then a.nvim_win_close(winnr, true) end
 		if a.nvim_buf_is_valid(bufnr) then a.nvim_buf_delete(bufnr, { force = true }) end
@@ -168,7 +195,7 @@ end
 ---@param snip SnippetObj
 ---@param mode "new"|"update"
 function M.editInPopup(snip, mode)
-	local conf = config.editSnippetPopup
+	local conf = require("scissors.config").config.editSnippetPopup
 	local ns = a.nvim_create_namespace("nvim-scissors-editing")
 
 	-- snippet properties
@@ -198,35 +225,12 @@ function M.editInPopup(snip, mode)
 	local hasTsParser = pcall(vim.treesitter.start, bufnr, snip.filetype)
 	if not hasTsParser then a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr }) end
 
-	-- WINDOW STATS
+	-- CREATE WINDOW
 	local vimWidth = vim.o.columns - 2
 	local vimHeight = vim.o.lines - 2
 	local width = math.floor(conf.width * vimWidth)
 	local height = math.floor(conf.height * vimHeight)
-
-	-- KEYMAP HINTS
-	-- insert as many hints as there is space for in the footer
-	local maps = config.editSnippetPopup.keymaps
-	local keymapHints = ("%s: Save  %s: Cancel"):format(maps.saveChanges, maps.cancel)
-	local extraHints = {
-		maps.goBackToSearch .. ": Back",
-		maps.deleteSnippet .. ": Delete",
-		maps.insertNextToken .. ": Token",
-		maps.jumpBetweenBodyAndPrefix .. ": Jump",
-		maps.openInFile .. ": Open File",
-	}
-	if mode ~= "new" then table.insert(extraHints, maps.duplicateSnippet .. ": Duplicate") end
-
-	keymapHints = shortenKeymapHintsWithSymbols(keymapHints)
-	extraHints = vim.tbl_map(shortenKeymapHintsWithSymbols, extraHints)
-	local borderAndPadding = 2 + 2 + 2
-	repeat
-		-- shuffle hints, so user sees different ones when there is not enough space
-		local nextHint = table.remove(extraHints, math.random(#extraHints))
-		local hintLen = vim.api.nvim_strwidth(keymapHints) + #nextHint + borderAndPadding
-		if hintLen > width then break end
-		keymapHints = keymapHints .. "  " .. nextHint
-	until #extraHints == 0
+	local keymapHints = generateKeymapHints(mode, width)
 
 	local winnr = a.nvim_open_win(bufnr, true, {
 		-- centered window

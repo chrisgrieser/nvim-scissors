@@ -1,6 +1,5 @@
 local M = {}
 
-local config = require("scissors.config").config
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
@@ -53,13 +52,15 @@ end
 ---@param jsonObj VSCodeSnippetDict|packageJson
 ---@return boolean success
 function M.writeAndFormatSnippetFile(filepath, jsonObj)
+	local jsonFormatter = require("scissors.config").config.jsonFormatter
+
 	local ok, jsonStr = pcall(vim.json.encode, jsonObj)
 	assert(ok and jsonStr, "Could not encode JSON.")
 
 	-- FORMAT
 	-- INFO sorting via `yq` or `jq` is necessary, since `vim.json.encode`
 	-- does not ensure a stable order of keys in the written JSON.
-	if config.jsonFormatter ~= "none" then
+	if jsonFormatter ~= "none" then
 		local cmds = {
 			-- DOCS https://mikefarah.gitbook.io/yq/operators/sort-keys
 			yq = {
@@ -73,7 +74,7 @@ function M.writeAndFormatSnippetFile(filepath, jsonObj)
 			-- DOCS https://jqlang.github.io/jq/manual/#invoking-jq
 			jq = { "jq", "--sort-keys", "--monochrome-output" },
 		}
-		local result = vim.system(cmds[config.jsonFormatter], { stdin = jsonStr }):wait()
+		local result = vim.system(cmds[jsonFormatter], { stdin = jsonStr }):wait()
 		if result.code ~= 0 then
 			u.notify("JSON formatting failed: " .. result.stderr, "error")
 			return false
