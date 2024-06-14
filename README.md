@@ -38,7 +38,7 @@ Automagical editing and creation of snippets.
 - Automagical conversion from buffer text to JSON string (quotes are escaped, etc.).
 - Intuitive UI for editing the snippet, dynamically adapting the number of
   prefixes.
-- Hot-reloading of the new/edited snippet.
+- Hot-reloading of the new/edited snippet (if using `LuaSnip` or `nvim-snippets`).
 - JSON-formatting and sorting of the snippet file after updating, using `yq` or
   `jq`. (Optional, but [useful when version-controlling your snippet collection](#version-controlling-snippets-json-formatting).)
 - Snippet/file
@@ -71,8 +71,9 @@ Automagical editing and creation of snippets.
 - [Telescope](https://github.com/nvim-telescope/telescope.nvim) OR ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
   [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
 - A snippet engine that can load VSCode-style snippets, such as
-  [LuaSnip](https://github.com/L3MON4D3/LuaSnip) or
-  [nvim-snippets](https://github.com/garymjr/nvim-snippets).
+  [LuaSnip](https://github.com/L3MON4D3/LuaSnip),
+  [nvim-snippets](https://github.com/garymjr/nvim-snippets), or [vim-vsnip](https://github.com/hrsh7th/vim-vsnip).
+  (Note that hot-reloading is not supported for `vim-vsnip`.)
 
 ## Installation
 
