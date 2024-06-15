@@ -178,6 +178,39 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	end, vim.tbl_extend("keep", opts, { expr = true }))
 end
 
+---Adds a dummy-window with `blend` to achieve a backdrop-like effect before
+---@param popupZindex integer
+---@param popupBuf integer
+local function createBackdrop(popupZindex, popupBuf)
+	local config = require("scissors.config").config
+	if not config.backdrop.enabled then return end
+	local blend = config.backdrop.blend
+
+	local bufnr = vim.api.nvim_create_buf(false, true)
+	local winnr = vim.api.nvim_open_win(bufnr, false, {
+		relative = "editor",
+		row = 0,
+		col = 0,
+		focusable = false,
+		width = vim.o.columns,
+		height = vim.o.lines,
+		style = "minimal",
+		zindex = popupZindex - 1, -- so the popup stays on top
+	})
+	vim.api.nvim_set_hl(0, "ScissorsBackdrop", { bg = "#000000", default = true })
+	vim.wo[winnr].winhighlight = "Normal:ScissorsBackdrop"
+	vim.wo[winnr].winblend = blend
+	vim.bo[bufnr].buftype = "nofile"
+
+	vim.api.nvim_create_autocmd("BufLeave", {
+		once = true,
+		buffer = popupBuf,
+		callback = function()
+			if a.nvim_win_is_valid(winnr) then a.nvim_win_close(winnr, true) end
+			if a.nvim_buf_is_valid(bufnr) then a.nvim_buf_delete(bufnr, { force = true }) end
+		end,
+	})
+end
 --------------------------------------------------------------------------------
 
 ---@param snipFile snipFile
@@ -231,6 +264,7 @@ function M.editInPopup(snip, mode)
 	local width = math.floor(conf.width * vimWidth)
 	local height = math.floor(conf.height * vimHeight)
 	local keymapHints = generateKeymapHints(mode, width)
+	local popupZindex = 2
 
 	local winnr = a.nvim_open_win(bufnr, true, {
 		-- centered window
@@ -243,7 +277,7 @@ function M.editInPopup(snip, mode)
 		title = winTitle,
 		title_pos = "center",
 		border = conf.border,
-		zindex = 1, -- below nvim-notify floats
+		zindex = popupZindex, -- below nvim-notify floats
 		footer = { { " " .. keymapHints .. " ", "FloatBorder" } },
 	})
 	local winOpts = {
@@ -258,6 +292,7 @@ function M.editInPopup(snip, mode)
 	for opt, value in pairs(winOpts) do
 		vim.api.nvim_set_option_value(opt, value, { win = winnr })
 	end
+	createBackdrop(popupZindex, bufnr)
 
 	-- move cursor, highlight cursor positions
 	if mode == "new" then

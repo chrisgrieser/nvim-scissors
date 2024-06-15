@@ -157,6 +157,10 @@ require("scissors").setup {
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
 		},
 	},
+	backdrop = {
+		enabled = true,
+		blend = 50, -- between 0-100
+	},
 	telescope = {
 		-- By default, the query only searches snippet prefixes. Set this to
 		-- `true` to also search the body of the snippets.

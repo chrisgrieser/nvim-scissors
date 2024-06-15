@@ -4,6 +4,7 @@ local M = {}
 ---@class (exact) pluginConfig
 ---@field snippetDir string
 ---@field editSnippetPopup { height: number, width: number, border: string, keymaps: popupKeymaps }
+---@field backdrop { enabled: boolean, blend: number }
 ---@field telescope telescopeConfig
 ---@field jsonFormatter "yq"|"jq"|"none"
 
@@ -37,6 +38,10 @@ local defaultConfig = {
 			insertNextToken = "<C-t>", -- insert & normal mode
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
 		},
+	},
+	backdrop = {
+		enabled = true,
+		blend = 50, -- between 0-100
 	},
 	telescope = {
 		-- By default, the query only searches snippet prefixes. Set this to
