@@ -246,10 +246,18 @@ function M.editInPopup(snip, mode)
 		zindex = 1, -- below nvim-notify floats
 		footer = { { " " .. keymapHints .. " ", "FloatBorder" } },
 	})
-	a.nvim_set_option_value("signcolumn", "no", { win = winnr })
-	a.nvim_set_option_value("list", true, { win = winnr })
-	a.nvim_set_option_value("listchars", vim.wo.listchars .. ",trail:·", { win = winnr })
-	a.nvim_set_option_value("winfixbuf", true, { win = winnr })
+	local winOpts = {
+		list = true,
+		listchars = "multispace:·,trail:·,lead:·,tab:▸▸,precedes:…,extends:…",
+		signcolumn = "no",
+		winfixbuf = true,
+		-- reduce scrolloff based on user-set window size
+		sidescrolloff = math.floor(vim.wo.sidescrolloff * conf.width),
+		scrolloff = math.floor(vim.wo.scrolloff * conf.height),
+	}
+	for opt, value in pairs(winOpts) do
+		vim.api.nvim_set_option_value(opt, value, { win = winnr })
+	end
 
 	-- move cursor, highlight cursor positions
 	if mode == "new" then
