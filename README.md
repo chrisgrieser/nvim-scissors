@@ -18,6 +18,9 @@ Automagical editing and creation of snippets.
 - [Rationale](#rationale)
 - [Requirements](#requirements)
 - [Installation](#installation)
+	* [`LuaSnip`](#luasnip)
+	* [`nvim-snippets`](#nvim-snippets)
+	* [`vim-vsnip`](#vim-vsnip)
 - [Usage](#usage)
 	* [Useful Keymaps](#useful-keymaps)
 	* [Prefixes](#prefixes)
@@ -100,14 +103,32 @@ use {
 }
 ```
 
-If you use `LuaSnip`, load the snippets in your `snippetDir` with:
+In addition, you need your snippet engine to point to the snippet folder as
+`nvim-scissors`:
+
+### `LuaSnip`
 
 ```lua
-require("luasnip.loaders.from_vscode").lazy_load { paths = { "path/to/your/snippetFolder" } }
+require("luasnip.loaders.from_vscode").lazy_load {
+	paths = { "path/to/your/snippetFolder" },
+}
 ```
 
-If you are using `nvim-snippets`, set its `search_path` setting to the same path
-as the `snippetDir` from `nvim-scissors`.
+### `nvim-snippets`
+
+```lua
+require("nvim-snippets").setup {
+	search_paths = { "path/to/your/snippetFolder" },
+}
+```
+
+### `vim-vsnip`
+
+```lua
+vim.g.vsnip_snippet_dir = "path/to/your/snippetFolder"
+-- OR
+vim.g.vsnip_snippet_dirs = { "path/to/your/snippetFolder" }
+```
 
 ## Usage
 The plugin provides two commands, `:ScissorsAddNewSnippet` and
