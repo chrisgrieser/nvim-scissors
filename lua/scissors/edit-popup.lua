@@ -48,7 +48,7 @@ local function generateKeymapHints(mode, maxLength)
 	local extraHints = {
 		mappings.goBackToSearch .. ": Back",
 		mappings.deleteSnippet .. ": Delete",
-		mappings.insertNextToken .. ": Token",
+		mappings.insertNextPlaceholder .. ": Placeholder",
 		mappings.jumpBetweenBodyAndPrefix .. ": Jump",
 		mappings.openInFile .. ": Open File",
 	}
@@ -133,16 +133,16 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		vim.cmd(("edit +/%q: %s"):format(locationInFile, snip.fullPath))
 	end, opts)
 
-	keymap({ "n", "i" }, mappings.insertNextToken, function()
+	keymap({ "n", "i" }, mappings.insertNextPlaceholder, function()
 		local bufText = table.concat(a.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
 		local numbers = {}
-		local tokenPattern = "${?(%d+)" -- match `$1`, `${2:word}`, or `${3|word|}`
-		for token in bufText:gmatch(tokenPattern) do
-			table.insert(numbers, tonumber(token))
+		local placeholderPattern = "${?(%d+)" -- match `$1`, `${2:word}`, or `${3|word|}`
+		for placeholder in bufText:gmatch(placeholderPattern) do
+			table.insert(numbers, tonumber(placeholder))
 		end
-		local highestToken = #numbers > 0 and math.max(unpack(numbers)) or 0
+		local highestPlaceholder = #numbers > 0 and math.max(unpack(numbers)) or 0
 
-		local insertStr = ("${%s:}"):format(highestToken + 1)
+		local insertStr = ("${%s:}"):format(highestPlaceholder + 1)
 		local row, col = unpack(a.nvim_win_get_cursor(0))
 		a.nvim_buf_set_text(bufnr, row - 1, col, row - 1, col, { insertStr })
 

@@ -125,10 +125,12 @@ vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() e
 vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
 
-> [!TIP]
-> A quick method for creating a new snippet that is similar to an existing
-> snippet is to search for a snippet via `editSnippet`, and then use the
-> `duplicateSnippet` command (default keymap: `<C-d>`).
+### Useful Keymaps
+- `<C-p>`: insert the [next placeholder](#variables-and-tabstops) such as
+  `${1:placeholder}` in the snippet body.
+- `<C-d>` to duplicate a snippet is most useful when creating many similar
+  snippets.
+
 ### Prefixes
 "Prefix" is how trigger words are referred to in the VSCode format.
 
@@ -158,7 +160,7 @@ require("scissors").setup {
 			deleteSnippet = "<C-BS>",
 			duplicateSnippet = "<C-d>",
 			openInFile = "<C-o>",
-			insertNextToken = "<C-t>", -- insert & normal mode
+			insertNextPlaceholder = "<C-p>", -- insert & normal mode
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
 		},
 	},

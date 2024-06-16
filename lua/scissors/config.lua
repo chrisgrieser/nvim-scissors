@@ -1,4 +1,5 @@
 local M = {}
+local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
 ---@class (exact) pluginConfig
@@ -14,7 +15,7 @@ local M = {}
 ---@field deleteSnippet string
 ---@field duplicateSnippet string
 ---@field openInFile string
----@field insertNextToken string
+---@field insertNextPlaceholder string
 ---@field goBackToSearch string
 ---@field jumpBetweenBodyAndPrefix string
 
@@ -35,7 +36,7 @@ local defaultConfig = {
 			deleteSnippet = "<C-BS>",
 			duplicateSnippet = "<C-d>",
 			openInFile = "<C-o>",
-			insertNextToken = "<C-t>", -- insert & normal mode
+			insertNextPlaceholder = "<C-p>", -- insert & normal mode
 			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
 		},
 	},
@@ -65,12 +66,20 @@ function M.setupPlugin(userConfig)
 	-- normalizing e.g. expands `~` in provided snippetDir
 	M.config.snippetDir = vim.fs.normalize(M.config.snippetDir)
 
+	-- DEPRECATION of `insertNextToken`
+	if M.config.editSnippetPopup.keymaps.insertNextToken then ---@diagnostic disable-line: undefined-field
+		M.config.editSnippetPopup.keymaps.insertNextPlaceholder =
+			M.config.editSnippetPopup.keymaps.insertNextToken ---@diagnostic disable-line: undefined-field
+		local msg = "The `insertNextToken` keymap is deprecated, use `insertNextPlaceholder` instead."
+		u.notify(msg, "warn")
+	end
+
 	-- VALIDATE border `none` does not work with and title/footer used by this plugin
 	if M.config.editSnippetPopup.border == "none" then
 		local fallback = defaultConfig.editSnippetPopup.border
 		M.config.editSnippetPopup.border = fallback
 		local msg = ('Border type "none" is not supported, falling back to %q'):format(fallback)
-		require("scissors.utils").notify(msg, "warn")
+		u.notify(msg, "warn")
 	end
 end
 
