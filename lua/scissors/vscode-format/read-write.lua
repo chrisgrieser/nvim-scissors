@@ -3,26 +3,6 @@ local M = {}
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
-local hasNotifiedOnRestartRequirement = false
----Currently only supports luasnip
----@param path string
-local function reloadSnippetFile(path)
-	local luasnipInstalled, luasnipLoaders = pcall(require, "luasnip.loaders")
-	local nvimSnippetsInstalled, snippetUtils = pcall(require, "snippets.utils")
-	if luasnipInstalled then
-		luasnipLoaders.reload_file(path) -- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
-	elseif nvimSnippetsInstalled then
-		snippetUtils.reload_file(path, true) -- https://github.com/garymjr/nvim-snippets/commit/754528d10277758ae3ff62dd8a2d0e44425b606f
-	elseif not hasNotifiedOnRestartRequirement then
-		local msg = "Restart nvim for changes to take effect.\n"
-			.. "(Hot-reload is only supported for LuaSnip and nvim-snippets.)"
-		u.notify(msg, "info")
-		hasNotifiedOnRestartRequirement = true
-	end
-end
-
---------------------------------------------------------------------------------
-
 ---@param path string
 ---@return table
 function M.readAndParseJson(path)
@@ -84,7 +64,9 @@ function M.writeAndFormatSnippetFile(filepath, jsonObj)
 
 	-- WRITE & RELOAD
 	M.writeFile(filepath, jsonStr)
-	if not vim.endswith(filepath, "package.json") then reloadSnippetFile(filepath) end
+	if not vim.endswith(filepath, "package.json") then
+		require("scissors.hot-reload").reloadSnippetFile(filepath)
+	end
 
 	return true
 end
