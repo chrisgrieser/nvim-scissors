@@ -281,8 +281,6 @@ function M.editInPopup(snip, mode)
 		footer = { { " " .. keymapHints .. " ", "FloatBorder" } },
 	})
 	local winOpts = {
-		list = true,
-		listchars = "multispace:·,trail:·,lead:·,tab:▸▸,precedes:…,extends:…",
 		signcolumn = "no",
 		winfixbuf = true,
 		-- reduce scrolloff based on user-set window size
