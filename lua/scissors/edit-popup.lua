@@ -168,14 +168,30 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		a.nvim_win_set_cursor(winnr, { moveToLine, 0 })
 	end, opts)
 
-	-- HACK workaround to deal with prefix-deletion on last prefix line (see issue #6)
-	-- (no other configuration of the virtual line fixes this, could be nvim-bug?)
+	-----------------------------------------------------------------------------
+
+	-- HACK deal with deletion and creation of prefixes on the last line (see #6)
+	local function normal(cmd) vim.cmd.normal { cmd, bang = true } end
+
 	keymap("n", "dd", function()
 		local prefixCount = getPrefixCount(prefixBodySep)
-		local currentLine = a.nvim_win_get_cursor(0)[1]
-		if currentLine == prefixCount then return "^DkJ" end
-		return "dd"
-	end, vim.tbl_extend("keep", opts, { expr = true }))
+		local currentLnum = a.nvim_win_get_cursor(0)[1]
+		local cmd = currentLnum == prefixCount and "^DkJ" or "dd"
+		normal(cmd)
+	end, opts)
+
+	keymap("n", "o", function()
+		local prefixCount = getPrefixCount(prefixBodySep)
+		local currentLnum = a.nvim_win_get_cursor(0)[1]
+		local cmd = "o"
+		if currentLnum == prefixCount then
+			local currentLine = a.nvim_get_current_line()
+			a.nvim_buf_set_lines(0, prefixCount - 1, prefixCount - 1, false, { currentLine })
+			cmd = "cc"
+		end
+		normal(cmd)
+		vim.cmd.startinsert()
+	end, opts)
 end
 
 ---Adds a dummy-window with `blend` to achieve a backdrop-like effect before

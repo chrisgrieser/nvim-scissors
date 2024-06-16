@@ -158,9 +158,7 @@ The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes
 the number of prefixes.
 
-> [!TIP]
-> To ensure that a new line is added to the prefix area and not the body
-> area, use `O` (the capital letter) on the first line.
+<img alt="Showcase prefix change" width=70% src="https://github.com/chrisgrieser/nvim-scissors/assets/73286100/d54f96c2-6751-46e9-9185-77b63eb2664a">
 
 ## Configuration
 The `.setup()` call is optional.
