@@ -35,6 +35,8 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 - |scissors-requirements|
 - |scissors-installation|
 - |scissors-usage|
+    - |scissors-useful-keymaps|
+    - |scissors-prefixes|
 - |scissors-configuration|
 - |scissors-cookbook-&-faq|
     - |scissors-introduction-to-the-vscode-style-snippet-format|
@@ -142,21 +144,30 @@ which you can use to directly create keymaps:
 >lua
     vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
     
-    -- When used in visual mode prefills the selection as body.
+    -- when used in visual mode, prefills the selection as snippet body
     vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 <
 
 
-  [!TIP] A quick method for creating a new snippet that is similar to an existing
-  snippet is to search for a snippet via `editSnippet`, and then use the
-  `duplicateSnippet` command (default keymap: `<C-d>`).
+USEFUL KEYMAPS ~
+
+- `<C-p>`insert the |scissors-next-placeholder| such as
+    `${1:placeholder}` in the snippet body.
+- `<C-d>` to duplicate a snippet is most useful when creating many similar
+    snippets.
+
+
+PREFIXES ~
+
+"Prefix" is how trigger words are referred to in the VSCode format.
+
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes the number
-of prefixes. ("Prefix" is how trigger words are referred to in the VSCode
-format.)
+of prefixes.
 
 
-
+  [!TIP] To ensure that a new line is added to the prefix area and not the body
+  area, use `O` (the capital letter) on the first line.
 
 CONFIGURATION                          *scissors-nvim-scissors--configuration*
 
@@ -177,7 +188,7 @@ The `.setup()` call is optional.
                 deleteSnippet = "<C-BS>",
                 duplicateSnippet = "<C-d>",
                 openInFile = "<C-o>",
-                insertNextToken = "<C-t>", -- insert & normal mode
+                insertNextPlaceholder = "<C-p>", -- insert & normal mode
                 jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
             },
         },
