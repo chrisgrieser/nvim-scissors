@@ -189,8 +189,7 @@ represents one prefix, and creating or removing lines thus changes the number
 of prefixes.
 
 
-  [!TIP] To ensure that a new line is added to the prefix area and not the body
-  area, use `O` (the capital letter) on the first line.
+
 
 CONFIGURATION                          *scissors-nvim-scissors--configuration*
 
