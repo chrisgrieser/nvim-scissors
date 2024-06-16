@@ -14,18 +14,18 @@ local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
 ---@param snippets SnippetObj[] entries
----@param formatter function(SnippetObj): string formats SnippetObj into display text
+---@param snipDisplay function(SnippetObj): string formats SnippetObj into display text
 ---@param prompt string
-function M.selectSnippet(snippets, formatter, prompt)
+function M.selectSnippet(snippets, snipDisplay, prompt)
 	local alsoMatchBody = require("scissors.config").config.telescope.alsoSearchSnippetBody
 
-	-- HACK color parent as comment, see `snipDisplay` using `\t\t`
-	-- TODO figure out coloring without using this autocmd
+	-- color parent as comment, due to `snipDisplay` using `\t\t`
 	vim.api.nvim_create_autocmd("FileType", {
 		once = true,
 		pattern = "TelescopeResults",
 		callback = function(ctx)
 			vim.api.nvim_buf_call(ctx.buf, function() vim.fn.matchadd("Comment", "\t\t.*$") end)
+			require("scissors.backdrop").new(ctx.buf)
 		end,
 	})
 
@@ -41,7 +41,7 @@ function M.selectSnippet(snippets, formatter, prompt)
 					if alsoMatchBody then matcher = matcher .. " " .. table.concat(snip.body, "\n") end
 					return {
 						value = snip,
-						display = formatter(snip),
+						display = snipDisplay(snip),
 						ordinal = matcher,
 					}
 				end,
