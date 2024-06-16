@@ -240,10 +240,10 @@ function M.editInPopup(snip, mode)
 	if mode == "update" then
 		local displayName = u.snipDisplayName(snip)
 		bufName = ("Edit Snippet %q"):format(displayName)
-		winTitle = (" Editing %q [%s] "):format(displayName, nameOfSnippetFile)
+		winTitle = ("Editing %q [%s]"):format(displayName, nameOfSnippetFile)
 	else
 		bufName = "New Snippet"
-		winTitle = (" New Snippet in %q "):format(nameOfSnippetFile)
+		winTitle = ("New Snippet in %q"):format(nameOfSnippetFile)
 	end
 
 	-- CREATE BUFFER
@@ -274,7 +274,7 @@ function M.editInPopup(snip, mode)
 		row = math.floor((1 - conf.height) * vimHeight / 2),
 		col = math.floor((1 - conf.width) * vimWidth / 2),
 
-		title = winTitle,
+		title = " " .. winTitle .. " ",
 		title_pos = "center",
 		border = conf.border,
 		zindex = popupZindex, -- below nvim-notify floats
