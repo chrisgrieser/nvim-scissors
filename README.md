@@ -19,6 +19,8 @@ Automagical editing and creation of snippets.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
+	* [Useful Keymaps](#useful-keymaps)
+	* [Prefixes](#prefixes)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
 	* [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
@@ -119,7 +121,7 @@ which you can use to directly create keymaps:
 ```lua
 vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
 
--- When used in visual mode prefills the selection as body.
+-- when used in visual mode, prefills the selection as snippet body
 vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
 
@@ -127,13 +129,16 @@ vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNew
 > A quick method for creating a new snippet that is similar to an existing
 > snippet is to search for a snippet via `editSnippet`, and then use the
 > `duplicateSnippet` command (default keymap: `<C-d>`).
+### Prefixes
+"Prefix" is how trigger words are referred to in the VSCode format.
 
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes
-the number of prefixes. ("Prefix" is how trigger words are referred to in the
-VSCode format.)
+the number of prefixes.
 
-<img alt="Showcase prefix change" width=70% src="https://github.com/chrisgrieser/nvim-scissors/assets/73286100/d54f96c2-6751-46e9-9185-77b63eb2664a">
+> [!TIP]
+> To ensure that a new line is added to the prefix area and not the body
+> area, use `O` (the capital letter) on the first line.
 
 ## Configuration
 The `.setup()` call is optional.
