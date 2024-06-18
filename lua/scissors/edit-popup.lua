@@ -238,8 +238,8 @@ function M.editInPopup(snip, mode)
 	-- prefer only starting treesitter as opposed to setting the buffer filetype,
 	-- as this avoid triggering the filetype plugin, which can sometimes entail
 	-- undesired effects like LSPs attaching
-	local hasTsParser = pcall(vim.treesitter.start, bufnr, snip.filetype)
-	if not hasTsParser then a.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr }) end
+	pcall(vim.treesitter.start, bufnr, snip.filetype)
+	vim.api.nvim_set_option_value("filetype", "scissors-snippet", { buf = bufnr })
 
 	-- CREATE WINDOW
 	local vimWidth = vim.o.columns - 2
@@ -247,7 +247,7 @@ function M.editInPopup(snip, mode)
 	local width = math.floor(conf.width * vimWidth)
 	local height = math.floor(conf.height * vimHeight)
 	local keymapHints = generateKeymapHints(mode, width)
-	local popupZindex = 2
+	local popupZindex = 20 -- below nvim-notify, which uses 50
 
 	local winnr = a.nvim_open_win(bufnr, true, {
 		-- centered window
