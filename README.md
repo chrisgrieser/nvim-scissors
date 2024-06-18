@@ -179,7 +179,6 @@ require("scissors").setup {
 			duplicateSnippet = "<C-d>",
 			openInFile = "<C-o>",
 			insertNextPlaceholder = "<C-p>", -- insert & normal mode
-			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
 		},
 	},
 	backdrop = {

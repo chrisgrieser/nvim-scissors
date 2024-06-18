@@ -17,7 +17,6 @@ local u = require("scissors.utils")
 ---@field openInFile string
 ---@field insertNextPlaceholder string
 ---@field goBackToSearch string
----@field jumpBetweenBodyAndPrefix string
 
 ---@class (exact) telescopeConfig
 ---@field alsoSearchSnippetBody boolean
@@ -37,7 +36,6 @@ local defaultConfig = {
 			duplicateSnippet = "<C-d>",
 			openInFile = "<C-o>",
 			insertNextPlaceholder = "<C-p>", -- insert & normal mode
-			jumpBetweenBodyAndPrefix = "<C-Tab>", -- insert & normal mode
 		},
 	},
 	backdrop = {
@@ -71,6 +69,14 @@ function M.setupPlugin(userConfig)
 		M.config.editSnippetPopup.keymaps.insertNextPlaceholder =
 			M.config.editSnippetPopup.keymaps.insertNextToken ---@diagnostic disable-line: undefined-field
 		local msg = "The `insertNextToken` keymap is deprecated, use `insertNextPlaceholder` instead."
+		u.notify(msg, "warn")
+	end
+
+	-- DEPRECATION of `jumpBetweenBodyAndPrefix`
+	if M.config.editSnippetPopup.keymaps.jumpBetweenBodyAndPrefix then ---@diagnostic disable-line: undefined-field
+		local msg = "The `jumpBetweenBodyAndPrefix` keymap has been removed. "
+			.. "You can now create a filetype-specific for custom keymaps using "
+			.. "the filetype `scissors-snippet`."
 		u.notify(msg, "warn")
 	end
 

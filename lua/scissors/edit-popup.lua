@@ -49,7 +49,6 @@ local function generateKeymapHints(mode, maxLength)
 		mappings.goBackToSearch .. ": Back",
 		mappings.deleteSnippet .. ": Delete",
 		mappings.insertNextPlaceholder .. ": Placeholder",
-		mappings.jumpBetweenBodyAndPrefix .. ": Jump",
 		mappings.openInFile .. ": Open File",
 	}
 	if mode ~= "new" then table.insert(extraHints, mappings.duplicateSnippet .. ": Duplicate") end
@@ -158,14 +157,6 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		elseif mode == "update" then
 			require("scissors").editSnippet()
 		end
-	end, opts)
-
-	keymap({ "i", "n" }, mappings.jumpBetweenBodyAndPrefix, function()
-		local prefixCount = getPrefixCount(prefixBodySep)
-		local currentLine = a.nvim_win_get_cursor(0)[1]
-		local isInBody = currentLine > prefixCount
-		local moveToLine = isInBody and 1 or currentLine + 1
-		a.nvim_win_set_cursor(winnr, { moveToLine, 0 })
 	end, opts)
 
 	-----------------------------------------------------------------------------
