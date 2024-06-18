@@ -78,6 +78,7 @@ Automagical editing and creation of snippets.
 - A snippet engine that can load VSCode-style snippets, such as
   [LuaSnip](https://github.com/L3MON4D3/LuaSnip),
   [nvim-snippets](https://github.com/garymjr/nvim-snippets), or [vim-vsnip](https://github.com/hrsh7th/vim-vsnip).
+- *Optional*: Treesitter parsers for the languages you want syntax highlighting for.
 
 ## Installation
 
