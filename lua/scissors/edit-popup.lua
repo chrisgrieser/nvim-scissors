@@ -229,7 +229,9 @@ function M.editInPopup(snip, mode)
 	-- prefer only starting treesitter as opposed to setting the buffer filetype,
 	-- as this avoid triggering the filetype plugin, which can sometimes entail
 	-- undesired effects like LSPs attaching
-	pcall(vim.treesitter.start, bufnr, snip.filetype)
+	local ft = snip.filetype
+	if ft == "zsh" then ft = "bash" end -- use bash syntax highlighting for zsh
+	pcall(vim.treesitter.start, bufnr, ft) -- errors when no parser available
 	vim.api.nvim_set_option_value("filetype", "scissors-snippet", { buf = bufnr })
 
 	-- CREATE WINDOW
