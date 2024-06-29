@@ -132,9 +132,10 @@ vim.g.vsnip_snippet_dirs = { "path/to/your/snippetFolder" }
 ```
 
 ## Usage
-The plugin provides two commands, `:ScissorsAddNewSnippet` and
+The plugin provides two ex commands, `:ScissorsAddNewSnippet` and
 `:ScissorsEditSnippet`. You can pass a range to `:ScissorsAddSnippet` command to
-prefill snippet body (for example `:'<,'>ScissorsAddSnippet` or `:3ScissorsAddSnippet`).
+prefill snippet body (for example `:'<,'> ScissorsAddSnippet` or `:3
+ScissorsAddSnippet`).
 
 The plugin also provides two lua functions `addNewSnippet` and `editSnippet`,
 which you can use to directly create keymaps:
