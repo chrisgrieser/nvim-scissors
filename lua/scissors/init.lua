@@ -75,7 +75,7 @@ function M.addNewSnippet(exCmdArgs)
 	local bodyPrefill = { "" }
 	local mode = vim.fn.mode()
 	local calledFromVisualMode = mode:find("[vV]")
-	local calledFromExCmd = exCmdArgs and exCmdArgs.range > 0
+	local calledFromExCmd = exCmdArgs.range and exCmdArgs.range > 0
 	if calledFromVisualMode then
 		u.leaveVisualMode() -- necessary so `<` and `>` marks are set
 		local startRow, startCol = unpack(vim.api.nvim_buf_get_mark(0, "<"))
