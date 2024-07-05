@@ -116,8 +116,8 @@ function M.addNewSnippet(exCmdArgs)
 
 	-- Bootstrap #2: new snippet file, if none exists
 	if #allSnipFiles == 0 then
+		u.notify("No snippet files found for filetype: " .. bufferFt .. "\nBootstrapping one.")
 		local newSnipFile = vb.bootstrapSnippetFile(bufferFt)
-		if not newSnipFile then return end
 		table.insert(allSnipFiles, newSnipFile)
 	end
 

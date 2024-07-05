@@ -46,6 +46,8 @@ end
 ---DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax
 ---@param bufnr number
 function M.tokenHighlight(bufnr)
+	local vars = require("scissors.vscode-format.snippet-variables").vars
+
 	vim.api.nvim_buf_call(bufnr, function()
 		-- escaped dollar
 		vim.fn.matchadd("@string.escape", [[\\\$]])
@@ -59,37 +61,6 @@ function M.tokenHighlight(bufnr)
 		vim.fn.matchadd(hlgroup, unescapedDollar .. [[{\d:.\{-}}]]) -- placeholders
 		vim.fn.matchadd(hlgroup, unescapedDollar .. [[{\d|.\{-}|}]]) -- choice
 
-		local vars = {
-			"TM_SELECTED_TEXT",
-			"TM_CURRENT_LINE",
-			"TM_CURRENT_WORD",
-			"TM_LINE_INDEX",
-			"TM_LINE_NUMBER",
-			"TM_FILENAME",
-			"TM_FILENAME_BASE",
-			"TM_DIRECTORY",
-			"TM_FILEPATH",
-			"CLIPBOARD",
-			"CURRENT_YEAR",
-			"CURRENT_YEAR_SHORT",
-			"CURRENT_MONTH",
-			"CURRENT_MONTH_NAME",
-			"CURRENT_MONTH_NAME_SHORT",
-			"CURRENT_DATE",
-			"CURRENT_DAY_NAME",
-			"CURRENT_DAY_NAME_SHORT",
-			"CURRENT_HOUR",
-			"CURRENT_MINUTE",
-			"CURRENT_SECOND",
-			"CURRENT_SECONDS_UNIX",
-			"CURRENT_TIMEZONE_OFFSET",
-			"RANDOM",
-			"RANDOM_HEX",
-			"UUID",
-			"LINE_COMMENT",
-			"BLOCK_COMMENT_START",
-			"BLOCK_COMMENT_END",
-		}
 		local bracedVars = unescapedDollar
 			.. [[{\(]]
 			.. table.concat(vars, [[\|]])

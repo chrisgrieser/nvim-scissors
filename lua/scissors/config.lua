@@ -89,5 +89,8 @@ function M.setupPlugin(userConfig)
 	end
 end
 
+-- filetype used for the popup window of this plugin
+M.pluginFiletype = "scissors-snippet"
+
 --------------------------------------------------------------------------------
 return M

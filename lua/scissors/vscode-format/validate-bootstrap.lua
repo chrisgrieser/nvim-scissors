@@ -81,11 +81,12 @@ function M.bootstrapSnipDir(snipDir)
 	if msg ~= "" then u.notify(vim.trim(msg)) end
 end
 
+---write a new snippet file for the given filetype, update package.json, and
+---return the snipFile
 ---@param ft string
+---@param contents? string -- defaults to `{}`
 ---@return snipFile -- the newly created snippet file
-function M.bootstrapSnippetFile(ft)
-	u.notify("No snippet files found for filetype: " .. ft .. "\nBootstrapping one.")
-
+function M.bootstrapSnippetFile(ft, contents)
 	local snipDir = require("scissors.config").config.snippetDir
 	local newSnipName = ft .. ".json"
 
@@ -96,7 +97,7 @@ function M.bootstrapSnippetFile(ft)
 		if not u.fileExists(newSnipFilepath) then break end
 		newSnipName = newSnipName .. "-1"
 	end
-	rw.writeFile(newSnipFilepath, "{}")
+	rw.writeFile(newSnipFilepath, contents or "{}")
 
 	-- update package.json
 	local packageJson = rw.readAndParseJson(snipDir .. "/package.json") ---@type packageJson

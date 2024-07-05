@@ -22,12 +22,11 @@ Automagical editing and creation of snippets.
 	* [`nvim-snippets`](#nvim-snippets)
 	* [`vim-vsnip`](#vim-vsnip)
 - [Usage](#usage)
-	* [Useful Keymaps](#useful-keymaps)
 	* [Prefixes](#prefixes)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
 	* [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
-	* [Variables and Tabstops](#variables-and-tabstops)
+	* [Variables & Tabstops](#variables--tabstops)
 	* [Version Controlling Snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
 	* [Snippets on visual selections](#snippets-on-visual-selections)
 	* [`friendly-snippets`](#friendly-snippets)
@@ -104,7 +103,7 @@ use {
 }
 ```
 
-In addition, you need your snippet engine to point to the snippet folder as
+In addition, you need your snippet engine to point to the same snippet folder as
 `nvim-scissors`:
 
 ### `LuaSnip`
@@ -147,7 +146,7 @@ vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() e
 vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
 
-### Useful Keymaps
+**Useful keymaps in the scissors popup window**
 - `<C-p>`: insert the [next placeholder](#variables-and-tabstops) such as
   `${1:placeholder}` in the snippet body.
 - `<C-d>` to duplicate a snippet is most useful when creating many similar
@@ -281,17 +280,24 @@ For details, read the official VSCode snippet documentation:
 - [`package.json` specification](https://code.visualstudio.com/api/language-extensions/snippet-guide)
 - [LuaSnip-specific additions to the format](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code)
 
-### Variables and Tabstops
-- There are various variables you can use, such as `$TM_FILENAME` or
-  `$LINE_COMMENT`. [See here for a full list of
-  variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
-- [Tabstops](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_tabstops)
-  are denoted by `$1`, `$2`, `$3`, with `$0` being the last tabstop. They
-  support placeholders such `${1:foobar}`.
+### Variables & Tabstops
+[Tabstops](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_tabstops)
+are denoted by `$1`, `$2`, `$3`, with `$0` being the last tabstop. They
+support placeholders such `${1:foobar}`.
 
-> [!TIP]
+> [!NOTE]
 > Due to the use of `$` in the snippet syntax, any *literal* `$` needs to be
 > escaped as `\$`.
+
+Furthermore, there are various variables you can use, such as `$TM_FILENAME` or
+`$LINE_COMMENT`. [See here for a full list of
+variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
+
+> [!TIP]
+> If you frequently create new snippets, you may also use the command
+> `:ScissorsCreateSnippetsForSnippetVars` to create snippets for the VSCode
+> snippet variables in `nvim-scissors`'s popup window. For example, typing
+> `filen` then creates a suggestion for `$TM_FILENAME`.
 
 ### Version Controlling Snippets: JSON-formatting
 This plugin writes JSON files via `vim.encode.json()`. That method saves
