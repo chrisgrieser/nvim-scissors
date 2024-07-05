@@ -73,16 +73,12 @@ end
 
 ---@param snip SnippetObj
 function M.deleteSnippet(snip)
-	local key = snip.originalKey
-	assert(key)
+	local key = assert(snip.originalKey)
 	local snippetsInFile = M.readAndParseJson(snip.fullPath) ---@cast snippetsInFile VSCodeSnippetDict
 	snippetsInFile[key] = nil -- = delete
 
 	local success = M.writeAndFormatSnippetFile(snip.fullPath, snippetsInFile)
-	if success then
-		local displayName = #key > 20 and key:sub(1, 20) .. "…" or key
-		u.notify(("%q deleted."):format(displayName))
-	end
+	if success then u.notify(("%q deleted."):format(u.snipDisplayName(snip))) end
 end
 --------------------------------------------------------------------------------
 return M
