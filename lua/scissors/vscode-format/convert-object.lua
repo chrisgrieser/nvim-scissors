@@ -82,12 +82,14 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	local filepath = snip.fullPath
 	local prefix = vim.list_slice(editedLines, 1, prefixCount)
 	local body = vim.list_slice(editedLines, prefixCount + 1, #editedLines)
-	local isNewSnippet = snip.originalKey == nil
+	local snippetWasUpdated = snip.originalKey ~= nil
 
 	-- LINT
-	prefix = vim.tbl_map(function(line) return vim.trim(line) end, prefix)
-	-- remove deleted prefixes
-	prefix = vim.tbl_filter(function(line) return line ~= "" end, prefix)
+	prefix = vim
+		.iter(prefix)
+		:map(function(line) return vim.trim(line) end)
+		:filter(function(line) return line ~= "" end) -- remove deleted prefixes
+		:totable()
 	-- trim trailing empty lines from body
 	while body[#body] == "" do
 		table.remove(body)
@@ -103,15 +105,14 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	end
 
 	-- convert snipObj to VSCodeSnippet
-	local originalKey = snip.originalKey
 	---@type VSCodeSnippet
 	local vsCodeSnip = {
 		body = #body == 1 and body[1] or body, -- flatten if only one element
 		prefix = #prefix == 1 and prefix[1] or prefix,
 	}
 
-	-- move item to new key
-	if originalKey ~= nil then snippetsInFile[originalKey] = nil end -- remove from old key
+	-- insert item at a new key
+	if snippetWasUpdated then snippetsInFile[snip.originalKey] = nil end -- remove from old key
 	local key = table.concat(prefix, " + ")
 	while snippetsInFile[key] ~= nil do -- ensure new key is unique
 		key = key .. "-1"
@@ -122,7 +123,7 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
 	if success then
 		local snipName = u.snipDisplayName(vsCodeSnip)
-		local action = isNewSnippet and "created" or "updated"
+		local action = snippetWasUpdated and "updated" or "created"
 		u.notify(("%q %s."):format(snipName, action))
 	end
 end
