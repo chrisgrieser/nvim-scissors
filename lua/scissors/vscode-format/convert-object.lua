@@ -120,7 +120,7 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	snippetsInFile[key] = vsCodeSnip -- insert at new key
 
 	-- write & notify
-	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile)
+	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile, snip.fileIsNew)
 	if success then
 		local snipName = u.snipDisplayName(vsCodeSnip)
 		local action = snippetWasUpdated and "updated" or "created"

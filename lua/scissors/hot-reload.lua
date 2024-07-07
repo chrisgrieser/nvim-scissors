@@ -5,7 +5,17 @@ local u = require("scissors.utils")
 local hasNotifiedOnRestartRequirement = false
 
 ---@param path string
-function M.reloadSnippetFile(path)
+---@param fileIsNew? boolean
+function M.reloadSnippetFile(path, fileIsNew)
+	-- GUARD
+	if fileIsNew then
+		local name = vim.fs.basename(path)
+		local msg = ("%q is a new file and thus cannot be hot-reloaded. "):format(name)
+			.. "Please restart nvim for this change to take effect."
+		u.notify(msg)
+		return
+	end
+
 	local luasnipInstalled, luasnipLoaders = pcall(require, "luasnip.loaders")
 	local nvimSnippetsInstalled, snippetUtils = pcall(require, "snippets.utils")
 	local vimVsnipInstalled = vim.g.loaded_vsnip ~= nil -- https://github.com/hrsh7th/vim-vsnip/blob/master/plugin/vsnip.vim#L4C5-L4C17

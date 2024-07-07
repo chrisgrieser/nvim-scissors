@@ -81,8 +81,8 @@ function M.bootstrapSnipDir(snipDir)
 	if msg ~= "" then u.notify(vim.trim(msg)) end
 end
 
----write a new snippet file for the given filetype, update package.json, and
----return the snipFile
+---Write a new snippet file for the given filetype, update package.json, and
+---returns the snipFile.
 ---@param ft string
 ---@param contents? string -- defaults to `{}`
 ---@return snipFile -- the newly created snippet file
@@ -108,7 +108,7 @@ function M.bootstrapSnippetFile(ft, contents)
 	rw.writeAndFormatSnippetFile(snipDir .. "/package.json", packageJson)
 
 	-- return snipFile to directly add to it
-	return { ft = ft, path = newSnipFilepath }
+	return { ft = ft, path = newSnipFilepath, fileIsNew = true }
 end
 
 --------------------------------------------------------------------------------

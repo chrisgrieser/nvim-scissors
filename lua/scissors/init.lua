@@ -104,19 +104,20 @@ function M.addNewSnippet(exCmdArgs)
 	---@type snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
-	-- Bootstrap #1: Create files that are specified in `package.json` but do not exist
+	-- GUARD file listed in `package.json` does not exist
 	for _, snipFile in ipairs(allSnipFiles) do
 		if not u.fileExists(snipFile.path) then
-			-- not using `vim.uv.fs_mkdir` since it does not create intermediate dirs
-			vim.fn.mkdir(vim.fs.dirname(snipFile.path), "p")
-			local rw = require("scissors.vscode-format.read-write")
-			rw.writeFile(snipFile.path, "{}")
+			local relPath = snipFile.path:sub(#snippetDir + 1)
+			local msg = ("%q is listed as a file in the `package.json` "):format(relPath)
+				.. "but it does not exist. Aborting."
+			u.notify(msg, "error")
+			return
 		end
 	end
 
-	-- Bootstrap #2: new snippet file, if none exists
+	-- BOOTSTRAP new snippet file, if none exists
 	if #allSnipFiles == 0 then
-		u.notify("No snippet files found for filetype: " .. bufferFt .. "\nBootstrapping one.")
+		u.notify(("No snippet file found for filetype: %s.\nBootstrapping one."):format(bufferFt))
 		local newSnipFile = vb.bootstrapSnippetFile(bufferFt)
 		table.insert(allSnipFiles, newSnipFile)
 	end

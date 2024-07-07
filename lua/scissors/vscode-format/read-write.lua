@@ -30,8 +30,9 @@ end
 
 ---@param filepath string
 ---@param jsonObj VSCodeSnippetDict|packageJson
+---@param fileIsNew? boolean
 ---@return boolean success
-function M.writeAndFormatSnippetFile(filepath, jsonObj)
+function M.writeAndFormatSnippetFile(filepath, jsonObj, fileIsNew)
 	local jsonFormatter = require("scissors.config").config.jsonFormatter
 
 	local ok, jsonStr = pcall(vim.json.encode, jsonObj)
@@ -65,7 +66,7 @@ function M.writeAndFormatSnippetFile(filepath, jsonObj)
 	-- WRITE & RELOAD
 	M.writeFile(filepath, jsonStr)
 	if not vim.endswith(filepath, "package.json") then
-		require("scissors.hot-reload").reloadSnippetFile(filepath)
+		require("scissors.hot-reload").reloadSnippetFile(filepath, fileIsNew)
 	end
 
 	return true

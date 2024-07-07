@@ -190,11 +190,13 @@ end
 ---@param snipFile snipFile
 ---@param bodyPrefill string[]
 function M.createNewSnipAndEdit(snipFile, bodyPrefill)
+	---@type SnippetObj
 	local snip = {
 		prefix = { "" },
 		body = bodyPrefill,
 		fullPath = snipFile.path,
 		filetype = snipFile.ft,
+		fileIsNew = snipFile.fileIsNew,
 	}
 	M.editInPopup(snip, "new")
 end
