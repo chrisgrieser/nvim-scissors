@@ -119,6 +119,9 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	end
 	snippetsInFile[key] = vsCodeSnip -- insert at new key
 
+	-- HACK
+	require("scissors.hot-reload").nvimSnippetsCacheFix(snip.filetype)
+
 	-- write & notify
 	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile, snip.fileIsNew)
 	if success then
