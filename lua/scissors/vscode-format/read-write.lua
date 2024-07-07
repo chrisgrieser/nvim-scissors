@@ -21,11 +21,14 @@ end
 
 ---@param filepath string
 ---@param text string
+---@return boolean success
 function M.writeFile(filepath, text)
 	local file, _ = io.open(filepath, "w")
 	assert(file, "Could not write to " .. filepath)
 	file:write(text)
-	file:close()
+	local success = file:close() or false
+	if not success then u.notify("Could not write to " .. filepath, "error") end
+	return success
 end
 
 ---@param filepath string
@@ -64,7 +67,9 @@ function M.writeAndFormatSnippetFile(filepath, jsonObj, fileIsNew)
 	end
 
 	-- WRITE & RELOAD
-	M.writeFile(filepath, jsonStr)
+	local writeSuccess = M.writeFile(filepath, jsonStr)
+	if not writeSuccess then return false end
+
 	if not vim.endswith(filepath, "package.json") then
 		require("scissors.hot-reload").reloadSnippetFile(filepath, fileIsNew)
 	end
