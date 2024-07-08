@@ -234,8 +234,8 @@ function M.editInPopup(snip, mode)
 	local ft = snip.filetype
 	if ft == "zsh" then ft = "bash" end -- use bash syntax highlighting for zsh
 	pcall(vim.treesitter.start, bufnr, ft) -- errors when no parser available
-	local pluginFiletype = require("scissors.config").pluginFiletype
-	vim.api.nvim_set_option_value("filetype", pluginFiletype, { buf = bufnr })
+	local scissorsFiletype = require("scissors.config").scissorsFiletype
+	vim.api.nvim_set_option_value("filetype", scissorsFiletype, { buf = bufnr })
 
 	-- CREATE WINDOW
 	local vimWidth = vim.o.columns - 2

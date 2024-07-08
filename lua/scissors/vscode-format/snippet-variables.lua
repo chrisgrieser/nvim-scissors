@@ -38,10 +38,10 @@ function M.createSnippetFile()
 	local vb = require("scissors.vscode-format.validate-bootstrap")
 	local convert = require("scissors.vscode-format.convert-object")
 	local u = require("scissors.utils")
-	local pluginFiletype = require("scissors.config").pluginFiletype
+	local scissorsFiletype = require("scissors.config").scissorsFiletype
 
 	-- GUARD
-	local snipFileForSnipVars = convert.getSnippetFilesForFt(pluginFiletype)
+	local snipFileForSnipVars = convert.getSnippetFilesForFt(scissorsFiletype)
 	if #snipFileForSnipVars > 0 then
 		local filename = vim.fs.basename(snipFileForSnipVars[1])
 		u.notify(("There already is a file %q."):format(filename), "warn")
@@ -55,14 +55,11 @@ function M.createSnippetFile()
 			body = "\\$" .. var, -- needs to be escaped to not be interpreted as a variable itself
 		}
 	end
-	vb.bootstrapSnippetFile(pluginFiletype, vim.json.encode(json))
+	vb.bootstrapSnippetFile(scissorsFiletype, vim.json.encode(json))
 	-- Cannot hotreload the new snippet file, since reloading the package.json is
 	-- not supported by the reloading functions of the snippet engines.
 
-	local filename = vim.fs.basename(pluginFiletype)
-	local msg = ("Snippet file %q for VSCode variables created."):format(filename)
-		.. "\n\nRestart nvim for this to take effect."
-	u.notify(msg, "info")
+	u.notify(("Snippet file %q for VSCode variables created."):format(scissorsFiletype))
 end
 
 --------------------------------------------------------------------------------
