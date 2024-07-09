@@ -14,19 +14,15 @@ local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
 ---@param snippets SnippetObj[] entries
----@param snipDisplay function(SnippetObj): string formats SnippetObj into display text
 ---@param prompt string
-function M.selectSnippet(snippets, snipDisplay, prompt)
+function M.selectSnippet(snippets, prompt)
 	local alsoMatchBody = require("scissors.config").config.telescope.alsoSearchSnippetBody
 
-	-- color parent as comment, due to `snipDisplay` using `\t\t`
+	-- backdrop
 	vim.api.nvim_create_autocmd("FileType", {
 		once = true,
 		pattern = "TelescopeResults",
-		callback = function(ctx)
-			vim.api.nvim_buf_call(ctx.buf, function() vim.fn.matchadd("Comment", "\t\t.*$") end)
-			require("scissors.backdrop").new(ctx.buf)
-		end,
+		callback = function(ctx) require("scissors.backdrop").new(ctx.buf) end,
 	})
 
 	pickers
@@ -41,7 +37,15 @@ function M.selectSnippet(snippets, snipDisplay, prompt)
 					if alsoMatchBody then matcher = matcher .. " " .. table.concat(snip.body, "\n") end
 					return {
 						value = snip,
-						display = snipDisplay(snip),
+						display = function(entry)
+							local _snip = entry.value
+							local filename = vim.fs.basename(snip.fullPath):gsub("%.json$", "")
+							local out = u.snipDisplayName(_snip) .. "\t" .. filename
+							local highlights = {
+								{ { #out - #filename, #out }, "TelescopeResultsComment" },
+							}
+							return out, highlights
+						end,
 						ordinal = matcher,
 					}
 				end,

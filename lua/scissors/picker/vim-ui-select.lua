@@ -1,9 +1,10 @@
 local M = {}
 
 local edit = require("scissors.edit-popup")
+local u = require("scissors.utils")
+local backdropAugroup
 --------------------------------------------------------------------------------
 
-local backdropAugroup
 local function setupBackdrop()
 	---This only affects the builtin `select` from dressing.nvim. The autocmd id is
 	---saved to be able to remove it, in case it was not used, e.g. due to the user
@@ -19,13 +20,15 @@ local function setupBackdrop()
 end
 
 ---@param snippets SnippetObj[] entries
----@param formatter function(SnippetObj): string formats SnippetObj into display text
 ---@param prompt string
-function M.selectSnippet(snippets, formatter, prompt)
+function M.selectSnippet(snippets, prompt)
 	setupBackdrop()
 	vim.ui.select(snippets, {
 		prompt = prompt,
-		format_item = formatter,
+		format_item = function(snip)
+			local filename = vim.fs.basename(snip.fullPath):gsub("%.json$", "")
+			return u.snipDisplayName(snip) .. " [" .. filename .. "]"
+		end,
 		kind = "nvim-scissors.snippetSearch",
 	}, function(snip)
 		vim.api.nvim_del_augroup_by_id(backdropAugroup)

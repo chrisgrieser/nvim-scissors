@@ -1,15 +1,5 @@
 local M = {}
-
-local u = require("scissors.utils")
 --------------------------------------------------------------------------------
-
----@param snip SnippetObj
----@return string
-local function snipDisplay(snip)
-	local snipName = u.snipDisplayName(snip)
-	local filename = vim.fs.basename(snip.fullPath):gsub("%.json$", "")
-	return ("%s\t\t[%s]"):format(snipName, filename)
-end
 
 ---@param allSnippets SnippetObj[]
 function M.selectSnippet(allSnippets)
@@ -18,7 +8,7 @@ function M.selectSnippet(allSnippets)
 	local hasTelescope, _ = pcall(require, "telescope")
 	local picker = hasTelescope and "telescope" or "vim-ui-select"
 
-	require("scissors.picker." .. picker).selectSnippet(allSnippets, snipDisplay, prompt)
+	require("scissors.picker." .. picker).selectSnippet(allSnippets, prompt)
 end
 
 --------------------------------------------------------------------------------
