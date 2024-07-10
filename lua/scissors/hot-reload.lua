@@ -28,10 +28,6 @@ function M.reloadSnippetFile(path, fileIsNew)
 	elseif nvimSnippetsInstalled then
 		snippetUtils.reload_file(path, true)
 
-		-- HACK fix nvim-snip not correctly reloading https://github.com/garymjr/nvim-snippets/issues/47
-		local _, nvimSnip = pcall(require, "snippets")
-		if nvimSnip then nvimSnip.clear_cache() end
-
 	-- https://github.com/hrsh7th/vim-vsnip/blob/02a8e79295c9733434aab4e0e2b8c4b7cea9f3a9/autoload/vsnip/source/vscode.vim#L7
 	elseif vimVsnipInstalled then
 		vim.fn["vsnip#source#vscode#refresh"](path)
