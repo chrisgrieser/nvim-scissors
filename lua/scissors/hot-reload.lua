@@ -4,13 +4,6 @@ local u = require("scissors.utils")
 
 local hasNotifiedOnRestartRequirement = false
 
--- HACK fix nvim-snip not correctly reloading https://github.com/garymjr/nvim-snippets/issues/47
----@param ft string
-function M.nvimSnippetsCacheFix(ft)
-	local nvimSnippetsInstalled, nvimSnip = pcall(require, "snippets")
-	if nvimSnippetsInstalled then nvimSnip.clear_cache(ft) end
-end
-
 ---@param path string
 ---@param fileIsNew? boolean
 function M.reloadSnippetFile(path, fileIsNew)
@@ -34,6 +27,10 @@ function M.reloadSnippetFile(path, fileIsNew)
 	-- undocumented, https://github.com/garymjr/nvim-snippets/blob/main/lua/snippets/utils/init.lua#L161-L178
 	elseif nvimSnippetsInstalled then
 		snippetUtils.reload_file(path, true)
+
+		-- HACK fix nvim-snip not correctly reloading https://github.com/garymjr/nvim-snippets/issues/47
+		local _, nvimSnip = pcall(require, "snippets")
+		if nvimSnip then nvimSnip.clear_cache() end
 
 	-- https://github.com/hrsh7th/vim-vsnip/blob/02a8e79295c9733434aab4e0e2b8c4b7cea9f3a9/autoload/vsnip/source/vscode.vim#L7
 	elseif vimVsnipInstalled then
