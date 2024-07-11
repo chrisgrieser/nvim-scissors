@@ -109,9 +109,10 @@ function M.updateSnippetFile(snip, editedLines, prefixCount)
 	local vsCodeSnip = {
 		body = #body == 1 and body[1] or body, -- flatten if only one element
 		prefix = #prefix == 1 and prefix[1] or prefix,
+		description = snip.description,
 	}
 
-	-- insert item at a new key
+	-- insert item at new key
 	if snippetWasUpdated then snippetsInFile[snip.originalKey] = nil end -- remove from old key
 	local key = table.concat(prefix, " + ")
 	while snippetsInFile[key] ~= nil do -- ensure new key is unique
