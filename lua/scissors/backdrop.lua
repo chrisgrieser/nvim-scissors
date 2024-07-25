@@ -13,7 +13,8 @@ function M.new(referenceBuf, referenceZindex)
 	-- `DressingSelect` has a zindex of 150: https://github.com/stevearc/dressing.nvim/blob/e3714c8049b2243e792492c4149e4cc395c68eb9/lua/dressing/select/builtin.lua#L96
 	-- `nivm-notify` and `Telescope` apparently do not set a zindex, so they use
 	-- the default value of `nvim_open_win`, which is 50: https://neovim.io/doc/user/api.html#nvim_open_win()
-	if not referenceZindex then referenceZindex = 10 end
+	-- satellite.nvim has (by default) 40, backdrop should be above -- https://github.com/lewis6991/satellite.nvim?tab=readme-ov-file#usage
+	if not referenceZindex then referenceZindex = 50 end
 
 	local bufnr = vim.api.nvim_create_buf(false, true)
 	local winnr = vim.api.nvim_open_win(bufnr, false, {
