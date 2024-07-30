@@ -232,7 +232,7 @@ function M.editInPopup(snip, mode)
 	-- as this avoid triggering the filetype plugin, which can sometimes entail
 	-- undesired effects like LSPs attaching
 	local ft = snip.filetype
-	if ft == "zsh" then ft = "bash" end -- use bash syntax highlighting for zsh
+	if ft == "zsh" or ft == "sh" then ft = "bash" end -- substitute missing `sh` and `zsh` parsers
 	pcall(vim.treesitter.start, bufnr, ft) -- errors when no parser available
 	local scissorsFiletype = require("scissors.config").scissorsFiletype
 	vim.api.nvim_set_option_value("filetype", scissorsFiletype, { buf = bufnr })
