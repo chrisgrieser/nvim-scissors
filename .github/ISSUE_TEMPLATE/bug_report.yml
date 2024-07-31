@@ -3,6 +3,21 @@ description: File a bug report
 title: "[Bug]: "
 labels: ["bug"]
 body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Make sure you have done the following
+      options:
+        - label: I have updated to the latest version of the plugin.
+          required: true
+        - label:
+            I have read [the docs, and in particular the
+            FAQ](https://github.com/chrisgrieser/nvim-scissors#table-of-contents).
+          required: true
+        - label:
+            The problem is related to creating or editing snippets. (Expanding and using snippet is
+            the responsibility of the snippet engine plugin, such as Luasnip or nvim-snippets.)
+          required: true
   - type: textarea
     id: bug-description
     attributes:
@@ -14,7 +29,8 @@ body:
     id: screenshot
     attributes:
       label: Relevant Screenshot
-      description: If applicable, add screenshots or a screen recording to help explain your problem.
+      description:
+        If applicable, add screenshots or a screen recording to help explain your problem.
   - type: textarea
     id: reproduction-steps
     attributes:
@@ -34,12 +50,3 @@ body:
       render: Text
     validations:
       required: true
-  - type: checkboxes
-    id: checklist
-    attributes:
-      label: Make sure you have done the following
-      options:
-        - label: I have updated to the latest version of the plugin.
-          required: true
-        - label: I have read [docs, and in particular the FAQ](https://github.com/chrisgrieser/nvim-scissors#table-of-contents).
-          required: true

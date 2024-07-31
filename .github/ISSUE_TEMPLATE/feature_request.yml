@@ -3,6 +3,17 @@ description: Suggest an idea
 title: "Feature Request: "
 labels: ["enhancement"]
 body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: The feature would be useful to more users than just me.
+          required: true
+        - label:
+            The suggestion is related to creating or editing snippets. (Expanding and using snippet
+            is the responsibility of the snippet engine plugin, such as Luasnip or nvim-snippets.)
+          required: true
   - type: textarea
     id: feature-requested
     attributes:
@@ -15,10 +26,3 @@ body:
     attributes:
       label: Relevant Screenshot
       description: If applicable, add screenshots or a screen recording to help explain the request.
-  - type: checkboxes
-    id: checklist
-    attributes:
-      label: Checklist
-      options:
-        - label: The feature would be useful to more users than just me.
-          required: true
