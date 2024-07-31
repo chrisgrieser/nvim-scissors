@@ -38,15 +38,13 @@ function M.editSnippet()
 
 	-- GET ALL SNIPPETS
 	local allSnippets = {} ---@type SnippetObj[]
-	for _, absPath in pairs(convert.getSnippetFilesForFt(bufferFt)) do
-		local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson VSCodeSnippetDict
-		local snipsInFile = convert.restructureVsCodeObj(vscodeJson, absPath, bufferFt)
-		vim.list_extend(allSnippets, snipsInFile)
+	for _, absPath in pairs(convert.getSnippetfilePathsForFt(bufferFt)) do
+		local filetypeSnippets = convert.readVscodeSnippetFile(absPath, bufferFt)
+		vim.list_extend(allSnippets, filetypeSnippets)
 	end
-	for _, absPath in pairs(convert.getSnippetFilesForFt("all")) do
-		local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson VSCodeSnippetDict
-		local snipsInFile = convert.restructureVsCodeObj(vscodeJson, absPath, "plaintext")
-		vim.list_extend(allSnippets, snipsInFile)
+	for _, absPath in pairs(convert.getSnippetfilePathsForFt("all")) do
+		local globalSnippets = convert.readVscodeSnippetFile(absPath, "plaintext")
+		vim.list_extend(allSnippets, globalSnippets)
 	end
 
 	-- GUARD
@@ -95,11 +93,11 @@ function M.addNewSnippet(exCmdArgs)
 	-- GET LIST OF ALL SNIPPET FILES WITH MATCHING FILETYPE
 	local snipFilesForFt = vim.tbl_map(
 		function(file) return { path = file, ft = bufferFt } end,
-		convert.getSnippetFilesForFt(bufferFt)
+		convert.getSnippetfilePathsForFt(bufferFt)
 	)
 	local snipFilesForAll = vim.tbl_map(
 		function(file) return { path = file, ft = "plaintext" } end,
-		convert.getSnippetFilesForFt("all")
+		convert.getSnippetfilePathsForFt("all")
 	)
 	---@type snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)

@@ -41,7 +41,7 @@ function M.createSnippetFile()
 	local scissorsFiletype = require("scissors.config").scissorsFiletype
 
 	-- GUARD
-	local snipFileForSnipVars = convert.getSnippetFilesForFt(scissorsFiletype)
+	local snipFileForSnipVars = convert.getSnippetfilePathsForFt(scissorsFiletype)
 	if #snipFileForSnipVars > 0 then
 		local filename = vim.fs.basename(snipFileForSnipVars[1])
 		u.notify(("There already is a file %q."):format(filename), "warn")
