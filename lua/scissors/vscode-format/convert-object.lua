@@ -92,7 +92,19 @@ function M.updateSnippetInVscodeSnippetFile(snip, changedSnippetLines, prefixCou
 	while body[#body] == "" do
 		table.remove(body)
 	end
-	-- GUARD validate
+	-- Auto-escape unescaped literal `$` in the body not used for tabstops or
+	-- placeholders, since they make the vscode snippets invalid.
+	-- Note: This does not affect placeholders such as `$foobar`, since those are
+	-- valid in the VSCode. (Though they result in an empty string if not
+	-- defined, so in most cases, the user still needs to escape them.)
+	for i, line in ipairs(body) do
+		body[i] = line
+			:gsub("([^\\])%$([^%w{])", "%1\\$%2") -- middle of line
+			:gsub("^%$([^%w{])", "\\$%1") -- beginning of line
+			:gsub("([^\\])%$$", "%1\\$") -- end of line
+	end
+
+	-- VALIDATE
 	if #body == 0 then
 		u.notify("Body is empty. No changes made.", "warn")
 		return
