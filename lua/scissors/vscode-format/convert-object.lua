@@ -115,20 +115,21 @@ function M.updateSnippetInVscodeSnippetFile(snip, changedSnippetLines, prefixCou
 	end
 
 	-- convert snipObj to VSCodeSnippet
-	---@type VSCodeSnippet
-	local vsCodeSnip = {
-		body = #body == 1 and body[1] or body, -- flatten if only one element
-		prefix = #prefix == 1 and prefix[1] or prefix,
-		description = snip.description,
-	}
+	local vsCodeSnip = vim.deepcopy(snip)
+	---@diagnostic disable-next-line: cast-type-mismatch we are converting it here
+	---@cast vsCodeSnip VSCodeSnippet
+	vsCodeSnip.prefix = #prefix == 1 and prefix[1] or prefix
+	vsCodeSnip.body = #body == 1 and body[1] or body
 
-	-- insert item at new key
-	if not isNewSnippet then snippetsInFile[snip.originalKey] = nil end -- remove from old key
-	local key = table.concat(prefix, " + ")
-	while snippetsInFile[key] ~= nil do -- ensure new key is unique
-		key = key .. "-1"
+	-- insert item at new key for VSCode format
+	local key = snip.originalKey
+	if not key then
+		key = table.concat(prefix, " + ")
+		while snippetsInFile[key] ~= nil do -- ensure new key is unique
+			key = key .. "-1"
+		end
 	end
-	snippetsInFile[key] = vsCodeSnip -- insert at new key
+	snippetsInFile[key] = vsCodeSnip
 
 	-- write & notify
 	local success = rw.writeAndFormatSnippetFile(filepath, snippetsInFile, snip.fileIsNew)
