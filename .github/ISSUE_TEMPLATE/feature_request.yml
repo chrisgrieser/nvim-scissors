@@ -8,19 +8,33 @@ body:
     attributes:
       label: Checklist
       options:
-        - label: The feature would be useful to more users than just me.
+        - label: I have read the plugin's README, including the FAQ.
           required: true
         - label:
             The suggestion is related to creating or editing snippets. (Expanding and using snippet
-            is the responsibility of the snippet engine plugin, such as Luasnip or nvim-snippets.)
+            is the responsibility of the snippet engine plugin, such as `Luasnip` or
+            `nvim-snippets`.)
+          required: true
+        - label: The feature would be useful to more users than just me.
           required: true
   - type: textarea
     id: feature-requested
     attributes:
       label: Feature Requested
       description: A clear and concise description of the feature.
-    validations:
-      required: true
+    validations: { required: true }
+  - type: textarea
+    id: problem-solved
+    attributes:
+      label: Problem solved
+      description: What problem would the feature solve?
+    validations: { required: true }
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What alternatives are there to the feature?
+    validations: { required: true }
   - type: textarea
     id: screenshot
     attributes:
