@@ -7,7 +7,7 @@ local u = require("scissors.utils")
 ---@field editSnippetPopup { height: number, width: number, border: string, keymaps: popupKeymaps }
 ---@field backdrop { enabled: boolean, blend: number }
 ---@field telescope telescopeConfig
----@field jsonFormatter "yq"|"jq"|"none"
+---@field jsonFormatter "yq"|"jq"|"none"|table
 
 ---@class (exact) popupKeymaps
 ---@field cancel string

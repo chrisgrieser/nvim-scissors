@@ -193,8 +193,9 @@ require("scissors").setup {
 	},
 	-- `none` writes as a minified json file using `vim.encode.json`.
 	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
-	-- you version control your snippets.
-	jsonFormatter = "none", -- "yq"|"jq"|"none"
+	-- you version control your snippets. To use a custom formatter, set to a
+	-- list of strings, which will then be passed to `vim.system()`.
+	jsonFormatter = "none", -- "yq"|"jq"|"none"|table
 }
 ```
 
