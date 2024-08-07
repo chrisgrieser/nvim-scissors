@@ -43,6 +43,7 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 - |scissors-cookbook-&-faq|
     - |scissors-introduction-to-the-vscode-style-snippet-format|
     - |scissors-variables-&-tabstops|
+    - |scissors-edit-snippet-title-and-snippet-description|
     - |scissors-version-controlling-snippets:-json-formatting|
     - |scissors-snippets-on-visual-selections|
     - |scissors-`friendly-snippets`|
@@ -333,6 +334,28 @@ Furthermore, there are various variables you can use, such as `$TM_FILENAME` or
   snippet variables in `nvim-scissors`’s popup window. For example, typing
   `filen` then creates a suggestion for `$TM_FILENAME`.
 
+FRIENDLY-SNIPPETS ~
+
+Even though the snippets from the friendly-snippets
+<https://github.com/rafamadriz/friendly-snippets> repository are written in the
+VSCode-style format, editing them directly is not supported. The reason being
+that any changes made would be overwritten as soon as the `friendly-snippets`
+repository is updated (which happens fairly regularly). Unfortunately, there is
+little `nvim-scissors` can do about that.
+
+What you can do, however, is to copy individual snippets files from the
+`friendly-snippets` repository into your own snippet folder, and edit them
+there.
+
+
+EDIT SNIPPET TITLE AND SNIPPET DESCRIPTION ~
+
+`nvim-scissors` only allows to edit the snippet prefix and snippet body, to
+keep the UI as simple as possible. For the few cases where you need to edit a
+snippet’s title or description, you can use the `openInFile` keymap and edit
+them directly in the snippet file.
+
+
 VERSION CONTROLLING SNIPPETS: JSON-FORMATTING ~
 
 This plugin writes JSON files via `vim.encode.json()`. That method saves the
@@ -374,20 +397,6 @@ where you want the selection to be inserted. (It’s roughly the equivalent of
 Then, in visual mode, press the key from `store_selection_keys`. The selection
 disappears, and you are put in insert mode. The next snippet you now trigger is
 going to have `$TM_SELECTED_TEXT` replaced with your selection.
-
-
-FRIENDLY-SNIPPETS ~
-
-Even though the snippets from the friendly-snippets
-<https://github.com/rafamadriz/friendly-snippets> repository are written in the
-VSCode-style format, editing them directly is not supported. The reason being
-that any changes made would be overwritten as soon as the `friendly-snippets`
-repository is updated (which happens fairly regularly). Unfortunately, there is
-little `nvim-scissors` can do about that.
-
-What you can do, however, is to copy individual snippets files from the
-`friendly-snippets` repository into your own snippet folder, and edit them
-there.
 
 
 AUTO-TRIGGERED SNIPPETS ~
