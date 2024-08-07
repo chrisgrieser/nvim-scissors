@@ -120,6 +120,13 @@ function M.updateSnippetInVscodeSnippetFile(snip, changedSnippetLines, prefixCou
 	---@cast vsCodeSnip VSCodeSnippet
 	vsCodeSnip.prefix = #prefix == 1 and prefix[1] or prefix
 	vsCodeSnip.body = #body == 1 and body[1] or body
+	-- delete keys added by this plugin
+	---@diagnostic disable: inject-field
+	vsCodeSnip.fullPath = nil
+	vsCodeSnip.filetype = nil
+	vsCodeSnip.originalKey = nil
+	vsCodeSnip.fileIsNew = nil
+	---@diagnostic enable: inject-field
 
 	-- insert item at new key for VSCode format
 	local key = snip.originalKey
