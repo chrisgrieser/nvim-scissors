@@ -47,10 +47,11 @@ local defaultConfig = {
 		-- `true` to also search the body of the snippets.
 		alsoSearchSnippetBody = false,
 	},
-	-- `none` writes as a minified json file using `:h vim.encode.json`.
-	-- `yq` and `jq` ensure formatted & sorted json files, which is relevant when
-	-- you are version control your snippets.
-	jsonFormatter = "none", -- "yq"|"jq"|"none"
+	-- `none` writes as a minified json file using `vim.encode.json`.
+	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
+	-- you version control your snippets. To use a custom formatter, set to a
+	-- list of strings, which will then be passed to `vim.system()`.
+	jsonFormatter = "none", -- "yq"|"jq"|"none"|table
 }
 
 --------------------------------------------------------------------------------
