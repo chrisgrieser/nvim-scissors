@@ -300,6 +300,12 @@ variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variab
 > snippet variables in `nvim-scissors`'s popup window. For example, typing
 > `filen` then creates a suggestion for `$TM_FILENAME`.
 
+### Edit snippet title and snippet description
+`nvim-scissors` only allows to edit the snippet prefix and snippet body, to keep
+the UI as simple as possible. For the few cases where you need to edit a
+snippet's title or description, you can use the `openInFile` keymap and edit
+them directly in the snippet file.
+
 ### Version Controlling Snippets: JSON-formatting
 This plugin writes JSON files via `vim.encode.json()`. That method saves
 the file in minified form, and does not have a
