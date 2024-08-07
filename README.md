@@ -26,11 +26,12 @@ Automagical editing and creation of snippets.
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
 	* [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
-	* [Variables & Tabstops](#variables--tabstops)
-	* [Version Controlling Snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
+	* [Variables & tabstops](#variables--tabstops)
+	* [Edit snippet title and snippet description](#edit-snippet-title-and-snippet-description)
+	* [Version controlling snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
 	* [Snippets on visual selections](#snippets-on-visual-selections)
 	* [`friendly-snippets`](#friendly-snippets)
-	* [Auto-triggered Snippets](#auto-triggered-snippets)
+	* [Auto-triggered snippets](#auto-triggered-snippets)
 - [Credits](#credits)
 
 <!-- tocstop -->
@@ -281,7 +282,7 @@ For details, read the official VSCode snippet documentation:
 - [`package.json` specification](https://code.visualstudio.com/api/language-extensions/snippet-guide)
 - [LuaSnip-specific additions to the format](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code)
 
-### Variables & Tabstops
+### Variables & tabstops
 [Tabstops](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_tabstops)
 are denoted by `$1`, `$2`, `$3`, with `$0` being the last tabstop. They
 support placeholders such `${1:foobar}`.
@@ -300,13 +301,23 @@ variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variab
 > snippet variables in `nvim-scissors`'s popup window. For example, typing
 > `filen` then creates a suggestion for `$TM_FILENAME`.
 
+### `friendly-snippets`
+Even though the snippets from the [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
+repository are written in the VSCode-style format, editing them directly is not
+supported. The reason being that any changes made would be overwritten as soon
+as the `friendly-snippets` repository is updated (which happens fairly
+regularly). Unfortunately, there is little `nvim-scissors` can do about that.
+
+What you can do, however, is to copy individual snippets files from the
+`friendly-snippets` repository into your own snippet folder, and edit them there.
+
 ### Edit snippet title and snippet description
 `nvim-scissors` only allows to edit the snippet prefix and snippet body, to keep
 the UI as simple as possible. For the few cases where you need to edit a
 snippet's title or description, you can use the `openInFile` keymap and edit
 them directly in the snippet file.
 
-### Version Controlling Snippets: JSON-formatting
+### Version controlling snippets: JSON-formatting
 This plugin writes JSON files via `vim.encode.json()`. That method saves
 the file in minified form, and does not have a
 deterministic order of dictionary keys.
@@ -345,17 +356,7 @@ Then, in visual mode, press the key from `store_selection_keys`. The selection
 disappears, and you are put in insert mode. The next snippet you now trigger
 is going to have `$TM_SELECTED_TEXT` replaced with your selection.
 
-### `friendly-snippets`
-Even though the snippets from the [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
-repository are written in the VSCode-style format, editing them directly is not
-supported. The reason being that any changes made would be overwritten as soon
-as the `friendly-snippets` repository is updated (which happens fairly
-regularly). Unfortunately, there is little `nvim-scissors` can do about that.
-
-What you can do, however, is to copy individual snippets files from the
-`friendly-snippets` repository into your own snippet folder, and edit them there.
-
-### Auto-triggered Snippets
+### Auto-triggered snippets
 While the VSCode snippet format does not support auto-triggered snippets,
 `LuaSnip` allows you to [specify auto-triggering in the VSCode-style JSON
 files by adding the `luasnip` key](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
