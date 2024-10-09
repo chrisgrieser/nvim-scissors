@@ -35,6 +35,7 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 - |scissors-requirements|
 - |scissors-installation|
     - |scissors-`luasnip`|
+    - |scissors-`blink.cmp`|
     - |scissors-`nvim-snippets`|
     - |scissors-`vim-vsnip`|
 - |scissors-usage|
@@ -43,10 +44,10 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 - |scissors-cookbook-&-faq|
     - |scissors-introduction-to-the-vscode-style-snippet-format|
     - |scissors-variables-&-tabstops|
+    - |scissors-`friendly-snippets`|
     - |scissors-edit-snippet-title-and-snippet-description|
     - |scissors-version-controlling-snippets:-json-formatting|
     - |scissors-snippets-on-visual-selections|
-    - |scissors-`friendly-snippets`|
     - |scissors-auto-triggered-snippets|
 - |scissors-credits|
 
@@ -137,6 +138,28 @@ LUASNIP ~
 <
 
 
+BLINK.CMP ~
+
+>lua
+    require("blink.cmp").setup {
+        sources = {
+            providers = {
+                {
+                    "blink.cmp.sources.snippets",
+                    opts = {
+                        search_paths = { "path/to/your/snippetFolder" },
+                    },
+                }
+            }
+        }
+    }
+<
+
+Notethat `nvim-scissors` does not support hot-reloading of snippets for
+`blink.cmp`. Hot-reloading is dependent on `blink.cmp` implementing this
+feature request <https://github.com/Saghen/blink.cmp/issues/28>.
+
+
 NVIM-SNIPPETS ~
 
 >lua
@@ -157,7 +180,7 @@ VIM-VSNIP ~
 
 USAGE                                          *scissors-nvim-scissors--usage*
 
-Theplugin provides two ex commands, `:ScissorsAddNewSnippet` and
+The plugin provides two ex commands, `:ScissorsAddNewSnippet` and
 `:ScissorsEditSnippet`. You can pass a range to `:ScissorsAddSnippet` command
 to prefill snippet body (for example `:'<,'> ScissorsAddSnippet` or `:3
 ScissorsAddSnippet`).
