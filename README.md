@@ -18,20 +18,21 @@ Automagical editing and creation of snippets.
 - [Rationale](#rationale)
 - [Requirements](#requirements)
 - [Installation](#installation)
-	* [`LuaSnip`](#luasnip)
-	* [`nvim-snippets`](#nvim-snippets)
-	* [`vim-vsnip`](#vim-vsnip)
+  * [`LuaSnip`](#luasnip)
+  * [`blink.cmp`](#blinkcmp)
+  * [`nvim-snippets`](#nvim-snippets)
+  * [`vim-vsnip`](#vim-vsnip)
 - [Usage](#usage)
-	* [Prefixes](#prefixes)
+  * [Prefixes](#prefixes)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
-	* [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
-	* [Variables & tabstops](#variables--tabstops)
-	* [Edit snippet title and snippet description](#edit-snippet-title-and-snippet-description)
-	* [Version controlling snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
-	* [Snippets on visual selections](#snippets-on-visual-selections)
-	* [`friendly-snippets`](#friendly-snippets)
-	* [Auto-triggered snippets](#auto-triggered-snippets)
+  * [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
+  * [Variables & tabstops](#variables--tabstops)
+  * [`friendly-snippets`](#friendly-snippets)
+  * [Edit snippet title and snippet description](#edit-snippet-title-and-snippet-description)
+  * [Version controlling snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
+  * [Snippets on visual selections](#snippets-on-visual-selections)
+  * [Auto-triggered snippets](#auto-triggered-snippets)
 - [Credits](#credits)
 
 <!-- tocstop -->
@@ -114,6 +115,27 @@ require("luasnip.loaders.from_vscode").lazy_load {
 	paths = { "path/to/your/snippetFolder" },
 }
 ```
+
+### `blink.cmp`
+
+```lua
+require("blink.cmp").setup {
+	sources = {
+		providers = {
+			{
+				"blink.cmp.sources.snippets",
+				opts = {
+					search_paths = { "path/to/your/snippetFolder" },
+				},
+			}
+		}
+	}
+}
+```
+
+Note that `nvim-scissors` does not support hot-reloading of snippets for
+`blink.cmp`. Hot-reloading is dependent on `blink.cmp` implementing [this
+feature request](https://github.com/Saghen/blink.cmp/issues/28).
 
 ### `nvim-snippets`
 
