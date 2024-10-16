@@ -62,8 +62,8 @@ function M.reloadSnippetFile(path, fileIsNew)
 	end
 
 	if not success then
-		local msg = ("Failed to hot-reload snippet file: %q\n\n"):format(errorMsg)
-			.. "Please restart nvim for changes to take effect."
+		local msg = ("Failed to hot-reload snippet file: %q\n\n."):format(errorMsg)
+			.. "Please restart nvim for changes to take effect. "
 			.. "If this issue keeps occurring, create a bug report at your snippet plugin's repo."
 		u.notify(msg, "warn")
 	end
