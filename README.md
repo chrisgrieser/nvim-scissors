@@ -79,8 +79,9 @@ Automagical editing and creation of snippets.
 - A snippet engine that can load VSCode-style snippets, such as
   [LuaSnip](https://github.com/L3MON4D3/LuaSnip),
   [nvim-snippets](https://github.com/garymjr/nvim-snippets),
-  [vim-vsnip](https://github.com/hrsh7th/vim-vsnip), or
-  [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login).
+  [vim-vsnip](https://github.com/hrsh7th/vim-vsnip),
+  [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login), or the
+  [basics-LSP](https://github.com/antonk52/basics-language-server/).
 - *Optional*: Treesitter parsers for the languages you want syntax highlighting
   for.
 
@@ -135,6 +136,23 @@ require("blink.cmp").setup {
 	}
 }
 ```
+
+### `basics-language-server`
+
+```lua
+-- NOTE: this requires the `nvim-lspconfig` as additional dependency
+require('lspconfig').basics_ls.setup({
+    settings = {
+        snippet = {
+            enable = true,
+            sources = { "path/to/your/snippetFolder" }
+        },
+    }
+})
+```
+
+Hot-reloading of the new/edited snippet is [not supported for the basics-LSP
+yet](https://github.com/antonk52/basics-language-server/issues/1).
 
 ### `nvim-snippets`
 
