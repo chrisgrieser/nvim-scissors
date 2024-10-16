@@ -16,6 +16,9 @@ function M.reloadSnippetFile(path, fileIsNew)
 		return
 	end
 
+	local success = false
+	local errorMsg = ""
+
 	local luasnipInstalled, luasnipLoaders = pcall(require, "luasnip.loaders")
 	local nvimSnippetsInstalled, snippetUtils = pcall(require, "snippets.utils")
 	local vimVsnipInstalled = vim.g.loaded_vsnip ~= nil -- https://github.com/hrsh7th/vim-vsnip/blob/master/plugin/vsnip.vim#L4C5-L4C17
@@ -23,26 +26,34 @@ function M.reloadSnippetFile(path, fileIsNew)
 
 	-- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
 	if luasnipInstalled then
-		luasnipLoaders.reload_file(path)
+		success, errorMsg = pcall(luasnipLoaders.reload_file, path)
 
 	-- undocumented, https://github.com/garymjr/nvim-snippets/blob/main/lua/snippets/utils/init.lua#L161-L178
 	elseif nvimSnippetsInstalled then
-		snippetUtils.reload_file(path, true)
+		success, errorMsg = pcall(snippetUtils.reload_file, path, true)
 
 	-- https://github.com/hrsh7th/vim-vsnip/blob/02a8e79295c9733434aab4e0e2b8c4b7cea9f3a9/autoload/vsnip/source/vscode.vim#L7
 	elseif vimVsnipInstalled then
-		vim.fn["vsnip#source#vscode#refresh"](path)
+		success, errorMsg = pcall(vim.fn["vsnip#source#vscode#refresh"], path)
 
 	-- https://github.com/Saghen/blink.cmp/issues/28#issuecomment-2415664831
 	elseif blinkCmpInstalled then
-		blinkCmp.sources.reload()
+		success, errorMsg = pcall(blinkCmp.sources.reload)
 
 	-- notify
 	elseif not hasNotifiedOnRestartRequirement then
-		local msg = "Restart nvim for changes to take effect.\n"
-			.. "(Please open an issue to add hot-reloading support for your snippet plugin.)"
-		u.notify(msg, "info")
-		hasNotifiedOnRestartRequirement = true
+		u.notify(
+			"Your snippet plugin does not support hot-reloading. Restart nvim for changes to take effect.",
+			"info"
+		)
+		return
+	end
+
+	if not success then
+		local msg = ("Failed to hot-reload snippet file: %q\n\n"):format(errorMsg)
+			.. "Please restart nvim for changes to take effect."
+			.. "If this issue keeps occurring, create a bug report at your snippet plugin's repo."
+		u.notify(msg, "warn")
 	end
 end
 
