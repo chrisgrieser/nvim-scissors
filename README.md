@@ -78,8 +78,11 @@ Automagical editing and creation of snippets.
   [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
 - A snippet engine that can load VSCode-style snippets, such as
   [LuaSnip](https://github.com/L3MON4D3/LuaSnip),
-  [nvim-snippets](https://github.com/garymjr/nvim-snippets), or [vim-vsnip](https://github.com/hrsh7th/vim-vsnip).
-- *Optional*: Treesitter parsers for the languages you want syntax highlighting for.
+  [nvim-snippets](https://github.com/garymjr/nvim-snippets),
+  [vim-vsnip](https://github.com/hrsh7th/vim-vsnip), or
+  [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login).
+- *Optional*: Treesitter parsers for the languages you want syntax highlighting
+  for.
 
 ## Installation
 
@@ -132,10 +135,6 @@ require("blink.cmp").setup {
 	}
 }
 ```
-
-Note that `nvim-scissors` does not support hot-reloading of snippets for
-`blink.cmp`. Hot-reloading is dependent on `blink.cmp` implementing [this
-feature request](https://github.com/Saghen/blink.cmp/issues/28).
 
 ### `nvim-snippets`
 
