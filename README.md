@@ -151,8 +151,7 @@ require('lspconfig').basics_ls.setup({
 })
 ```
 
-Hot-reloading of the new/edited snippet is [not supported for the basics-LSP
-yet](https://github.com/antonk52/basics-language-server/issues/1).
+Hot-reloading of the new/edited snippet for `basics_ls` requires `nvim-lspconfig`.
 
 ### `nvim-snippets`
 
