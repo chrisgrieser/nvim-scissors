@@ -174,8 +174,8 @@ BASICS-LANGUAGE-SERVER ~
     })
 <
 
-Hot-reloadingof the new/edited snippet is not supported for the basics-LSP yet
-<https://github.com/antonk52/basics-language-server/issues/1>.
+Hot-reloadingof the new/edited snippet for `basics_ls` requires
+`nvim-lspconfig`.
 
 
 NVIM-SNIPPETS ~
