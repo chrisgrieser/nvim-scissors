@@ -32,7 +32,7 @@ function M.reloadSnippetFile(path, fileIsNew)
 	-- https://github.com/hrsh7th/vim-vsnip/blob/02a8e79295c9733434aab4e0e2b8c4b7cea9f3a9/autoload/vsnip/source/vscode.vim#L7
 	elseif vimVsnipInstalled then
 		vim.fn["vsnip#source#vscode#refresh"](path)
-	
+
 	-- https://github.com/Saghen/blink.cmp/issues/28#issuecomment-2415664831
 	elseif blinkCmpInstalled then
 		blinkCmp.sources.reload()
