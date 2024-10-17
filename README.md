@@ -20,6 +20,7 @@ Automagical editing and creation of snippets.
 - [Installation](#installation)
   * [`LuaSnip`](#luasnip)
   * [`blink.cmp`](#blinkcmp)
+  * [`basics-language-server`](#basics-language-server)
   * [`nvim-snippets`](#nvim-snippets)
   * [`vim-vsnip`](#vim-vsnip)
 - [Usage](#usage)
@@ -109,7 +110,7 @@ use {
 }
 ```
 
-In addition, you need your snippet engine to point to the same snippet folder as
+In addition, your snippet engine needs to point to the same snippet folder as
 `nvim-scissors`:
 
 ### `LuaSnip`
