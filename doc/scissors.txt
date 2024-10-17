@@ -36,6 +36,7 @@ TABLE OF CONTENTS                  *scissors-nvim-scissors--table-of-contents*
 - |scissors-installation|
     - |scissors-`luasnip`|
     - |scissors-`blink.cmp`|
+    - |scissors-`basics-language-server`|
     - |scissors-`nvim-snippets`|
     - |scissors-`vim-vsnip`|
 - |scissors-usage|
@@ -129,8 +130,8 @@ INSTALLATION                            *scissors-nvim-scissors--installation*
     }
 <
 
-In addition, you need your snippet engine to point to the same snippet folder
-as `nvim-scissors`
+In addition, your snippet engine needs to point to the same snippet folder as
+`nvim-scissors`
 
 
 LUASNIP ~
