@@ -127,8 +127,7 @@ require("luasnip.loaders.from_vscode").lazy_load {
 require("blink.cmp").setup {
 	sources = {
 		providers = {
-			{
-				"blink.cmp.sources.snippets",
+			snippets = {
 				opts = {
 					search_paths = { "path/to/your/snippetFolder" },
 				},
