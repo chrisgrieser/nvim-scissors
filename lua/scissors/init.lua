@@ -18,7 +18,6 @@ function M.editSnippet()
 	local u = require("scissors.utils")
 	local snippetDir = require("scissors.config").config.snippetDir
 	local bufferFt = vim.bo.filetype
-	local rw = require("scissors.vscode-format.read-write")
 	local convert = require("scissors.vscode-format.convert-object")
 	local picker = require("scissors.picker.picker-choice")
 	local vb = require("scissors.vscode-format.validate-bootstrap")
