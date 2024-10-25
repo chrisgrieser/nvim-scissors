@@ -247,7 +247,7 @@ require("scissors").setup {
 ### Introduction to the VSCode-style snippet format
 This plugin requires that you have a valid VSCode snippet folder. In addition to
 saving the snippets in the required JSON format, there must also be a
-`package.json` at the root of the snippet folder, specifying which files are
+`package.json` at the root of the snippet folder, specifying which files
 should be used for which languages.
 
 Example file structure inside the `snippetDir`:
