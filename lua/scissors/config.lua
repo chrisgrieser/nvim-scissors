@@ -23,6 +23,7 @@ local u = require("scissors.utils")
 
 ---@type pluginConfig
 local defaultConfig = {
+	-- `vim.fn.stdpath("config")` returns the path to your nvim config.
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
 		height = 0.4, -- relative to the window, between 0-1

@@ -18,18 +18,21 @@ Automagical editing and creation of snippets.
 - [Rationale](#rationale)
 - [Requirements](#requirements)
 - [Installation](#installation)
-  * [`LuaSnip`](#luasnip)
-  * [`blink.cmp`](#blinkcmp)
-  * [`basics-language-server`](#basics-language-server)
-  * [`nvim-snippets`](#nvim-snippets)
-  * [`vim-vsnip`](#vim-vsnip)
+  * [nvim-scissors](#nvim-scissors)
+  * [Snippet engine setup](#snippet-engine-setup)
+    + [LuaSnip](#luasnip)
+    + [blink.cmp](#blinkcmp)
+    + [basics-language-server](#basics-language-server)
+    + [nvim-snippets](#nvim-snippets)
+    + [vim-vsnip](#vim-vsnip)
 - [Usage](#usage)
+  * [Main usage](#main-usage)
   * [Prefixes](#prefixes)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
   * [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
   * [Variables & tabstops](#variables--tabstops)
-  * [`friendly-snippets`](#friendly-snippets)
+  * [friendly-snippets](#friendly-snippets)
   * [Edit snippet title and snippet description](#edit-snippet-title-and-snippet-description)
   * [Version controlling snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
   * [Snippets on visual selections](#snippets-on-visual-selections)
@@ -41,18 +44,18 @@ Automagical editing and creation of snippets.
 ## Features
 - Add new snippets, edit snippets, or delete snippets on the fly.
 - Syntax highlighting while you edit the snippet. Includes highlighting of
-  tokens like `$0` or `${2:foobar}`.
-- Automagical conversion from buffer text to JSON string (quotes are escaped, etc.).
+  tabstops and placeholders such as `$0`, `${2:foobar}`, or `$CLIPBOARD`
+- Automagical conversion from buffer text to JSON string.
 - Intuitive UI for editing the snippet, dynamically adapting the number of
   prefixes.
-- Hot-reloading of the new/edited snippet.
-- JSON-formatting and sorting of the snippet file after updating, using `yq` or
-  `jq`. (Optional, but [useful when version-controlling your snippet collection](#version-controlling-snippets-json-formatting).)
-- Snippet/file
-  selection via `telescope` or `vim.ui.select`.
-- Automatic bootstrapping of the snippet folder, if it is empty or missing a
-  `package.json`.
-- Supports only [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
+- Automatic hot-reloading of any changes.
+- Optional JSON-formatting and sorting of the snippet file after updating, using
+  `yq` or `jq`. ([Useful when version-controlling your snippet
+  collection](#version-controlling-snippets-json-formatting).)
+- Snippet/file selection via `telescope` or `vim.ui.select`.
+- Automatic bootstrapping of the snippet folder or new snippet files if needed.
+- Supports only [VSCode-style
+  snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 
 > [!TIP]
 > You can use
@@ -60,33 +63,34 @@ Automagical editing and creation of snippets.
 > convert your snippets to the VSCode format.
 
 ## Rationale
-- Regrettably, there are innumerable formats in which snippets can be saved. The
-  closest thing to a standard is the [VSCode snippet
-  format](https://code.visualstudio.com/docs/editor/userdefinedsnippets). For
-  portability, easier sharing, and to future-proof your snippet collection, it
-  can make sense to save your snippets in that format.
-- Most notably, the VSCode format is used by plugins like
+- The [VSCode snippet
+  format](https://code.visualstudio.com/docs/editor/userdefinedsnippets) is the
+  closest thing to a standard regarding snippets. It is used by
   [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and
-  supported by [LuaSnip](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
+  supported by most snippet engine plugins for nvim.
 - However, the snippets are stored as JSON files, which are a pain to modify
-  manually. This plugin aims to alleviate that pain by automagically writing
-  the JSON for you.
+  manually. This plugin aims to alleviate that pain by automagically writing the
+  JSON for you.
 
 ## Requirements
-- nvim 0.10
-- Snippets saved in the [VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format).
-- [Telescope](https://github.com/nvim-telescope/telescope.nvim) OR ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
+- nvim 0.10+
+- Snippets saved in the [VSCode-style snippet
+  format](#introduction-to-the-vscode-style-snippet-format).
+- [Telescope](https://github.com/nvim-telescope/telescope.nvim) OR
+  ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
   [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
-- A snippet engine that can load VSCode-style snippets, such as
-  [LuaSnip](https://github.com/L3MON4D3/LuaSnip),
-  [nvim-snippets](https://github.com/garymjr/nvim-snippets),
-  [vim-vsnip](https://github.com/hrsh7th/vim-vsnip),
-  [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login), or the
-  [basics-LSP](https://github.com/antonk52/basics-language-server/).
+- A snippet engine that can load VSCode-style snippets, such as:
+  * [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
+  * [nvim-snippets](https://github.com/garymjr/nvim-snippets)
+  * [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
+  * [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login)
+  * [basics-LSP](https://github.com/antonk52/basics-language-server/)
 - *Optional*: Treesitter parsers for the languages you want syntax highlighting
   for.
 
 ## Installation
+
+### nvim-scissors
 
 ```lua
 -- lazy.nvim
@@ -110,10 +114,14 @@ use {
 }
 ```
 
+### Snippet engine setup
 In addition, your snippet engine needs to point to the same snippet folder as
 `nvim-scissors`:
 
-### `LuaSnip`
+> [!TIP]
+> `vim.fn.stdpath("config")` returns the path to your nvim config.
+
+#### LuaSnip
 
 ```lua
 require("luasnip.loaders.from_vscode").lazy_load {
@@ -121,7 +129,7 @@ require("luasnip.loaders.from_vscode").lazy_load {
 }
 ```
 
-### `blink.cmp`
+#### blink.cmp
 
 ```lua
 require("blink.cmp").setup {
@@ -137,7 +145,7 @@ require("blink.cmp").setup {
 }
 ```
 
-### `basics-language-server`
+#### basics-language-server
 
 ```lua
 -- NOTE: this requires the `nvim-lspconfig` as additional dependency
@@ -153,7 +161,9 @@ require('lspconfig').basics_ls.setup({
 
 Hot-reloading of the new/edited snippet for `basics_ls` requires `nvim-lspconfig`.
 
-### `nvim-snippets`
+<!-- LTeX: enabled=false -->
+#### nvim-snippets
+<!-- LTeX: enabled=true -->
 
 ```lua
 require("nvim-snippets").setup {
@@ -161,7 +171,9 @@ require("nvim-snippets").setup {
 }
 ```
 
-### `vim-vsnip`
+<!-- LTeX: enabled=false -->
+#### vim-vsnip
+<!-- LTeX: enabled=true -->
 
 ```lua
 vim.g.vsnip_snippet_dir = "path/to/your/snippetFolder"
@@ -170,6 +182,8 @@ vim.g.vsnip_snippet_dirs = { "path/to/your/snippetFolder" }
 ```
 
 ## Usage
+
+### Main usage
 The plugin provides two ex commands, `:ScissorsAddNewSnippet` and
 `:ScissorsEditSnippet`. You can pass a range to `:ScissorsAddSnippet` command to
 prefill snippet body (for example `:'<,'> ScissorsAddSnippet` or `:3
@@ -184,12 +198,6 @@ vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() e
 -- when used in visual mode, prefills the selection as snippet body
 vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
 ```
-
-**Useful keymaps in the scissors popup window**
-- `<C-p>`: insert the [next placeholder](#variables-and-tabstops) such as
-  `${1:placeholder}` in the snippet body.
-- `<C-d>` to duplicate a snippet is most useful when creating many similar
-  snippets.
 
 ### Prefixes
 "Prefix" is how trigger words are referred to in the VSCode format.
@@ -206,6 +214,7 @@ The `.setup()` call is optional.
 ```lua
 -- default settings
 require("scissors").setup {
+	-- `vim.fn.stdpath("config")` returns the path to your nvim config.
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
 		height = 0.4, -- relative to the editor, number between 0 and 1
@@ -238,15 +247,12 @@ require("scissors").setup {
 }
 ```
 
-> [!TIP]
-> `vim.fn.stdpath("config")` returns the path to your nvim config.
-
 ## Cookbook & FAQ
 
 ### Introduction to the VSCode-style snippet format
 This plugin requires that you have a valid VSCode snippet folder. In addition to
 saving the snippets in the required JSON format, there must also be a
-`package.json` at the root of the snippet folder, specifying which files
+`package.json` file at the root of the snippet folder, specifying which files
 should be used for which languages.
 
 Example file structure inside the `snippetDir`:
@@ -336,10 +342,12 @@ variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variab
 > [!TIP]
 > If you frequently create new snippets, you may also use the command
 > `:ScissorsCreateSnippetsForSnippetVars` to create snippets for the VSCode
-> snippet variables in `nvim-scissors`'s popup window. For example, typing
-> `filen` then creates a suggestion for `$TM_FILENAME`.
+> snippet variables in the `nvim-scissors` popup window. For example, typing
+> `filen` then triggers a suggestion for `$TM_FILENAME`.
 
-### `friendly-snippets`
+<!-- LTeX: enabled=false -->
+### friendly-snippets
+<!-- LTeX: enabled=true -->
 Even though the snippets from the [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
 repository are written in the VSCode-style format, editing them directly is not
 supported. The reason being that any changes made would be overwritten as soon
@@ -406,7 +414,6 @@ JSON files, so any additions via the `luasnip` key are preserved.
 > You can use the `openInFile` keymap to directory open JSON file at the
 > snippet's location to make edits there easier.
 
-<!-- vale Google.FirstPerson = NO -->
 ## Credits
 In my day job, I am a sociologist studying the social mechanisms underlying the
 digital economy. For my PhD project, I investigate the governance of the app
