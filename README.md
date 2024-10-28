@@ -82,10 +82,10 @@ Automagical editing and creation of snippets.
   only work when using `Telescope`.
 - A snippet engine that can load VSCode-style snippets, such as:
   * [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
+  * [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login)
+  * [basics-language-server](https://github.com/antonk52/basics-language-server/)
   * [nvim-snippets](https://github.com/garymjr/nvim-snippets)
   * [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
-  * [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login)
-  * [basics-LSP](https://github.com/antonk52/basics-language-server/)
 - *Optional*: Treesitter parsers for the languages you want syntax highlighting
   for.
 
@@ -369,7 +369,7 @@ This plugin writes JSON files via `vim.encode.json()`. That method saves
 the file in minified form, and does not have a
 deterministic order of dictionary keys.
 
-Both, minification, and unstable key order, are a problem if you
+Both, minification and unstable key order, are a problem if you
 version-control your snippet collection. To solve this issue, `nvim-scissors`
 can optionally unminify and sort the JSON files via `yq` or `jq` after updating
 a snippet. (Both are also available via
