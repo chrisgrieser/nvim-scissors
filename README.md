@@ -78,7 +78,8 @@ Automagical editing and creation of snippets.
   format](#introduction-to-the-vscode-style-snippet-format).
 - [Telescope](https://github.com/nvim-telescope/telescope.nvim) OR
   ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
-  [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
+  [fzf-lua](https://github.com/ibhagwan/fzf-lua)). Note that snippet previews
+  only work when using `Telescope`.
 - A snippet engine that can load VSCode-style snippets, such as:
   * [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
   * [nvim-snippets](https://github.com/garymjr/nvim-snippets)
