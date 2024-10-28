@@ -50,7 +50,17 @@ function M.reloadSnippetFile(path, fileIsNew)
 
 	-- https://github.com/Saghen/blink.cmp/issues/28#issuecomment-2415664831
 	elseif blinkCmpInstalled then
-		success, errorMsg = pcall(blinkCmp.sources.reload)
+		-- BUG PENDING https://github.com/Saghen/blink.cmp/issues/28#issuecomment-2442271546
+		-- success, errorMsg = pcall(blinkCmp.sources.reload)
+
+		if not hasNotifiedOnRestartRequirement then
+			u.notify(
+				"Due to a `blink_cmp` bug, hot-reloading is currently not supported. Restart nvim for changes to take effect.",
+				"warn"
+			)
+			hasNotifiedOnRestartRequirement = true
+			return
+		end
 
 	-- notify
 	elseif not hasNotifiedOnRestartRequirement then
