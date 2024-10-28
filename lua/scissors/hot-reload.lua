@@ -58,6 +58,7 @@ function M.reloadSnippetFile(path, fileIsNew)
 			"Your snippet plugin does not support hot-reloading. Restart nvim for changes to take effect.",
 			"info"
 		)
+		hasNotifiedOnRestartRequirement = true
 		return
 	end
 
