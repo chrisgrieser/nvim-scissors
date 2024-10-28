@@ -115,7 +115,7 @@ NVIM-SCISSORS ~
     -- lazy.nvim
     {
         "chrisgrieser/nvim-scissors",
-        dependencies = { "nvim-telescope/telescope.nvim", "garymjr/nvim-snippets" }, 
+        dependencies = "nvim-telescope/telescope.nvim", 
         opts = {
             snippetDir = "path/to/your/snippetFolder",
         } 
@@ -124,7 +124,7 @@ NVIM-SCISSORS ~
     -- packer
     use {
         "chrisgrieser/nvim-scissors",
-        dependencies = { "nvim-telescope/telescope.nvim", "garymjr/nvim-snippets" }, 
+        dependencies = "nvim-telescope/telescope.nvim", 
         config = function()
             require("scissors").setup ({
                 snippetDir = "path/to/your/snippetFolder",
