@@ -96,7 +96,7 @@ Automagical editing and creation of snippets.
 -- lazy.nvim
 {
 	"chrisgrieser/nvim-scissors",
-	dependencies = { "nvim-telescope/telescope.nvim", "garymjr/nvim-snippets" }, 
+	dependencies = "nvim-telescope/telescope.nvim", 
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
 	} 
@@ -105,7 +105,7 @@ Automagical editing and creation of snippets.
 -- packer
 use {
 	"chrisgrieser/nvim-scissors",
-	dependencies = { "nvim-telescope/telescope.nvim", "garymjr/nvim-snippets" }, 
+	dependencies = "nvim-telescope/telescope.nvim", 
 	config = function()
 		require("scissors").setup ({
 			snippetDir = "path/to/your/snippetFolder",
