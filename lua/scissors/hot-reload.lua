@@ -40,7 +40,8 @@ function M.reloadSnippetFile(path, fileIsNew)
 	-- https://github.com/antonk52/basics-language-server/issues/1
 	elseif basicsLsInstalled then
 		if vim.cmd.LspRestart == nil then
-			local msg = "Hot-reloading for `basics_ls` requires `nvim-lspconfig`. Restart nvim manually for changes to take effect."
+			local msg =
+				"Hot-reloading for `basics_ls` requires `nvim-lspconfig`. Restart nvim manually for changes to take effect."
 			u.notify(msg, "warn")
 			return
 		end
@@ -52,7 +53,8 @@ function M.reloadSnippetFile(path, fileIsNew)
 
 	-- notify
 	elseif not hasNotifiedOnRestartRequirement then
-		local msg = "Your snippet plugin does not support hot-reloading. Restart nvim for changes to take effect."
+		local msg =
+			"Your snippet plugin does not support hot-reloading. Restart nvim for changes to take effect."
 		u.notify(msg, "info")
 		hasNotifiedOnRestartRequirement = true
 		return
