@@ -33,7 +33,8 @@ function M.dedentAndTrimBlanks(lines)
 		table.remove(lines)
 	end
 
-	local indentAmounts = vim.iter(lines)
+	local indentAmounts = vim
+		.iter(lines)
 		:filter(function(line) return line ~= "" end) -- ignore blank lines
 		:map(function(line) return #line:match("^%s*") end)
 		:totable()
