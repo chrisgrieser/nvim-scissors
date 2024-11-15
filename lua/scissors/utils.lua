@@ -25,6 +25,7 @@ function M.fileExists(path) return vim.uv.fs_stat(path) ~= nil end
 ---@param lines string[]
 ---@return string[] dedentedLines
 function M.dedentAndTrimBlanks(lines)
+	-- remove leading and trailing blank lines
 	while lines[1] == "" do
 		table.remove(lines, 1)
 	end
@@ -32,8 +33,12 @@ function M.dedentAndTrimBlanks(lines)
 		table.remove(lines)
 	end
 
-	local indentAmounts = vim.tbl_map(function(line) return #(line:match("^%s*")) end, lines)
+	local indentAmounts = vim.iter(lines)
+		:filter(function(line) return line ~= "" end) -- ignore blank lines
+		:map(function(line) return #line:match("^%s*") end)
+		:totable()
 	local smallestIndent = math.min(unpack(indentAmounts))
+
 	local dedentedLines = vim.tbl_map(function(line) return line:sub(smallestIndent + 1) end, lines)
 	return dedentedLines
 end

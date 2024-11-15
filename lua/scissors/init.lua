@@ -84,6 +84,7 @@ function M.addNewSnippet(exCmdArgs)
 			vim.api.nvim_buf_get_text(0, exCmdArgs.line1 - 1, 0, exCmdArgs.line2 - 1, -1, {})
 	end
 	if calledFromExCmd or calledFromVisualMode then
+		vim.notify("🖨️ 🔵")
 		bodyPrefill = u.dedentAndTrimBlanks(bodyPrefill)
 		-- escape `$`
 		bodyPrefill = vim.tbl_map(function(line) return line:gsub("%$", "\\$") end, bodyPrefill)
