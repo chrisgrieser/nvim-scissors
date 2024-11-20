@@ -13,7 +13,6 @@
 ---@field language string|string[]
 ---@field path string
 
-
 ---@class (exact) Scissors.SnippetObj used by this plugin
 ---@field fullPath string (key only set by this plugin)
 ---@field filetype string (key only set by this plugin)
