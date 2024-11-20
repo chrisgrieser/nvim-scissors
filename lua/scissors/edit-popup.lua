@@ -1,12 +1,11 @@
+local M = {}
+
 local convert = require("scissors.vscode-format.convert-object")
 local rw = require("scissors.vscode-format.read-write")
 local u = require("scissors.utils")
-
-local M = {}
-local a = vim.api
 --------------------------------------------------------------------------------
 
----@class (exact) extMarkInfo
+---@class (exact) Scissors.extMarkInfo
 ---@field bufnr number
 ---@field ns number
 ---@field id number
@@ -14,12 +13,12 @@ local a = vim.api
 ---INFO the extmark representing the horizontal divider between prefix and body
 ---also acts as method to determine the number of prefixes. If the user has
 ---inserted/deleted a line, this is considered a change in number of prefixes
----@param prefixBodySep extMarkInfo
+---@param prefixBodySep Scissors.extMarkInfo
 ---@return number newCount
 ---@nodiscard
 local function getPrefixCount(prefixBodySep)
 	local extM = prefixBodySep
-	local newCount = a.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1] + 1
+	local newCount = vim.api.nvim_buf_get_extmark_by_id(extM.bufnr, extM.ns, extM.id, {})[1] + 1
 	return newCount
 end
 
@@ -70,17 +69,17 @@ end
 ---@param winnr number
 ---@param mode "new"|"update"
 ---@param snip Scissors.SnippetObj
----@param prefixBodySep extMarkInfo
+---@param prefixBodySep Scissors.extMarkInfo
 local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	local mappings = require("scissors.config").config.editSnippetPopup.keymaps
 	local keymap = vim.keymap.set
 	local opts = { buffer = bufnr, nowait = true, silent = true }
 	local function closePopup()
-		if a.nvim_win_is_valid(winnr) then a.nvim_win_close(winnr, true) end
-		if a.nvim_buf_is_valid(bufnr) then a.nvim_buf_delete(bufnr, { force = true }) end
+		if vim.api.nvim_win_is_valid(winnr) then vim.api.nvim_win_close(winnr, true) end
+		if vim.api.nvim_buf_is_valid(bufnr) then vim.api.nvim_buf_delete(bufnr, { force = true }) end
 	end
 	local function confirmChanges()
-		local editedLines = a.nvim_buf_get_lines(bufnr, 0, -1, false)
+		local editedLines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 		local newPrefixCount = getPrefixCount(prefixBodySep)
 		convert.updateSnippetInVscodeSnippetFile(snip, editedLines, newPrefixCount)
 		closePopup()
@@ -117,7 +116,8 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 			return
 		end
 		u.notify(("Duplicating snippet %q"):format(u.snipDisplayName(snip)))
-		local currentBody = a.nvim_buf_get_lines(bufnr, getPrefixCount(prefixBodySep), -1, false)
+		local currentBody =
+			vim.api.nvim_buf_get_lines(bufnr, getPrefixCount(prefixBodySep), -1, false)
 		closePopup()
 		local snipFile = { path = snip.fullPath, ft = snip.filetype } ---@type Scissors.snipFile
 		M.createNewSnipAndEdit(snipFile, currentBody)
@@ -133,7 +133,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	end, opts)
 
 	keymap({ "n", "i" }, mappings.insertNextPlaceholder, function()
-		local bufText = table.concat(a.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
+		local bufText = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
 		local numbers = {}
 		local placeholderPattern = "${?(%d+)" -- match `$1`, `${2:word}`, or `${3|word|}`
 		for placeholder in bufText:gmatch(placeholderPattern) do
@@ -142,11 +142,11 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		local highestPlaceholder = #numbers > 0 and math.max(unpack(numbers)) or 0
 
 		local insertStr = ("${%s:}"):format(highestPlaceholder + 1)
-		local row, col = unpack(a.nvim_win_get_cursor(0))
-		a.nvim_buf_set_text(bufnr, row - 1, col, row - 1, col, { insertStr })
+		local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+		vim.api.nvim_buf_set_text(bufnr, row - 1, col, row - 1, col, { insertStr })
 
 		-- move cursor
-		a.nvim_win_set_cursor(0, { row, col + #insertStr - 1 })
+		vim.api.nvim_win_set_cursor(0, { row, col + #insertStr - 1 })
 		vim.cmd.startinsert()
 	end, opts)
 
@@ -166,18 +166,18 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 
 	keymap("n", "dd", function()
 		local prefixCount = getPrefixCount(prefixBodySep)
-		local currentLnum = a.nvim_win_get_cursor(0)[1]
+		local currentLnum = vim.api.nvim_win_get_cursor(0)[1]
 		local cmd = currentLnum == prefixCount and "^DkJ" or "dd"
 		normal(cmd)
 	end, opts)
 
 	keymap("n", "o", function()
 		local prefixCount = getPrefixCount(prefixBodySep)
-		local currentLnum = a.nvim_win_get_cursor(0)[1]
+		local currentLnum = vim.api.nvim_win_get_cursor(0)[1]
 		local cmd = "o"
 		if currentLnum == prefixCount then
-			local currentLine = a.nvim_get_current_line()
-			a.nvim_buf_set_lines(0, prefixCount - 1, prefixCount - 1, false, { currentLine })
+			local currentLine = vim.api.nvim_get_current_line()
+			vim.api.nvim_buf_set_lines(0, prefixCount - 1, prefixCount - 1, false, { currentLine })
 			cmd = "cc"
 		end
 		normal(cmd)
@@ -206,7 +206,7 @@ end
 function M.editInPopup(snip, mode)
 	local conf = require("scissors.config").config.editSnippetPopup
 	local icon = require("scissors.config").config.icons.scissors
-	local ns = a.nvim_create_namespace("nvim-scissors-editing")
+	local ns = vim.api.nvim_create_namespace("nvim-scissors-editing")
 
 	-- snippet properties
 	local copy = vim.deepcopy(snip.prefix) -- copy since `list_extend` mutates destination
@@ -225,10 +225,10 @@ function M.editInPopup(snip, mode)
 	winTitle = vim.trim(icon .. " " .. winTitle)
 
 	-- CREATE BUFFER
-	local bufnr = a.nvim_create_buf(false, true)
-	a.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-	a.nvim_buf_set_name(bufnr, bufName)
-	a.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
+	local bufnr = vim.api.nvim_create_buf(false, true)
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+	vim.api.nvim_buf_set_name(bufnr, bufName)
+	vim.api.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
 
 	-- prefer only starting treesitter as opposed to setting the buffer filetype,
 	-- as this avoid triggering the filetype plugin, which can sometimes entail
@@ -247,7 +247,7 @@ function M.editInPopup(snip, mode)
 	local keymapHints = generateKeymapHints(mode, width)
 	local popupZindex = 20 -- below nvim-notify, which uses 50
 
-	local winnr = a.nvim_open_win(bufnr, true, {
+	local winnr = vim.api.nvim_open_win(bufnr, true, {
 		-- centered window
 		relative = "editor",
 		width = width,
@@ -278,15 +278,15 @@ function M.editInPopup(snip, mode)
 		vim.defer_fn(vim.cmd.startinsert, 1) -- for whatever reason needs to be deferred to work reliably
 	elseif mode == "update" then
 		local firstLineOfBody = #snip.prefix + 1
-		pcall(a.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
+		pcall(vim.api.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
 	end
 	u.tokenHighlight(bufnr)
 
 	-- PREFIX-BODY-SEPARATOR
 	-- (INFO its position determines number of prefixes)
-	local winWidth = a.nvim_win_get_width(winnr)
-	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type extMarkInfo
-	prefixBodySep.id = a.nvim_buf_set_extmark(bufnr, ns, #snip.prefix - 1, 0, {
+	local winWidth = vim.api.nvim_win_get_width(winnr)
+	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type Scissors.extMarkInfo
+	prefixBodySep.id = vim.api.nvim_buf_set_extmark(bufnr, ns, #snip.prefix - 1, 0, {
 		virt_lines = {
 			{ { ("═"):rep(winWidth), "FloatBorder" } },
 		},
@@ -300,13 +300,13 @@ function M.editInPopup(snip, mode)
 	local labelExtMarkIds = {} ---@type number[]
 	local function updatePrefixLabel(newPrefixCount) ---@param newPrefixCount number
 		for _, label in pairs(labelExtMarkIds) do
-			a.nvim_buf_del_extmark(bufnr, ns, label)
+			vim.api.nvim_buf_del_extmark(bufnr, ns, label)
 		end
 		for i = 1, newPrefixCount do
 			local ln = i - 1
 			local label = newPrefixCount == 1 and "Prefix" or "Prefix #" .. i
-			a.nvim_buf_add_highlight(bufnr, ns, "DiagnosticVirtualTextHint", ln, 0, -1)
-			local id = a.nvim_buf_set_extmark(bufnr, ns, ln, 0, {
+			vim.api.nvim_buf_add_highlight(bufnr, ns, "DiagnosticVirtualTextHint", ln, 0, -1)
+			local id = vim.api.nvim_buf_set_extmark(bufnr, ns, ln, 0, {
 				virt_text = { { label, "Todo" } },
 				virt_text_pos = "right_align",
 			})
@@ -316,7 +316,7 @@ function M.editInPopup(snip, mode)
 	updatePrefixLabel(#snip.prefix) -- initialize
 
 	-- update in case prefix count changes due to user input
-	a.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+	vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
 		buffer = bufnr,
 		callback = function()
 			local newPrefixCount = getPrefixCount(prefixBodySep)

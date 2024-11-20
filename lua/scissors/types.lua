@@ -23,7 +23,7 @@
 ---@field fileIsNew? boolean -- the file for the snippet is newly created
 
 ---DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets
----@alias VSCodeSnippetDict table<string, Scissors.VSCodeSnippet>
+---@alias Scissors.VSCodeSnippetDict table<string, Scissors.VSCodeSnippet>
 
 ---@class (exact) Scissors.VSCodeSnippet
 ---@field prefix string|string[]

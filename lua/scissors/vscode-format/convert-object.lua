@@ -32,7 +32,7 @@ end
 ---@return Scissors.SnippetObj[]
 ---@nodiscard
 function M.readVscodeSnippetFile(absPath, filetype)
-	local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson VSCodeSnippetDict
+	local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson Scissors.VSCodeSnippetDict
 
 	local snippetsInFileList = {} ---@type Scissors.SnippetObj[]
 
@@ -75,7 +75,7 @@ end
 ---@param changedSnippetLines string[]
 ---@param prefixCount number determining how many lines in the changes lines belong to the prefix
 function M.updateSnippetInVscodeSnippetFile(snip, changedSnippetLines, prefixCount)
-	local snippetsInFile = rw.readAndParseJson(snip.fullPath) ---@cast snippetsInFile VSCodeSnippetDict
+	local snippetsInFile = rw.readAndParseJson(snip.fullPath) ---@cast snippetsInFile Scissors.VSCodeSnippetDict
 
 	local filepath = snip.fullPath
 	local prefix = vim.list_slice(changedSnippetLines, 1, prefixCount)
