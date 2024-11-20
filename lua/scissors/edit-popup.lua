@@ -69,7 +69,7 @@ end
 ---@param bufnr number
 ---@param winnr number
 ---@param mode "new"|"update"
----@param snip SnippetObj
+---@param snip Scissors.SnippetObj
 ---@param prefixBodySep extMarkInfo
 local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	local mappings = require("scissors.config").config.editSnippetPopup.keymaps
@@ -119,7 +119,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		u.notify(("Duplicating snippet %q"):format(u.snipDisplayName(snip)))
 		local currentBody = a.nvim_buf_get_lines(bufnr, getPrefixCount(prefixBodySep), -1, false)
 		closePopup()
-		local snipFile = { path = snip.fullPath, ft = snip.filetype } ---@type snipFile
+		local snipFile = { path = snip.fullPath, ft = snip.filetype } ---@type Scissors.snipFile
 		M.createNewSnipAndEdit(snipFile, currentBody)
 	end, opts)
 
@@ -187,10 +187,10 @@ end
 
 --------------------------------------------------------------------------------
 
----@param snipFile snipFile
+---@param snipFile Scissors.snipFile
 ---@param bodyPrefill string[]
 function M.createNewSnipAndEdit(snipFile, bodyPrefill)
-	---@type SnippetObj
+	---@type Scissors.SnippetObj
 	local snip = {
 		prefix = { "" },
 		body = bodyPrefill,
@@ -201,7 +201,7 @@ function M.createNewSnipAndEdit(snipFile, bodyPrefill)
 	M.editInPopup(snip, "new")
 end
 
----@param snip SnippetObj
+---@param snip Scissors.SnippetObj
 ---@param mode "new"|"update"
 function M.editInPopup(snip, mode)
 	local conf = require("scissors.config").config.editSnippetPopup

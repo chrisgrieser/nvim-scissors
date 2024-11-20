@@ -32,7 +32,7 @@ function M.writeFile(filepath, text)
 end
 
 ---@param filepath string
----@param jsonObj VSCodeSnippetDict|packageJson
+---@param jsonObj VSCodeSnippetDict|Scissors.packageJson
 ---@param fileIsNew? boolean
 ---@return boolean success
 function M.writeAndFormatSnippetFile(filepath, jsonObj, fileIsNew)
@@ -79,7 +79,7 @@ function M.writeAndFormatSnippetFile(filepath, jsonObj, fileIsNew)
 	return true
 end
 
----@param snip SnippetObj
+---@param snip Scissors.SnippetObj
 function M.deleteSnippet(snip)
 	local key = assert(snip.originalKey)
 	local snippetsInFile = M.readAndParseJson(snip.fullPath) ---@cast snippetsInFile VSCodeSnippetDict

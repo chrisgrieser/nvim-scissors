@@ -2,28 +2,8 @@ local M = {}
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
----@class (exact) pluginConfig
----@field snippetDir string
----@field editSnippetPopup { height: number, width: number, border: string, keymaps: popupKeymaps }
----@field backdrop { enabled: boolean, blend: number }
----@field telescope telescopeConfig
----@field jsonFormatter "yq"|"jq"|"none"|table
-
----@class (exact) popupKeymaps
----@field cancel string
----@field saveChanges string
----@field deleteSnippet string
----@field duplicateSnippet string
----@field openInFile string
----@field insertNextPlaceholder string
----@field goBackToSearch string
-
----@class (exact) telescopeConfig
----@field alsoSearchSnippetBody boolean
-
----@type pluginConfig
+---@class Scissors.Config
 local defaultConfig = {
-	-- `vim.fn.stdpath("config")` returns the path to your nvim config.
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
 		height = 0.4, -- relative to the window, between 0-1
@@ -39,10 +19,6 @@ local defaultConfig = {
 			insertNextPlaceholder = "<C-p>", -- insert & normal mode
 		},
 	},
-	backdrop = {
-		enabled = true,
-		blend = 50, -- between 0-100
-	},
 	telescope = {
 		-- By default, the query only searches snippet prefixes. Set this to
 		-- `true` to also search the body of the snippets.
@@ -52,14 +28,20 @@ local defaultConfig = {
 	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
 	-- you version control your snippets. To use a custom formatter, set to a
 	-- list of strings, which will then be passed to `vim.system()`.
-	jsonFormatter = "none", -- "yq"|"jq"|"none"|table
+	---@type "yq"|"jq"|"none"|string[]
+	jsonFormatter = "none",
+
+	backdrop = {
+		enabled = true,
+		blend = 50, -- between 0-100
+	},
 }
 
 --------------------------------------------------------------------------------
 
 M.config = defaultConfig -- in case user does not call `setup`
 
----@param userConfig? pluginConfig
+---@param userConfig? Scissors.Config
 function M.setupPlugin(userConfig)
 	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig or {})
 

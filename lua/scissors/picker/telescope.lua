@@ -13,7 +13,7 @@ local edit = require("scissors.edit-popup")
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
----@param snippets SnippetObj[] entries
+---@param snippets Scissors.SnippetObj[] entries
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
 	local alsoMatchBody = require("scissors.config").config.telescope.alsoSearchSnippetBody
@@ -82,7 +82,7 @@ end
 
 --------------------------------------------------------------------------------
 
----@param files snipFile[]
+---@param files Scissors.snipFile[]
 ---@param formatter function(snipFile): string
 ---@param prompt string
 ---@param bodyPrefill string[] for the new snippet
@@ -113,7 +113,7 @@ function M.addSnippet(files, formatter, prompt, bodyPrefill)
 			attach_mappings = function(prompt_bufnr, _)
 				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
-					local snipFile = actionState.get_selected_entry().value ---@type snipFile snipFile
+					local snipFile = actionState.get_selected_entry().value ---@type Scissors.snipFile snipFile
 					edit.createNewSnipAndEdit(snipFile, bodyPrefill)
 				end)
 				return true

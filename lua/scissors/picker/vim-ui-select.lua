@@ -19,7 +19,7 @@ local function setupBackdrop()
 	})
 end
 
----@param snippets SnippetObj[] entries
+---@param snippets Scissors.SnippetObj[] entries
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
 	setupBackdrop()
@@ -36,7 +36,7 @@ function M.selectSnippet(snippets, prompt)
 	end)
 end
 
----@param files snipFile[]
+---@param files Scissors.snipFile[]
 ---@param formatter function(snipFile): string
 ---@param prompt string
 ---@param bodyPrefill string[] for the new snippet

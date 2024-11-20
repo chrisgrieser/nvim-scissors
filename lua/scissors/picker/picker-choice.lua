@@ -1,7 +1,7 @@
 local M = {}
 --------------------------------------------------------------------------------
 
----@param allSnippets SnippetObj[]
+---@param allSnippets Scissors.SnippetObj[]
 function M.selectSnippet(allSnippets)
 	local prompt = "Select Snippet:"
 
@@ -13,7 +13,7 @@ end
 
 --------------------------------------------------------------------------------
 
----@param item snipFile
+---@param item Scissors.snipFile
 ---@return string
 local function fileDisplay(item)
 	local snippetDir = require("scissors.config").config.snippetDir
@@ -22,7 +22,7 @@ local function fileDisplay(item)
 	return shortened
 end
 
----@param allSnipFiles snipFile[]
+---@param allSnipFiles Scissors.snipFile[]
 ---@param bodyPrefill string[]
 function M.addSnippet(allSnipFiles, bodyPrefill)
 	local prompt = "Select file for new snippet:"

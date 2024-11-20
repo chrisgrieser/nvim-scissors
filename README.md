@@ -215,10 +215,9 @@ The `.setup()` call is optional.
 ```lua
 -- default settings
 require("scissors").setup {
-	-- `vim.fn.stdpath("config")` returns the path to your nvim config.
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
-		height = 0.4, -- relative to the editor, number between 0 and 1
+		height = 0.4, -- relative to the window, between 0-1
 		width = 0.6,
 		border = "rounded",
 		keymaps = {
@@ -231,10 +230,6 @@ require("scissors").setup {
 			insertNextPlaceholder = "<C-p>", -- insert & normal mode
 		},
 	},
-	backdrop = {
-		enabled = true,
-		blend = 50, -- between 0-100
-	},
 	telescope = {
 		-- By default, the query only searches snippet prefixes. Set this to
 		-- `true` to also search the body of the snippets.
@@ -244,7 +239,13 @@ require("scissors").setup {
 	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
 	-- you version control your snippets. To use a custom formatter, set to a
 	-- list of strings, which will then be passed to `vim.system()`.
-	jsonFormatter = "none", -- "yq"|"jq"|"none"|table
+	---@type "yq"|"jq"|"none"|string[]
+	jsonFormatter = "none",
+
+	backdrop = {
+		enabled = true,
+		blend = 50, -- between 0-100
+	},
 }
 ```
 

@@ -11,7 +11,7 @@ local M = {}
 -- of the plugin on initialization instead of lazy-loading the code only when needed.
 --------------------------------------------------------------------------------
 
----@param userConfig? pluginConfig
+---@param userConfig? Scissors.Config
 function M.setup(userConfig) require("scissors.config").setupPlugin(userConfig) end
 
 function M.editSnippet()
@@ -36,7 +36,7 @@ function M.editSnippet()
 	end
 
 	-- GET ALL SNIPPETS
-	local allSnippets = {} ---@type SnippetObj[]
+	local allSnippets = {} ---@type Scissors.SnippetObj[]
 	for _, absPath in pairs(convert.getSnippetfilePathsForFt(bufferFt)) do
 		local filetypeSnippets = convert.readVscodeSnippetFile(absPath, bufferFt)
 		vim.list_extend(allSnippets, filetypeSnippets)
@@ -99,7 +99,7 @@ function M.addNewSnippet(exCmdArgs)
 		function(file) return { path = file, ft = "plaintext" } end,
 		convert.getSnippetfilePathsForFt("all")
 	)
-	---@type snipFile[]
+	---@type Scissors.snipFile[]
 	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
 
 	-- GUARD file listed in `package.json` does not exist

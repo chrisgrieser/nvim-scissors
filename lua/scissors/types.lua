@@ -1,15 +1,20 @@
 ---@meta
 
----@alias snipFile {path: string, ft: string, fileIsNew?: boolean}
+---@class Scissors.snipFile
+---@field path string
+---@field ft string
+---@field fileIsNew? boolean
 
----@class (exact) snippetFileMetadata
+---DOCS https://code.visualstudio.com/api/language-extensions/snippet-guide
+---@class Scissors.packageJson
+---@field contributes { snippets: Scissors.snippetFileMetadata[] }
+
+---@class (exact) Scissors.snippetFileMetadata
 ---@field language string|string[]
 ---@field path string
 
----DOCS https://code.visualstudio.com/api/language-extensions/snippet-guide
----@alias packageJson { contributes: { snippets: snippetFileMetadata[] } }
 
----@class (exact) SnippetObj used by this plugin
+---@class (exact) Scissors.SnippetObj used by this plugin
 ---@field fullPath string (key only set by this plugin)
 ---@field filetype string (key only set by this plugin)
 ---@field originalKey? string if not set, is a new snippet (key only set by this plugin)
@@ -19,9 +24,9 @@
 ---@field fileIsNew? boolean -- the file for the snippet is newly created
 
 ---DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets
----@alias VSCodeSnippetDict table<string, VSCodeSnippet>
+---@alias VSCodeSnippetDict table<string, Scissors.VSCodeSnippet>
 
----@class (exact) VSCodeSnippet
+---@class (exact) Scissors.VSCodeSnippet
 ---@field prefix string|string[]
 ---@field body string|string[]
 ---@field description? string

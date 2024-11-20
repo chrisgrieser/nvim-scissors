@@ -5,10 +5,11 @@ local M = {}
 ---@param level? "info"|"warn"|"error"|"debug"|"trace"
 function M.notify(msg, level)
 	if not level then level = "info" end
-	vim.notify(msg, vim.log.levels[level:upper()], { title = "nvim-scissors" })
+	local icon = require("scissors.config").config.icons.scissors
+	vim.notify(msg, vim.log.levels[level:upper()], { title = "nvim-scissors", icon = icon })
 end
 
----@param snip SnippetObj|VSCodeSnippet
+---@param snip Scissors.SnippetObj|Scissors.VSCodeSnippet
 ---@return string snipName
 function M.snipDisplayName(snip)
 	local snipName = snip.prefix
