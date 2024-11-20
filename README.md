@@ -246,6 +246,9 @@ require("scissors").setup {
 		enabled = true,
 		blend = 50, -- between 0-100
 	},
+	icons = {
+		scissors = "󰩫",
+	},
 }
 ```
 

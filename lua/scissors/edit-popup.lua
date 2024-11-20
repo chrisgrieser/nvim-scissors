@@ -205,6 +205,7 @@ end
 ---@param mode "new"|"update"
 function M.editInPopup(snip, mode)
 	local conf = require("scissors.config").config.editSnippetPopup
+	local icon = require("scissors.config").config.icons.scissors
 	local ns = a.nvim_create_namespace("nvim-scissors-editing")
 
 	-- snippet properties
@@ -221,6 +222,7 @@ function M.editInPopup(snip, mode)
 		bufName = "New Snippet"
 		winTitle = ("New Snippet in %q"):format(nameOfSnippetFile)
 	end
+	winTitle = vim.trim(icon .. " " .. winTitle)
 
 	-- CREATE BUFFER
 	local bufnr = a.nvim_create_buf(false, true)

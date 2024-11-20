@@ -3,7 +3,8 @@ local M = {}
 
 ---@param allSnippets Scissors.SnippetObj[]
 function M.selectSnippet(allSnippets)
-	local prompt = "Select Snippet:"
+	local icon = require("scissors.config").config.icons.scissors
+	local prompt = vim.trim(icon .. " Select Snippet:")
 
 	local hasTelescope, _ = pcall(require, "telescope")
 	local picker = hasTelescope and "telescope" or "vim-ui-select"
@@ -25,7 +26,8 @@ end
 ---@param allSnipFiles Scissors.snipFile[]
 ---@param bodyPrefill string[]
 function M.addSnippet(allSnipFiles, bodyPrefill)
-	local prompt = "Select file for new snippet:"
+	local icon = require("scissors.config").config.icons.scissors
+	local prompt = vim.trim(icon .. " Select file for new snippet:")
 
 	local hasTelescope, _ = pcall(require, "telescope")
 	local picker = hasTelescope and "telescope" or "vim-ui-select"
