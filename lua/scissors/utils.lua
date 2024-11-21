@@ -6,7 +6,12 @@ local M = {}
 function M.notify(msg, level)
 	if not level then level = "info" end
 	local icon = require("scissors.config").config.icons.scissors
-	vim.notify(msg, vim.log.levels[level:upper()], { title = "nvim-scissors", icon = icon })
+	local opts = { title = "scissors", icon = icon }
+
+	-- since nvim-notify does not support the `icon` field that snacks.nvim
+	if package.loaded["notify"] then opts.title = vim.trim(icon .. opts.title) end
+
+	vim.notify(msg, vim.log.levels[level:upper()], opts)
 end
 
 ---@param snip Scissors.SnippetObj|Scissors.VSCodeSnippet
