@@ -10,7 +10,7 @@ local u = require("scissors.utils")
 function M.validate(snipDir)
 	-- empty filetype
 	if vim.bo.filetype == "" then
-		u.notify("nvim-scissors requires the current buffer to have a filetype.", "warn")
+		u.notify("`nvim-scissors` requires the current buffer to have a filetype.", "warn")
 		return false
 	end
 
@@ -32,7 +32,7 @@ function M.validate(snipDir)
 			or not (packageJson.contributes and packageJson.contributes.snippets)
 		then
 			u.notify(
-				"The `package.json` in your snippetDir is invalid.\n"
+				"The `package.json` in your `snippetDir` is invalid.\n"
 					.. "Please make sure it follows the required specification for VSCode snippets.",
 				"error"
 			)
@@ -42,7 +42,7 @@ function M.validate(snipDir)
 	-- using friendly-snippets
 	elseif isFriendlySnippetsDir then
 		u.notify(
-			"Snippets from friendly-snippets should be edited directly, since any changes would be overwritten as soon as the repo is updated.\n"
+			"Snippets from `friendly-snippets` should be edited directly, since any changes would be overwritten as soon as the repo is updated.\n"
 				.. "Copy the snippet files you want from the repo into your snippet directory and edit them there.",
 			"error"
 		)

@@ -216,11 +216,11 @@ function M.editInPopup(snip, mode)
 	local bufName, winTitle
 	if mode == "update" then
 		local displayName = u.snipDisplayName(snip)
-		bufName = ("Edit Snippet %q"):format(displayName)
+		bufName = ("Edit snippet %q"):format(displayName)
 		winTitle = ("Editing %q [%s]"):format(displayName, nameOfSnippetFile)
 	else
-		bufName = "New Snippet"
-		winTitle = ("New Snippet in %q"):format(nameOfSnippetFile)
+		bufName = "New snippet"
+		winTitle = ("New snippet in %q"):format(nameOfSnippetFile)
 	end
 	winTitle = vim.trim(icon .. " " .. winTitle)
 
