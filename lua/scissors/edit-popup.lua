@@ -264,6 +264,7 @@ function M.editInPopup(snip, mode)
 	local winOpts = {
 		signcolumn = "no",
 		winfixbuf = true,
+		conceallevel = 0,
 		-- reduce scrolloff based on user-set window size
 		sidescrolloff = math.floor(vim.wo.sidescrolloff * conf.width),
 		scrolloff = math.floor(vim.wo.scrolloff * conf.height),
