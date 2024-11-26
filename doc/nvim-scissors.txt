@@ -1,6 +1,20 @@
 *nvim-scissors.txt*          For Neovim          Last change: 2024 November 26
 
 ==============================================================================
+Table of Contents                            *nvim-scissors-table-of-contents*
+
+1. nvim-scissors                                |nvim-scissors-nvim-scissors-|
+  - Table of Contents         |nvim-scissors-nvim-scissors--table-of-contents|
+  - Features                           |nvim-scissors-nvim-scissors--features|
+  - Rationale                         |nvim-scissors-nvim-scissors--rationale|
+  - Requirements                   |nvim-scissors-nvim-scissors--requirements|
+  - Installation                   |nvim-scissors-nvim-scissors--installation|
+  - Usage                                 |nvim-scissors-nvim-scissors--usage|
+  - Configuration                 |nvim-scissors-nvim-scissors--configuration|
+  - Cookbook & FAQ               |nvim-scissors-nvim-scissors--cookbook-&-faq|
+  - Credits                             |nvim-scissors-nvim-scissors--credits|
+
+==============================================================================
 1. nvim-scissors                                *nvim-scissors-nvim-scissors-*
 
 
