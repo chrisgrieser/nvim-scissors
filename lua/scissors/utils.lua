@@ -30,29 +30,22 @@ function M.fileExists(path) return vim.uv.fs_stat(path) ~= nil end
 
 ---@param lines string[]
 ---@return string[] dedentedLines
+---@nodiscard
 function M.dedentAndTrimBlanks(lines)
 	-- remove leading and trailing blank lines
-	while lines[1] == "" do
+	while vim.trim(lines[1]) == "" do
 		table.remove(lines, 1)
 	end
-	while lines[#lines] == "" do
+	while vim.trim(lines[#lines]) == "" do
 		table.remove(lines)
 	end
 
-	local indentAmounts = vim
-		.iter(lines)
-		:filter(function(line) return line ~= "" end) -- ignore blank lines
-		:map(function(line) return #line:match("^%s*") end)
-		:totable()
-	local smallestIndent = math.min(unpack(indentAmounts))
-
+	local smallestIndent = vim.iter(lines):fold(math.huge, function(acc, line)
+		local indent = #line:match("^%s*")
+		return math.min(acc, indent)
+	end)
 	local dedentedLines = vim.tbl_map(function(line) return line:sub(smallestIndent + 1) end, lines)
 	return dedentedLines
-end
-
-function M.leaveVisualMode()
-	local escKey = vim.api.nvim_replace_termcodes("<Esc>", false, true, true)
-	vim.api.nvim_feedkeys(escKey, "nx", false)
 end
 
 ---DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax

@@ -74,7 +74,7 @@ function M.addNewSnippet(exCmdArgs)
 	local calledFromVisualMode = mode:find("[vV]")
 	local calledFromExCmd = exCmdArgs.range and exCmdArgs.range > 0
 	if calledFromVisualMode then
-		u.leaveVisualMode() -- necessary so `<` and `>` marks are set
+		vim.cmd.normal { mode, bang = true } -- leave visual mode so `<`/`>` marks are set
 		local startRow, startCol = unpack(vim.api.nvim_buf_get_mark(0, "<"))
 		local endRow, endCol = unpack(vim.api.nvim_buf_get_mark(0, ">"))
 		endCol = mode:find("V") and -1 or (endCol + 1)
