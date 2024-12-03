@@ -1,10 +1,10 @@
-*nvim-scissors.txt*          For Neovim          Last change: 2024 November 26
+*nvim-scissors.txt*          For Neovim          Last change: 2024 December 03
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
 
 1. nvim-scissors                                |nvim-scissors-nvim-scissors-|
-  - Table of Contents         |nvim-scissors-nvim-scissors--table-of-contents|
+  - Table of contents         |nvim-scissors-nvim-scissors--table-of-contents|
   - Features                           |nvim-scissors-nvim-scissors--features|
   - Rationale                         |nvim-scissors-nvim-scissors--rationale|
   - Requirements                   |nvim-scissors-nvim-scissors--requirements|
@@ -12,7 +12,7 @@ Table of Contents                            *nvim-scissors-table-of-contents*
   - Usage                                 |nvim-scissors-nvim-scissors--usage|
   - Configuration                 |nvim-scissors-nvim-scissors--configuration|
   - Cookbook & FAQ               |nvim-scissors-nvim-scissors--cookbook-&-faq|
-  - Credits                             |nvim-scissors-nvim-scissors--credits|
+  - About the author           |nvim-scissors-nvim-scissors--about-the-author|
 
 ==============================================================================
 1. nvim-scissors                                *nvim-scissors-nvim-scissors-*
@@ -42,7 +42,7 @@ TABLE OF CONTENTS             *nvim-scissors-nvim-scissors--table-of-contents*
         - |nvim-scissors-nvim-snippets|
         - |nvim-scissors-vim-vsnip|
 - |nvim-scissors-usage|
-    - |nvim-scissors-main-usage|
+    - |nvim-scissors-basics|
     - |nvim-scissors-prefixes|
 - |nvim-scissors-configuration|
 - |nvim-scissors-cookbook-&-faq|
@@ -53,7 +53,7 @@ TABLE OF CONTENTS             *nvim-scissors-nvim-scissors--table-of-contents*
     - |nvim-scissors-version-controlling-snippets:-json-formatting|
     - |nvim-scissors-snippets-on-visual-selections|
     - |nvim-scissors-auto-triggered-snippets|
-- |nvim-scissors-credits|
+- |nvim-scissors-about-the-author|
 
 
 FEATURES                               *nvim-scissors-nvim-scissors--features*
@@ -169,6 +169,9 @@ BLINK.CMP
     }
 <
 
+It is recommended to use the latest release of `blink.cmp` for hot-reloading to
+work.
+
 
 BASICS-LANGUAGE-SERVER
 
@@ -209,7 +212,7 @@ VIM-VSNIP
 USAGE                                     *nvim-scissors-nvim-scissors--usage*
 
 
-MAIN USAGE ~
+BASICS ~
 
 The plugin provides two ex commands, `:ScissorsAddNewSnippet` and
 `:ScissorsEditSnippet`. You can pass a range to `:ScissorsAddSnippet` command
@@ -465,7 +468,7 @@ JSON files, so any additions via the `luasnip` key are preserved.
   [!TIP] You can use the `openInFile` keymap to directory open JSON file at the
   snippet’s location to make edits there easier.
 
-CREDITS                                 *nvim-scissors-nvim-scissors--credits*
+ABOUT THE AUTHOR               *nvim-scissors-nvim-scissors--about-the-author*
 
 In my day job, I am a sociologist studying the social mechanisms underlying the
 digital economy. For my PhD project, I investigate the governance of the app
