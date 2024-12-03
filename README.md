@@ -10,7 +10,7 @@ Automagical editing and creation of snippets.
 
 <https://github.com/chrisgrieser/nvim-scissors/assets/73286100/de544b7e-20c3-4bec-b7aa-cbaaacca09ca>
 
-## Table of Contents
+## Table of contents
 
 <!-- toc -->
 
@@ -18,26 +18,26 @@ Automagical editing and creation of snippets.
 - [Rationale](#rationale)
 - [Requirements](#requirements)
 - [Installation](#installation)
-  * [nvim-scissors](#nvim-scissors)
-  * [Snippet engine setup](#snippet-engine-setup)
-    + [LuaSnip](#luasnip)
-    + [blink.cmp](#blinkcmp)
-    + [basics-language-server](#basics-language-server)
-    + [nvim-snippets](#nvim-snippets)
-    + [vim-vsnip](#vim-vsnip)
+	* [nvim-scissors](#nvim-scissors)
+	* [Snippet engine setup](#snippet-engine-setup)
+		+ [LuaSnip](#luasnip)
+		+ [blink.cmp](#blinkcmp)
+		+ [basics-language-server](#basics-language-server)
+		+ [nvim-snippets](#nvim-snippets)
+		+ [vim-vsnip](#vim-vsnip)
 - [Usage](#usage)
-  * [Main usage](#main-usage)
-  * [Prefixes](#prefixes)
+	* [Basics](#basics)
+	* [Prefixes](#prefixes)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
-  * [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
-  * [Variables & tabstops](#variables--tabstops)
-  * [friendly-snippets](#friendly-snippets)
-  * [Edit snippet title and snippet description](#edit-snippet-title-and-snippet-description)
-  * [Version controlling snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
-  * [Snippets on visual selections](#snippets-on-visual-selections)
-  * [Auto-triggered snippets](#auto-triggered-snippets)
-- [Credits](#credits)
+	* [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
+	* [Variables & tabstops](#variables--tabstops)
+	* [friendly-snippets](#friendly-snippets)
+	* [Edit snippet title and snippet description](#edit-snippet-title-and-snippet-description)
+	* [Version controlling snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
+	* [Snippets on visual selections](#snippets-on-visual-selections)
+	* [Auto-triggered snippets](#auto-triggered-snippets)
+- [About the author](#about-the-author)
 
 <!-- tocstop -->
 
@@ -78,7 +78,7 @@ Automagical editing and creation of snippets.
   format](#introduction-to-the-vscode-style-snippet-format).
 - [telescope](https://github.com/nvim-telescope/telescope.nvim) OR
   ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
-  [fzf-lua](https://github.com/ibhagwan/fzf-lua)). 
+  [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
   * Note that snippet previews
     only work when using `telescope`.
 - A snippet engine that can load VSCode-style snippets, such as:
@@ -150,7 +150,9 @@ require("blink.cmp").setup {
 It is recommended to use the latest release of `blink.cmp` for hot-reloading to
 work.
 
+<!-- LTeX: enabled=false -->
 #### basics-language-server
+<!-- LTeX: enabled=true -->
 
 ```lua
 -- NOTE: this requires the `nvim-lspconfig` as additional dependency
@@ -188,7 +190,7 @@ vim.g.vsnip_snippet_dirs = { "path/to/your/snippetFolder" }
 
 ## Usage
 
-### Main usage
+### Basics
 The plugin provides two ex commands, `:ScissorsAddNewSnippet` and
 `:ScissorsEditSnippet`. You can pass a range to `:ScissorsAddSnippet` command to
 prefill snippet body (for example `:'<,'> ScissorsAddSnippet` or `:3
@@ -423,7 +425,7 @@ JSON files, so any additions via the `luasnip` key are preserved.
 > You can use the `openInFile` keymap to directory open JSON file at the
 > snippet's location to make edits there easier.
 
-## Credits
+## About the author
 In my day job, I am a sociologist studying the social mechanisms underlying the
 digital economy. For my PhD project, I investigate the governance of the app
 economy and how software ecosystems manage the tension between innovation and
