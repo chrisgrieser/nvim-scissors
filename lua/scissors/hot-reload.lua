@@ -17,12 +17,13 @@ function M.reloadSnippetFile(path, fileIsNew)
 	end
 
 	local success = false
+	---@type string?
 	local errorMsg = ""
 
 	local luasnipInstalled, luasnipLoaders = pcall(require, "luasnip.loaders")
 	local nvimSnippetsInstalled, snippetUtils = pcall(require, "snippets.utils")
 	local vimVsnipInstalled = vim.g.loaded_vsnip ~= nil -- https://github.com/hrsh7th/vim-vsnip/blob/master/plugin/vsnip.vim#L4C5-L4C17
-	local blinkCmpInstalled, blinkCmp = pcall(require, "blink.cmp.sources.lib")
+	local blinkCmpInstalled, blinkCmp = pcall(require, "blink.cmp")
 	local basicsLsInstalled = vim.fn.executable("basics-language-server") == 1
 
 	-- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
@@ -49,13 +50,7 @@ function M.reloadSnippetFile(path, fileIsNew)
 
 	-- https://github.com/Saghen/blink.cmp/issues/428#issuecomment-2513235377
 	elseif blinkCmpInstalled then
-		if blinkCmp.reload then
-			success, errorMsg = pcall(blinkCmp.reload)
-		else
-			success = false
-			errorMsg = "`blink.cmp` hot-reloading function not found."
-		end
-		if not success then errorMsg = errorMsg .. "\nTry updating to the latest version of `blink.cmp`." end
+		success, errorMsg = pcall(blinkCmp.reload, "snippets")
 
 	-- notify
 	elseif not hasNotifiedOnRestartRequirement then
