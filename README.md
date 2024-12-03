@@ -147,6 +147,9 @@ require("blink.cmp").setup {
 }
 ```
 
+It is recommended to use the latest release of `blink.cmp` for hot-reloading to
+work.
+
 #### basics-language-server
 
 ```lua
