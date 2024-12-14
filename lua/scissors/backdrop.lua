@@ -47,5 +47,19 @@ function M.new(referenceBuf, referenceZindex)
 	})
 end
 
+---Sets up autocmd that creates a backdrop for the next occurrence of the given filetype
+---@param filetype string
+---@return integer augroup
+function M.setup(filetype)
+	local group = vim.api.nvim_create_augroup("nvim-scissors.backdrop." .. filetype, {})
+	vim.api.nvim_create_autocmd("FileType", {
+		group = group,
+		once = true,
+		pattern = filetype,
+		callback = function(ctx) require("scissors.backdrop").new(ctx.buf) end,
+	})
+	return group
+end
+
 --------------------------------------------------------------------------------
 return M

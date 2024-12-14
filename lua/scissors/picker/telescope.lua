@@ -18,12 +18,7 @@ local u = require("scissors.utils")
 function M.selectSnippet(snippets, prompt)
 	local config = require("scissors.config").config.telescope
 
-	-- backdrop
-	vim.api.nvim_create_autocmd("FileType", {
-		once = true,
-		pattern = "TelescopeResults",
-		callback = function(ctx) require("scissors.backdrop").new(ctx.buf) end,
-	})
+	require("scissors.backdrop").setup("TelescopeResults")
 
 	pickers
 		.new(config.opts, {
@@ -87,6 +82,8 @@ end
 ---@param prompt string
 ---@param bodyPrefill string[] for the new snippet
 function M.addSnippet(files, formatter, prompt, bodyPrefill)
+	require("scissors.backdrop").setup("TelescopeResults")
+
 	pickers
 		.new({}, {
 			prompt_title = prompt:gsub(": ?$", ""),
