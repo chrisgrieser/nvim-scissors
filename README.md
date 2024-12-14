@@ -79,8 +79,7 @@ Automagical editing and creation of snippets.
 - [telescope](https://github.com/nvim-telescope/telescope.nvim) OR
   ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
   [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
-  * Note that snippet previews
-    only work when using `telescope`.
+  * Note that snippet previews only work when using `telescope`.
 - A snippet engine that can load VSCode-style snippets, such as:
   * [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
   * [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login)
@@ -240,7 +239,17 @@ require("scissors").setup {
 		-- By default, the query only searches snippet prefixes. Set this to
 		-- `true` to also search the body of the snippets.
 		alsoSearchSnippetBody = false,
+
+		-- accepts the common telescope picker config
+		opts = {
+			layout_strategies = "horizontal",
+			layout_config = {
+				horizontal = { width = 0.9 },
+				preview_width = 0.6,
+			},
+		},
 	},
+
 	-- `none` writes as a minified json file using `vim.encode.json`.
 	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
 	-- you version control your snippets. To use a custom formatter, set to a

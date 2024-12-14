@@ -16,7 +16,7 @@ local u = require("scissors.utils")
 ---@param snippets Scissors.SnippetObj[] entries
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
-	local alsoMatchBody = require("scissors.config").config.telescope.alsoSearchSnippetBody
+	local config = require("scissors.config").config.telescope
 
 	-- backdrop
 	vim.api.nvim_create_autocmd("FileType", {
@@ -26,15 +26,15 @@ function M.selectSnippet(snippets, prompt)
 	})
 
 	pickers
-		.new({}, {
+		.new(config.opts, {
 			prompt_title = prompt:gsub(": ?$", ""),
-			sorter = telescopeConf.generic_sorter {},
+			sorter = telescopeConf.generic_sorter(config.opts),
 
 			finder = finders.new_table {
 				results = snippets,
 				entry_maker = function(snip)
 					local matcher = table.concat(snip.prefix, " ")
-					if alsoMatchBody then matcher = matcher .. " " .. table.concat(snip.body, "\n") end
+					if config.alsoMatchBody then matcher = matcher .. " " .. table.concat(snip.body, "\n") end
 					return {
 						value = snip,
 						display = function(entry)
