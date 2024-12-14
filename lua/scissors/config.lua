@@ -58,26 +58,10 @@ M.config = defaultConfig -- in case user does not call `setup`
 function M.setupPlugin(userConfig)
 	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig or {})
 
-	-- normalizing e.g. expands `~` in provided snippetDir
+	-- normalizing relevant as it expands `~` to the home directory
 	M.config.snippetDir = vim.fs.normalize(M.config.snippetDir)
 
-	-- DEPRECATION of `insertNextToken`
-	if M.config.editSnippetPopup.keymaps.insertNextToken then ---@diagnostic disable-line: undefined-field
-		M.config.editSnippetPopup.keymaps.insertNextPlaceholder =
-			M.config.editSnippetPopup.keymaps.insertNextToken ---@diagnostic disable-line: undefined-field
-		local msg = "The `insertNextToken` keymap is deprecated, use `insertNextPlaceholder` instead."
-		u.notify(msg, "warn")
-	end
-
-	-- DEPRECATION of `jumpBetweenBodyAndPrefix`
-	if M.config.editSnippetPopup.keymaps.jumpBetweenBodyAndPrefix then ---@diagnostic disable-line: undefined-field
-		local msg = "The `jumpBetweenBodyAndPrefix` keymap has been removed. "
-			.. "You can now create a filetype-specific for custom keymaps using "
-			.. "the filetype `scissors-snippet`."
-		u.notify(msg, "warn")
-	end
-
-	-- VALIDATE border `none` does not work with and title/footer used by this plugin
+	-- border `none` does not work with and title/footer used by this plugin
 	if M.config.editSnippetPopup.border == "none" then
 		local fallback = defaultConfig.editSnippetPopup.border
 		M.config.editSnippetPopup.border = fallback
