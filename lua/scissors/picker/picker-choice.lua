@@ -4,7 +4,7 @@ local M = {}
 ---@param allSnippets Scissors.SnippetObj[]
 function M.selectSnippet(allSnippets)
 	local icon = require("scissors.config").config.icons.scissors
-	local prompt = vim.trim(icon .. " Select Snippet:")
+	local prompt = vim.trim(icon .. " Select Snippet: ")
 
 	-- INFO not using ternary to pass variable into `require`, since that
 	-- prevents the LSP from picking up references
@@ -31,7 +31,7 @@ end
 ---@param bodyPrefill string[]
 function M.addSnippet(allSnipFiles, bodyPrefill)
 	local icon = require("scissors.config").config.icons.scissors
-	local prompt = vim.trim(icon .. " Select file for new snippet:")
+	local prompt = vim.trim(icon .. " Select file for new snippet: ")
 
 	local hasTelescope, _ = pcall(require, "telescope")
 	if hasTelescope then
