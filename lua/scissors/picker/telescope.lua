@@ -16,20 +16,21 @@ local u = require("scissors.utils")
 ---@param snippets Scissors.SnippetObj[] entries
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
-	local config = require("scissors.config").config.telescope
-
 	require("scissors.backdrop").setup("TelescopeResults")
+	local conf = require("scissors.config").config.telescope
 
 	pickers
-		.new(config.opts, {
+		.new(conf.opts, {
 			prompt_title = prompt:gsub(": ?$", ""),
-			sorter = telescopeConf.generic_sorter(config.opts),
+			sorter = telescopeConf.generic_sorter(conf.opts),
 
 			finder = finders.new_table {
 				results = snippets,
 				entry_maker = function(snip)
 					local matcher = table.concat(snip.prefix, " ")
-					if config.alsoMatchBody then matcher = matcher .. " " .. table.concat(snip.body, "\n") end
+					if conf.alsoMatchBody then
+						matcher = matcher .. " " .. table.concat(snip.body, "\n")
+					end
 					return {
 						value = snip,
 						display = function(entry)
@@ -57,19 +58,19 @@ function M.selectSnippet(snippets, prompt)
 					local bufnr = self.state.bufnr
 					vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, snip.body)
 
-					-- highlights
-					vim.api.nvim_set_option_value("filetype", snip.filetype, { buf = bufnr })
+					-- highlights of the snippet
+					vim.bo[bufnr].filetype = snip.filetype
 					vim.defer_fn(function() u.tokenHighlight(bufnr) end, 1)
 				end,
 			},
 
-			attach_mappings = function(prompt_bufnr, _)
+			attach_mappings = function(promptBufnr, _)
 				actions.select_default:replace(function()
-					actions.close(prompt_bufnr)
-					local snip = actionState.get_selected_entry().value
+					actions.close(promptBufnr)
+					local snip = actionState.get_selected_entry().value ---@type Scissors.SnippetObj
 					edit.editInPopup(snip, "update")
 				end)
-				return true
+				return true -- `true` = keeps default mappings from user
 			end,
 		})
 		:find()
@@ -78,24 +79,28 @@ end
 --------------------------------------------------------------------------------
 
 ---@param files Scissors.snipFile[]
----@param formatter function(snipFile): string
+---@param formatter fun(snipFile): string
 ---@param prompt string
 ---@param bodyPrefill string[] for the new snippet
 function M.addSnippet(files, formatter, prompt, bodyPrefill)
 	require("scissors.backdrop").setup("TelescopeResults")
 
-	pickers
-		.new({}, {
-			prompt_title = prompt:gsub(": ?$", ""),
-			sorter = telescopeConf.generic_sorter {},
-
-			layout_strategy = "horizontal",
-			layout_config = {
-				horizontal = {
-					width = { 0.5, max = 60 },
-					height = { 0.4, min = 12 },
-				},
+	-- not using the telescope picker opts from the config, since in this case,
+	-- we want a smaller window due to this picker only requiring filenames
+	local telescopeOpts = {
+		layout_strategy = "horizontal",
+		layout_config = {
+			horizontal = {
+				width = { 0.5, max = 60 },
+				height = { 0.4, min = 12 },
 			},
+		},
+	}
+
+	pickers
+		.new(telescopeOpts, {
+			prompt_title = prompt:gsub(": ?$", ""),
+			sorter = telescopeConf.generic_sorter(telescopeOpts),
 
 			finder = finders.new_table {
 				results = files,
@@ -107,13 +112,13 @@ function M.addSnippet(files, formatter, prompt, bodyPrefill)
 					}
 				end,
 			},
-			attach_mappings = function(prompt_bufnr, _)
+			attach_mappings = function(promptBufnr, _)
 				actions.select_default:replace(function()
-					actions.close(prompt_bufnr)
+					actions.close(promptBufnr)
 					local snipFile = actionState.get_selected_entry().value ---@type Scissors.snipFile snipFile
 					edit.createNewSnipAndEdit(snipFile, bodyPrefill)
 				end)
-				return true
+				return true -- `true` = keeps default mappings from user
 			end,
 		})
 		:find()
