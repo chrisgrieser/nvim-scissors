@@ -73,7 +73,7 @@ function M.writeAndFormatSnippetFile(filepath, jsonObj, fileIsNew)
 	if not writeSuccess then return false end
 
 	if not vim.endswith(filepath, "package.json") then
-		require("scissors.hot-reload").reloadSnippetFile(filepath, fileIsNew)
+		require("scissors.4-hot-reload").reloadSnippetFile(filepath, fileIsNew)
 	end
 
 	return true

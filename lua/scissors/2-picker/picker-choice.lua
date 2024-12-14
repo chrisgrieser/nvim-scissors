@@ -10,9 +10,9 @@ function M.selectSnippet(allSnippets)
 	-- prevents the LSP from picking up references
 	local hasTelescope, _ = pcall(require, "telescope")
 	if hasTelescope then
-		require("scissors.picker.telescope").selectSnippet(allSnippets, prompt)
+		require("scissors.2-picker.telescope").selectSnippet(allSnippets, prompt)
 	else
-		require("scissors.picker.vim-ui-select").selectSnippet(allSnippets, prompt)
+		require("scissors.2-picker.vim-ui-select").selectSnippet(allSnippets, prompt)
 	end
 end
 
@@ -36,10 +36,10 @@ function M.addSnippet(allSnipFiles, bodyPrefill)
 	local hasTelescope, _ = pcall(require, "telescope")
 	if hasTelescope then
 		-- stylua: ignore
-		require("scissors.picker.telescope").addSnippet(allSnipFiles, fileDisplay, prompt, bodyPrefill)
+		require("scissors.2-picker.telescope").addSnippet(allSnipFiles, fileDisplay, prompt, bodyPrefill)
 	else
 		-- stylua: ignore
-		require("scissors.picker.vim-ui-select").addSnippet(allSnipFiles, fileDisplay, prompt, bodyPrefill)
+		require("scissors.2-picker.vim-ui-select").addSnippet(allSnipFiles, fileDisplay, prompt, bodyPrefill)
 	end
 end
 --------------------------------------------------------------------------------

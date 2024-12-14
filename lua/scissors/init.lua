@@ -13,20 +13,20 @@ local M = {}
 ---@param userConfig? Scissors.Config
 function M.setup(userConfig) require("scissors.config").setupPlugin(userConfig) end
 
-function M.addNewSnippet(exCmdArgs) require("scissors.prepare-selection").addNewSnippet(exCmdArgs) end
-function M.editSnippet() require("scissors.prepare-selection").editSnippet() end
+function M.addNewSnippet(exCmdArgs) require("scissors.1-prepare-selection").addNewSnippet(exCmdArgs) end
+function M.editSnippet() require("scissors.1-prepare-selection").editSnippet() end
 
 --------------------------------------------------------------------------------
 
 vim.api.nvim_create_user_command(
 	"ScissorsAddNewSnippet",
-	function(args) require("scissors.prepare-selection").addNewSnippet(args) end,
+	function(args) require("scissors.1-prepare-selection").addNewSnippet(args) end,
 	{ desc = "Add new snippet.", range = true }
 )
 
 vim.api.nvim_create_user_command(
 	"ScissorsEditSnippet",
-	function() require("scissors.prepare-selection").editSnippet() end,
+	function() require("scissors.1-prepare-selection").editSnippet() end,
 	{ desc = "Edit existing snippet." }
 )
 

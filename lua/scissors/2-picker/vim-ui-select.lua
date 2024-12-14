@@ -1,6 +1,6 @@
 local M = {}
 
-local edit = require("scissors.edit-popup")
+local edit = require("scissors.3-edit-popup")
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 

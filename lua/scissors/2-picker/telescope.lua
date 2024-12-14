@@ -9,7 +9,7 @@ local actions = require("telescope.actions")
 local finders = require("telescope.finders")
 local previewers = require("telescope.previewers")
 
-local edit = require("scissors.edit-popup")
+local edit = require("scissors.3-edit-popup")
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 

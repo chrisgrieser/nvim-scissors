@@ -1,14 +1,15 @@
 local M = {}
+
+local u = require("scissors.utils")
+local snippetDir = require("scissors.config").config.snippetDir
+local convert = require("scissors.vscode-format.convert-object")
+local picker = require("scissors.2-picker.picker-choice")
+local vb = require("scissors.vscode-format.validate-bootstrap")
+local createNewSnipAndEdit = require("scissors.3-edit-popup").createNewSnipAndEdit
+local addSnippet = require("scissors.2-picker.picker-choice").addSnippet
 --------------------------------------------------------------------------------
 
 function M.editSnippet()
-	local u = require("scissors.utils")
-	local snippetDir = require("scissors.config").config.snippetDir
-	local bufferFt = vim.bo.filetype
-	local convert = require("scissors.vscode-format.convert-object")
-	local picker = require("scissors.picker.picker-choice")
-	local vb = require("scissors.vscode-format.validate-bootstrap")
-
 	-- GUARD
 	if not vb.validate(snippetDir) then return end
 	local packageJsonExist = u.fileExists(snippetDir .. "/package.json")
@@ -23,6 +24,7 @@ function M.editSnippet()
 	end
 
 	-- GET ALL SNIPPETS
+	local bufferFt = vim.bo.filetype
 	local allSnippets = {} ---@type Scissors.SnippetObj[]
 	for _, absPath in pairs(convert.getSnippetfilePathsForFt(bufferFt)) do
 		local filetypeSnippets = convert.readVscodeSnippetFile(absPath, bufferFt)
@@ -44,16 +46,13 @@ function M.editSnippet()
 end
 
 function M.addNewSnippet(exCmdArgs)
-	exCmdArgs = exCmdArgs or {}
-	local snippetDir = require("scissors.config").config.snippetDir
-	local u = require("scissors.utils")
-	local vb = require("scissors.vscode-format.validate-bootstrap")
-	local convert = require("scissors.vscode-format.convert-object")
-	local bufferFt = vim.bo.filetype
-
 	-- GUARD & bootstrap
 	if not vb.validate(snippetDir) then return end
 	vb.bootstrapSnipDir(snippetDir)
+
+	-- PARAMS
+	local bufferFt = vim.bo.filetype
+	exCmdArgs = exCmdArgs or {}
 
 	-- VISUAL MODE: prefill body with selected text
 	local bodyPrefill = { "" }
@@ -108,9 +107,9 @@ function M.addNewSnippet(exCmdArgs)
 
 	-- SELECT
 	if #allSnipFiles == 1 then
-		require("scissors.edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
+		createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
 	else
-		require("scissors.picker.picker-choice").addSnippet(allSnipFiles, bodyPrefill)
+		addSnippet(allSnipFiles, bodyPrefill)
 	end
 end
 
