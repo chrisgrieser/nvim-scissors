@@ -34,7 +34,7 @@ Automagical editing and creation of snippets.
 	* [Variables & tabstops](#variables--tabstops)
 	* [friendly-snippets](#friendly-snippets)
 	* [Edit snippet title and snippet description](#edit-snippet-title-and-snippet-description)
-	* [Version controlling snippets: JSON-formatting](#version-controlling-snippets-json-formatting)
+	* [Version controlling snippets & formatting your snippet files](#version-controlling-snippets--formatting-your-snippet-files)
 	* [Snippets on visual selections](#snippets-on-visual-selections)
 	* [Auto-triggered snippets](#auto-triggered-snippets)
 - [About the author](#about-the-author)
@@ -346,10 +346,10 @@ For details, read the official VSCode snippet documentation:
 - [`package.json` specification](https://code.visualstudio.com/api/language-extensions/snippet-guide)
 - [LuaSnip-specific additions to the format](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code)
 
-### Variables & tabstops
+### Tabstops and variables
 [Tabstops](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_tabstops)
-are denoted by `$1`, `$2`, `$3`, with `$0` being the last tabstop. They
-support placeholders such `${1:foobar}`.
+are denoted by `$1`, `$2`, `$3`, etc., with `$0` being the last tabstop. They
+support placeholders such as `${1:foobar}`.
 
 > [!NOTE]
 > Due to the use of `$` in the snippet syntax, any *literal* `$` needs to be
@@ -360,10 +360,11 @@ Furthermore, there are various variables you can use, such as `$TM_FILENAME` or
 variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
 
 > [!TIP]
-> If you frequently create new snippets, you may also use the command
+> If you frequently create new snippets, you can also use the command
 > `:ScissorsCreateSnippetsForSnippetVars` to create snippets for the VSCode
-> snippet variables in the `nvim-scissors` popup window. For example, typing
-> `filen` then triggers a suggestion for `$TM_FILENAME`.
+> snippet variables in the `nvim-scissors` popup window (i.e., snippets for
+> creating snippets). For example, typing `filen` will then trigger a
+> suggestion for `$TM_FILENAME`.
 
 <!-- LTeX: enabled=false -->
 ### friendly-snippets
@@ -383,9 +384,9 @@ the UI as simple as possible. For the few cases where you need to edit a
 snippet's title or description, you can use the `openInFile` keymap and edit
 them directly in the snippet file.
 
-### Version controlling snippets: JSON-formatting
+### Version controlling snippets & Snippet file formatting
 This plugin writes JSON files via `vim.encode.json()`. That method saves
-the file in minified form, and does not have a
+the file in minified form and does not have a
 deterministic order of dictionary keys.
 
 Both, minification and unstable key order, are a problem if you
