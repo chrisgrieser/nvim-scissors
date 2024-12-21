@@ -1,4 +1,4 @@
-*nvim-scissors.txt*          For Neovim          Last change: 2024 December 14
+*nvim-scissors.txt*          For Neovim          Last change: 2024 December 21
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -50,7 +50,7 @@ TABLE OF CONTENTS             *nvim-scissors-nvim-scissors--table-of-contents*
     - |nvim-scissors-variables-&-tabstops|
     - |nvim-scissors-friendly-snippets|
     - |nvim-scissors-edit-snippet-title-and-snippet-description|
-    - |nvim-scissors-version-controlling-snippets:-json-formatting|
+    - |nvim-scissors-version-controlling-snippets-&-formatting-your-snippet-files|
     - |nvim-scissors-snippets-on-visual-selections|
     - |nvim-scissors-auto-triggered-snippets|
 - |nvim-scissors-about-the-author|
@@ -378,12 +378,12 @@ LuaSnip-specific additions to the format
 <https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code>
 
 
-VARIABLES & TABSTOPS ~
+TABSTOPS AND VARIABLES ~
 
 Tabstops
 <https://code.visualstudio.com/docs/editor/userdefinedsnippets#_tabstops> are
-denoted by `$1`, `$2`, `$3`, with `$0` being the last tabstop. They support
-placeholders such `${1:foobar}`.
+denoted by `$1`, `$2`, `$3`, etc., with `$0` being the last tabstop. They
+support placeholders such as `${1:foobar}`.
 
 
   [!NOTE] Due to the use of `$` in the snippet syntax, any _literal_ `$` needs to
@@ -393,10 +393,11 @@ Furthermore, there are various variables you can use, such as `$TM_FILENAME` or
 <https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables>.
 
 
-  [!TIP] If you frequently create new snippets, you may also use the command
+  [!TIP] If you frequently create new snippets, you can also use the command
   `:ScissorsCreateSnippetsForSnippetVars` to create snippets for the VSCode
-  snippet variables in the `nvim-scissors` popup window. For example, typing
-  `filen` then triggers a suggestion for `$TM_FILENAME`.
+  snippet variables in the `nvim-scissors` popup window (i.e., snippets for
+  creating snippets). For example, typing `filen` will then trigger a suggestion
+  for `$TM_FILENAME`.
 
 FRIENDLY-SNIPPETS ~
 
@@ -420,10 +421,10 @@ snippet’s title or description, you can use the `openInFile` keymap and edit
 them directly in the snippet file.
 
 
-VERSION CONTROLLING SNIPPETS: JSON-FORMATTING ~
+VERSION CONTROLLING SNIPPETS & SNIPPET FILE FORMATTING ~
 
 This plugin writes JSON files via `vim.encode.json()`. That method saves the
-file in minified form, and does not have a deterministic order of dictionary
+file in minified form and does not have a deterministic order of dictionary
 keys.
 
 Both, minification and unstable key order, are a problem if you version-control
