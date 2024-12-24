@@ -25,6 +25,8 @@ function M.reloadSnippetFile(path, fileIsNew)
 	local vimVsnipInstalled = vim.g.loaded_vsnip ~= nil -- https://github.com/hrsh7th/vim-vsnip/blob/master/plugin/vsnip.vim#L4C5-L4C17
 	local blinkCmpInstalled, blinkCmp = pcall(require, "blink.cmp")
 	local basicsLsInstalled = vim.fn.executable("basics-language-server") == 1
+	---@diagnostic disable-next-line:undefined-field
+	local miniSnippetsInstalled = _G.MiniSnippets ~= nil
 
 	-- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
 	if luasnipInstalled then
@@ -51,6 +53,11 @@ function M.reloadSnippetFile(path, fileIsNew)
 	-- https://github.com/Saghen/blink.cmp/issues/428#issuecomment-2513235377
 	elseif blinkCmpInstalled then
 		success, errorMsg = pcall(blinkCmp.reload, "snippets")
+	elseif miniSnippetsInstalled then
+		--- Reset whole cache so that next "prepare" step rereads file(s)
+		---@diagnostic disable-next-line:undefined-field
+		_G.MiniSnippets.setup(_G.MiniSnippets.config)
+		success = true
 
 	-- notify
 	elseif not hasNotifiedOnRestartRequirement then
