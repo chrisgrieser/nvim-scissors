@@ -37,22 +37,23 @@ TABLE OF CONTENTS             *nvim-scissors-nvim-scissors--table-of-contents*
     - |nvim-scissors-nvim-scissors|
     - |nvim-scissors-snippet-engine-setup|
         - |nvim-scissors-luasnip|
+        - |nvim-scissors-mini.snippets|
         - |nvim-scissors-blink.cmp|
         - |nvim-scissors-basics-language-server|
         - |nvim-scissors-nvim-snippets|
         - |nvim-scissors-vim-vsnip|
 - |nvim-scissors-usage|
-    - |nvim-scissors-basics|
-    - |nvim-scissors-prefixes|
+    - |nvim-scissors-starting-`nvim-scissors`|
+    - |nvim-scissors-editing-snippets-in-the-popup-window|
 - |nvim-scissors-configuration|
 - |nvim-scissors-cookbook-&-faq|
     - |nvim-scissors-introduction-to-the-vscode-style-snippet-format|
-    - |nvim-scissors-variables-&-tabstops|
+    - |nvim-scissors-tabstops-and-variables|
     - |nvim-scissors-friendly-snippets|
-    - |nvim-scissors-edit-snippet-title-and-snippet-description|
-    - |nvim-scissors-version-controlling-snippets-&-formatting-your-snippet-files|
-    - |nvim-scissors-snippets-on-visual-selections|
-    - |nvim-scissors-auto-triggered-snippets|
+    - |nvim-scissors-edit-snippet-title-or-description|
+    - |nvim-scissors-version-controlling-snippets-&-snippet-file-formatting|
+    - |nvim-scissors-snippets-on-visual-selections-(`luasnip`-only)|
+    - |nvim-scissors-auto-triggered-snippets-(`luasnip`-only)|
 - |nvim-scissors-about-the-author|
 
 
@@ -64,9 +65,9 @@ FEATURES                               *nvim-scissors-nvim-scissors--features*
 - Automagical conversion from buffer text to JSON string.
 - Intuitive UI for editing the snippet, dynamically adapting the number of
     prefixes.
-- Automatic hot-reloading of any changes.
-- Optional JSON-formatting and sorting of the snippet file after updating, using
-    `yq` or `jq`. (|nvim-scissors-useful-when-version-controlling-your-snippet-collection|.)
+- Automatic hot-reloading of any changes, so you do not have to restart nvim for
+    changes to take effect.
+- Optional JSON-formatting and sorting of the snippet file. (|nvim-scissors-useful-when-version-controlling-your-snippet-collection|.)
 - Snippet/file selection via `telescope` or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
 - Supports only VSCode-style
@@ -84,8 +85,8 @@ RATIONALE                             *nvim-scissors-nvim-scissors--rationale*
     closest thing to a standard regarding snippets. It is used by
     friendly-snippets <https://github.com/rafamadriz/friendly-snippets> and
     supported by most snippet engine plugins for nvim.
-- However, the snippets are stored as JSON files, which are a pain to modify
-    manually. This plugin aims to alleviate that pain by automagically writing the
+- However, the VSCode snippets are stored as JSON files, which are a pain to
+    modify manually. This plugin alleviates that pain by automagically writing the
     JSON for you.
 
 
@@ -155,13 +156,13 @@ LUASNIP
 
 MINI.SNIPPETS
 
-`mini.snippets` preferred snippet location is any 'snippets/' directory in the
-'runtimepath'. For manually maintained snippets the best location is the user
+`mini.snippets` preferred snippet location is any `snippets/` directory in the
+`runtimepath`. For manually maintained snippets the best location is the user
 config directory, which requires the following `nvim-scissors` setup:
 
 >lua
-    require('scissors').setup({
-      snippetDir = vim.fn.stdpath('config') .. '/snippets',
+    require("scissors").setup({
+        snippetDir = vim.fn.stdpath("config") .. "/snippets",
     })
 <
 
@@ -170,7 +171,8 @@ its Quickstart
 <https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart>
 guide should be enough to make it respect snippets from 'snippets/' directory
 inside user config. **Note**`nvim-scissors` works only with VSCode-style
-snippet files (not Lua files or JSON arrays).
+snippet files (not Lua files or JSON arrays), and also requires a
+|nvim-scissors-`package.json`-for-the-vscode-format|.
 
 
 BLINK.CMP
@@ -196,8 +198,8 @@ work.
 BASICS-LANGUAGE-SERVER
 
 >lua
-    -- NOTE: this requires the `nvim-lspconfig` as additional dependency
-    require('lspconfig').basics_ls.setup({
+    -- NOTE: this requires `nvim-lspconfig` as additional dependency
+    require("lspconfig").basics_ls.setup({
         settings = {
             snippet = {
                 enable = true,
@@ -207,7 +209,7 @@ BASICS-LANGUAGE-SERVER
     })
 <
 
-Hot-reloading of the new/edited snippet for `basics_ls` requires
+Note that Hot-reloading of the new/edited snippet for `basics_ls` also requires
 `nvim-lspconfig`.
 
 
@@ -447,7 +449,7 @@ What you can do, however, is to copy individual snippets files from the
 there.
 
 
-EDIT SNIPPET TITLE AND SNIPPET DESCRIPTION ~
+EDIT SNIPPET TITLE OR DESCRIPTION ~
 
 `nvim-scissors` only allows to edit the snippet prefix and snippet body, to
 keep the UI as simple as possible. For the few cases where you need to edit a
@@ -462,9 +464,9 @@ file in minified form and does not have a deterministic order of dictionary
 keys.
 
 Both, minification and unstable key order, are a problem if you version-control
-your snippet collection. To solve this issue, `nvim-scissors` can optionally
-unminify and sort the JSON files via `yq` or `jq` after updating a snippet.
-(Both are also available via mason.nvim
+your snippet collection. To solve this issue, `nvim-scissors` lets you
+optionally unminify and sort the JSON files via `yq` or `jq` after updating a
+snippet. (Both are also available via mason.nvim
 <https://github.com/williamboman/mason.nvim>.)
 
 It is recommended to run `yq`/`jq` once on all files in your snippet
@@ -479,7 +481,7 @@ diff from the initial sorting. You can do so with `yq` using this command:
 How to do the same with `jq` is left as an exercise to the reader.
 
 
-SNIPPETS ON VISUAL SELECTIONS ~
+SNIPPETS ON VISUAL SELECTIONS (LUASNIP ONLY) ~
 
 With `Luasnip`, this is an opt-in feature, enabled via:
 
@@ -498,7 +500,7 @@ disappears, and you are put in insert mode. The next snippet you now trigger is
 going to have `$TM_SELECTED_TEXT` replaced with your selection.
 
 
-AUTO-TRIGGERED SNIPPETS ~
+AUTO-TRIGGERED SNIPPETS (LUASNIP ONLY) ~
 
 While the VSCode snippet format does not support auto-triggered snippets,
 `LuaSnip` allows you to specify auto-triggering in the VSCode-style JSON files
@@ -506,7 +508,7 @@ by adding the `luasnip` key
 <https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code>.
 
 `nvim-scissors` does not touch any keys other than `prefix` and `body` in the
-JSON files, so any additions via the `luasnip` key are preserved.
+JSON files, so any additions like the `luasnip` key are preserved.
 
 
   [!TIP] You can use the `openInFile` keymap to directory open JSON file at the
