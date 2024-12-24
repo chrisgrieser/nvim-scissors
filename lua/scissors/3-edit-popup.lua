@@ -28,9 +28,10 @@ end
 ---@param snip Scissors.SnippetObj
 ---@param prefixBodySep Scissors.extMarkInfo
 local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
-	local mappings = require("scissors.config").config.editSnippetPopup.keymaps
-	local keymap = vim.keymap.set
-	local opts = { buffer = bufnr, nowait = true, silent = true }
+	local maps = require("scissors.config").config.editSnippetPopup.keymaps
+	local function keymap(modes, lhs, rhs)
+		vim.keymap.set(modes, lhs, rhs, { buffer = bufnr, nowait = true, silent = true })
+	end
 	local function closePopup()
 		if vim.api.nvim_win_is_valid(winnr) then vim.api.nvim_win_close(winnr, true) end
 		if vim.api.nvim_buf_is_valid(bufnr) then vim.api.nvim_buf_delete(bufnr, { force = true }) end
@@ -42,7 +43,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		closePopup()
 	end
 
-	keymap("n", mappings.cancel, closePopup, opts)
+	keymap("n", maps.cancel, closePopup)
 
 	-- also close the popup on leaving buffer, ensures there is not leftover
 	-- buffer when user closes popup in a different way, such as `:close`.
@@ -52,22 +53,22 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		callback = closePopup,
 	})
 
-	keymap("n", mappings.saveChanges, confirmChanges, opts)
+	keymap("n", maps.saveChanges, confirmChanges)
 	-- so people in the habit of saving via `:w` do not get an error
 	vim.cmd.cnoreabbrev("<buffer> w ScissorsSave")
 	vim.cmd.cnoreabbrev("<buffer> write ScissorsSave")
 	vim.api.nvim_buf_create_user_command(bufnr, "ScissorsSave", confirmChanges, {})
 
-	keymap("n", mappings.deleteSnippet, function()
+	keymap("n", maps.deleteSnippet, function()
 		if mode == "new" then
 			u.notify("Cannot delete a snippet that has not been saved yet.", "warn")
 			return
 		end
 		rw.deleteSnippet(snip)
 		closePopup()
-	end, opts)
+	end)
 
-	keymap("n", mappings.duplicateSnippet, function()
+	keymap("n", maps.duplicateSnippet, function()
 		if mode == "new" then
 			u.notify("Cannot duplicate a snippet that has not been saved yet.", "warn")
 			return
@@ -78,18 +79,18 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		closePopup()
 		local snipFile = { path = snip.fullPath, ft = snip.filetype } ---@type Scissors.snipFile
 		M.createNewSnipAndEdit(snipFile, currentBody)
-	end, opts)
+	end)
 
-	keymap("n", mappings.openInFile, function()
+	keymap("n", maps.openInFile, function()
 		closePopup()
 		-- since there seem to be various escaping issues, simply using `.` to
 		-- match any char instead, since a rare wrong location is preferable to
 		-- the opening failing
 		local locationInFile = snip.originalKey:gsub("[/()%[%] ]", ".")
 		vim.cmd(("edit +/%q: %s"):format(locationInFile, snip.fullPath))
-	end, opts)
+	end)
 
-	keymap({ "n", "i" }, mappings.insertNextPlaceholder, function()
+	keymap({ "n", "i" }, maps.insertNextPlaceholder, function()
 		local bufText = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
 		local numbers = {}
 		local placeholderPattern = "${?(%d+)" -- match `$1`, `${2:word}`, or `${3|word|}`
@@ -105,37 +106,35 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		-- move cursor
 		vim.api.nvim_win_set_cursor(0, { row, col + #insertStr - 1 })
 		vim.cmd.startinsert()
-	end, opts)
+	end)
 
-	keymap("n", mappings.goBackToSearch, function()
+	keymap("n", maps.goBackToSearch, function()
 		closePopup()
 		if mode == "new" then
 			require("scissors").addNewSnippet()
 		elseif mode == "update" then
 			require("scissors").editSnippet()
 		end
-	end, opts)
+	end)
 
-	keymap("n", mappings.showHelp, function()
+	keymap("n", maps.showHelp, function()
 		local info = {
 			"The popup is just one window, so you can move between the prefix area "
 				.. "and the body with `j` and `k` or any other movement commands.",
 			"",
-			("- [%s] cancel"):format(mappings.cancel),
-			("- [%s] save changes"):format(mappings.saveChanges),
-			("- [%s] go back to search"):format(mappings.goBackToSearch),
-			("- [%s] delete snippet"):format(mappings.deleteSnippet),
-			("- [%s] duplicate snippet"):format(mappings.duplicateSnippet),
-			("- [%s] open in file"):format(mappings.openInFile),
-			("- [%s] insert next placeholder (normal & insert)"):format(
-				mappings.insertNextPlaceholder
-			),
-			("- [%s] show help"):format(mappings.showHelp),
+			("- [%s] cancel"):format(maps.cancel),
+			("- [%s] save changes"):format(maps.saveChanges),
+			("- [%s] go back to search"):format(maps.goBackToSearch),
+			("- [%s] delete snippet"):format(maps.deleteSnippet),
+			("- [%s] duplicate snippet"):format(maps.duplicateSnippet),
+			("- [%s] open in file"):format(maps.openInFile),
+			("- [%s] insert next placeholder (normal & insert)"):format(maps.insertNextPlaceholder),
+			("- [%s] show help"):format(maps.showHelp),
 			"",
 			"All mappings apply to normal mode (if not noted otherwise).",
 		}
 		u.notify(table.concat(info, "\n"), "info", { id = "scissors-help", timeout = 10000 })
-	end, opts)
+	end)
 
 	-----------------------------------------------------------------------------
 
@@ -147,7 +146,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		local currentLnum = vim.api.nvim_win_get_cursor(0)[1]
 		local cmd = currentLnum == prefixCount and "^DkJ" or "dd"
 		normal(cmd)
-	end, opts)
+	end)
 
 	keymap("n", "o", function()
 		local prefixCount = getPrefixCount(prefixBodySep)
@@ -160,7 +159,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		end
 		normal(cmd)
 		vim.cmd.startinsert()
-	end, opts)
+	end)
 end
 
 --------------------------------------------------------------------------------
@@ -218,21 +217,21 @@ function M.editInPopup(snip, mode)
 	local popupZindex = 45 -- below nvim-notify, which uses 50
 
 	-- keymap hints
-	local emphasisHlgroup = "Keyword"
+	local hlgroup = { key = "Keyword", desc = "Comment" }
 	local maps = require("scissors.config").config.editSnippetPopup.keymaps
 	local footer = {
-		{ " ", "FloatBorder" },
-		{ maps.showHelp, emphasisHlgroup },
-		{ ": show help (normal)", "Comment" },
-		{ " ", "FloatBorder" },
-		{ maps.cancel, emphasisHlgroup },
-		{ ": cancel (normal)", "Comment" },
-		{ " ", "FloatBorder" },
-		{ maps.saveChanges, emphasisHlgroup },
-		{ ": save (normal)", "Comment" },
-		{ " ", "FloatBorder" },
-		{ maps.insertNextPlaceholder, emphasisHlgroup },
-		{ ": placeholder (normal+insert)", "Comment" },
+		{ " normal mode: ", "FloatBorder" },
+		{ maps.showHelp, hlgroup.key },
+		{ " show help", hlgroup.desc },
+		{ "  ", "FloatBorder" },
+		{ maps.cancel, hlgroup.key },
+		{ " cancel", hlgroup.desc },
+		{ "  ", "FloatBorder" },
+		{ maps.saveChanges, hlgroup.key },
+		{ " save", hlgroup.desc },
+		{ "  ", "FloatBorder" },
+		{ maps.insertNextPlaceholder, hlgroup.key },
+		{ " placeholder (normal & insert)", hlgroup.desc },
 		{ " ", "FloatBorder" },
 	}
 
