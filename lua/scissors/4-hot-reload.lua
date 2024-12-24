@@ -7,15 +7,6 @@ local hasNotifiedOnRestartRequirement = false
 ---@param path string
 ---@param fileIsNew? boolean
 function M.reloadSnippetFile(path, fileIsNew)
-	-- GUARD
-	if fileIsNew then
-		local name = vim.fs.basename(path)
-		local msg = ("%q is a new file and thus cannot be hot-reloaded. "):format(name)
-			.. "Please restart nvim for this change to take effect."
-		u.notify(msg)
-		return
-	end
-
 	local success = false
 	---@type string?
 	local errorMsg = ""
@@ -26,6 +17,16 @@ function M.reloadSnippetFile(path, fileIsNew)
 	local blinkCmpInstalled, blinkCmp = pcall(require, "blink.cmp")
 	local basicsLsInstalled = vim.fn.executable("basics-language-server") == 1
 	local miniSnippetsInstalled = _G.MiniSnippets ~= nil ---@diagnostic disable-line:undefined-field
+
+	-- GUARD
+	-- hot-reloading new files is supported by mini.snippets: https://github.com/chrisgrieser/nvim-scissors/pull/25#issuecomment-2561345395
+	if fileIsNew and not miniSnippetsInstalled then
+		local name = vim.fs.basename(path)
+		local msg = ("%q is a new file and thus cannot be hot-reloaded. "):format(name)
+			.. "Please restart nvim for this change to take effect."
+		u.notify(msg)
+		return
+	end
 
 	-----------------------------------------------------------------------------
 	-- https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#loaders
