@@ -82,6 +82,7 @@ Automagical editing and creation of snippets.
   * Note that snippet previews only work when using `telescope`.
 - A snippet engine that can load VSCode-style snippets, such as:
   * [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
+  * [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
   * [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login)
   * [basics-language-server](https://github.com/antonk52/basics-language-server/)
   * [nvim-snippets](https://github.com/garymjr/nvim-snippets)
@@ -129,6 +130,23 @@ require("luasnip.loaders.from_vscode").lazy_load {
 	paths = { "path/to/your/snippetFolder" },
 }
 ```
+
+#### mini.snippets
+
+`mini.snippets` preferred snippet location is any 'snippets/' directory in the 'runtimepath'.
+For manually maintained snippets the best location is the user config directory, which requires the
+following `nvim-scissors` setup:
+
+```lua
+require('scissors').setup({
+  snippetDir = vim.fn.stdpath('config') .. '/snippets',
+})
+```
+
+The `mini.snippets` setup requires explicit definition of loaders. Following its
+[Quickstart](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart)
+guide should be enough to make it respect snippets from 'snippets/' directory inside user config.
+**Note**: `nvim-scissors` works only with VSCode-style snippet files (not Lua files or JSON arrays).
 
 #### blink.cmp
 
