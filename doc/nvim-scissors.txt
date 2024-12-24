@@ -85,9 +85,9 @@ RATIONALE                             *nvim-scissors-nvim-scissors--rationale*
     closest thing to a standard regarding snippets. It is used by
     friendly-snippets <https://github.com/rafamadriz/friendly-snippets> and
     supported by most snippet engine plugins for nvim.
-- However, the VSCode snippets are stored as JSON files, which are a pain to
-    modify manually. This plugin alleviates that pain by automagically writing the
-    JSON for you.
+- However, VSCode snippets are stored as JSON, which are a pain to modify
+    manually. This plugin alleviates that pain by automagically writing the JSON
+    for you.
 
 
 REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
@@ -101,7 +101,7 @@ REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
 - A snippet engine that can load VSCode-style snippets, such as:
     - LuaSnip <https://github.com/L3MON4D3/LuaSnip>
     - mini.snippets <https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md>
-    - blink.cmp <http://support.blinkforhome.com/en_US/account-and-login>
+    - blink.cmp <https://github.com/Saghen/blink.cmp>
     - basics-language-server <https://github.com/antonk52/basics-language-server/>
     - nvim-snippets <https://github.com/garymjr/nvim-snippets>
     - vim-vsnip <https://github.com/hrsh7th/vim-vsnip>
@@ -255,7 +255,7 @@ The plugin provides two lua functions, `.addNewSnippet()` and `.editSnippet()`
     )
 <
 
-Youcan also use `:ScissorsAddNewSnippet` or `:ScissorsEditSnippet` if you
+Youcan also use `:ScissorsAddNewSnippet` and `:ScissorsEditSnippet` if you
 prefer ex commands.
 
 The `:ScissorsAddSnippet` ex command also accepts a range to prefill the
@@ -289,6 +289,7 @@ The `.setup()` call is optional.
             width = 0.6,
             border = "rounded",
             keymaps = {
+                -- if not mentioned otherwise, the keymaps apply to normal mode
                 cancel = "q",
                 saveChanges = "<CR>", -- alternatively, can also use `:w`
                 goBackToSearch = "<BS>",
