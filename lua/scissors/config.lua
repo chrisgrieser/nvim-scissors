@@ -17,6 +17,7 @@ local defaultConfig = {
 			duplicateSnippet = "<C-d>",
 			openInFile = "<C-o>",
 			insertNextPlaceholder = "<C-p>", -- insert & normal mode
+			showHelp = "?",
 		},
 	},
 	telescope = {

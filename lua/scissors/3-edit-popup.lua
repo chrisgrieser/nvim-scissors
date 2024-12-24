@@ -116,6 +116,27 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		end
 	end, opts)
 
+	keymap("n", mappings.showHelp, function()
+		local info = {
+			"The popup is just one window, so you can move between the prefix area "
+				.. "and the body with `j` and `k` or any other movement commands.",
+			"",
+			("- [%s] cancel"):format(mappings.cancel),
+			("- [%s] save changes"):format(mappings.saveChanges),
+			("- [%s] go back to search"):format(mappings.goBackToSearch),
+			("- [%s] delete snippet"):format(mappings.deleteSnippet),
+			("- [%s] duplicate snippet"):format(mappings.duplicateSnippet),
+			("- [%s] open in file"):format(mappings.openInFile),
+			("- [%s] insert next placeholder (normal & insert)"):format(
+				mappings.insertNextPlaceholder
+			),
+			("- [%s] show help"):format(mappings.showHelp),
+			"",
+			"All mappings apply to normal mode (if not noted otherwise).",
+		}
+		u.notify(table.concat(info, "\n"), "info", { id = "scissors-help", timeout = 10000 })
+	end, opts)
+
 	-----------------------------------------------------------------------------
 
 	-- HACK deal with deletion and creation of prefixes on the last line (see #6)
@@ -200,6 +221,9 @@ function M.editInPopup(snip, mode)
 	local emphasisHlgroup = "Keyword"
 	local maps = require("scissors.config").config.editSnippetPopup.keymaps
 	local footer = {
+		{ " ", "FloatBorder" },
+		{ maps.showHelp, emphasisHlgroup },
+		{ ": show help (normal)", "Comment" },
 		{ " ", "FloatBorder" },
 		{ maps.cancel, emphasisHlgroup },
 		{ ": cancel (normal)", "Comment" },

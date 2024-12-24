@@ -3,10 +3,15 @@ local M = {}
 
 ---@param msg string
 ---@param level? "info"|"warn"|"error"|"debug"|"trace"
-function M.notify(msg, level)
+---@param opts? table
+function M.notify(msg, level, opts)
 	if not level then level = "info" end
+
 	local icon = require("scissors.config").config.icons.scissors
-	vim.notify(msg, vim.log.levels[level:upper()], { title = "scissors", icon = icon })
+	local defaultOpts = { title = "scissors", icon = icon }
+	opts = vim.tbl_deep_extend("force", opts, defaultOpts)
+
+	vim.notify(msg, vim.log.levels[level:upper()], opts)
 end
 
 ---@param snip Scissors.SnippetObj|Scissors.VSCodeSnippet

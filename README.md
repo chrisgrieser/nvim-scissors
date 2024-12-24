@@ -247,6 +247,9 @@ The popup is just one window, so you can move between the prefix area and the
 body with `j` and `k` or any other movement commands. ("Prefix" is how trigger
 words are referred to in the VSCode format.)
 
+Use `showHelp` (default keymap: `?`) to show a notification containing all
+keymaps. 
+
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes
 the number of prefixes.
@@ -273,6 +276,7 @@ require("scissors").setup {
 			duplicateSnippet = "<C-d>",
 			openInFile = "<C-o>",
 			insertNextPlaceholder = "<C-p>", -- insert & normal mode
+			showHelp = "?",
 		},
 	},
 	telescope = {
