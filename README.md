@@ -265,6 +265,7 @@ require("scissors").setup {
 		width = 0.6,
 		border = "rounded",
 		keymaps = {
+			-- if not mentioned otherwise, the keymaps apply to normal mode
 			cancel = "q",
 			saveChanges = "<CR>", -- alternatively, can also use `:w`
 			goBackToSearch = "<BS>",

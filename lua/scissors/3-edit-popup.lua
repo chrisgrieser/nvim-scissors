@@ -22,49 +22,6 @@ local function getPrefixCount(prefixBodySep)
 	return newCount
 end
 
----using only utf symbols, so they work for users without nerd fonts
----@param hint string
----@return string
-local function shortenKeymapHintsWithSymbols(hint)
-	local shortened = hint
-		:gsub("<[Cc][Rr]>", "↩")
-		:gsub("<[dD]own>", "↓")
-		:gsub("<[Uu]p>", "↑")
-		:gsub("<[Rr]ight>", "→")
-		:gsub("<[Ll]eft>", "←")
-		:gsub("<[Tt]ab>", "⭾ ")
-		:gsub("<[Ss]pace>", "⎵")
-		:gsub("<[Bb][Ss]>", "⌫")
-	return shortened
-end
-
----@param mode "new"|"update"
----@param maxLength number
----@return string
-local function generateKeymapHints(mode, maxLength)
-	local mappings = require("scissors.config").config.editSnippetPopup.keymaps
-	local keymapHints = ("%s: Save  %s: Cancel"):format(mappings.saveChanges, mappings.cancel)
-	local extraHints = {
-		mappings.goBackToSearch .. ": Back",
-		mappings.deleteSnippet .. ": Delete",
-		mappings.insertNextPlaceholder .. ": Placeholder",
-		mappings.openInFile .. ": Open File",
-	}
-	if mode ~= "new" then table.insert(extraHints, mappings.duplicateSnippet .. ": Duplicate") end
-
-	keymapHints = shortenKeymapHintsWithSymbols(keymapHints)
-	extraHints = vim.tbl_map(shortenKeymapHintsWithSymbols, extraHints)
-	local borderAndPadding = 2 + 2 + 2
-	repeat
-		-- shuffle hints, so user sees different ones when there is not enough space
-		local nextHint = table.remove(extraHints, math.random(#extraHints))
-		local hintLen = vim.api.nvim_strwidth(keymapHints) + #nextHint + borderAndPadding
-		if hintLen > maxLength then break end
-		keymapHints = keymapHints .. "  " .. nextHint
-	until #extraHints == 0
-	return keymapHints
-end
-
 ---@param bufnr number
 ---@param winnr number
 ---@param mode "new"|"update"
@@ -238,7 +195,22 @@ function M.editInPopup(snip, mode)
 	pcall(vim.treesitter.start, bufnr, ft) -- errors when no parser available
 	vim.bo[bufnr].filetype = require("scissors.config").scissorsFiletype
 	local popupZindex = 45 -- below nvim-notify, which uses 50
-	local keymapHints = generateKeymapHints(mode, math.floor(conf.width * vim.o.columns - 2))
+
+	-- keymap hints
+	local emphasisHlgroup = "Keyword"
+	local maps = require("scissors.config").config.editSnippetPopup.keymaps
+	local footer = {
+		{ " ", "FloatBorder" },
+		{ maps.cancel, emphasisHlgroup },
+		{ ": cancel (normal)", "Comment" },
+		{ " ", "FloatBorder" },
+		{ maps.saveChanges, emphasisHlgroup },
+		{ ": save (normal)", "Comment" },
+		{ " ", "FloatBorder" },
+		{ maps.insertNextPlaceholder, emphasisHlgroup },
+		{ ": placeholder (normal+insert)", "Comment" },
+		{ " ", "FloatBorder" },
+	}
 
 	-- CREATE WINDOW
 	local winnr = vim.api.nvim_open_win(bufnr, true, {
@@ -253,7 +225,7 @@ function M.editInPopup(snip, mode)
 		title_pos = "center",
 		border = conf.border,
 		zindex = popupZindex,
-		footer = { { " " .. keymapHints .. " ", "FloatBorder" } },
+		footer = footer,
 	})
 	vim.wo[winnr].signcolumn = "no"
 	vim.wo[winnr].winfixbuf = true
