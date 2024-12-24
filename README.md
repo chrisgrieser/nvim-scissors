@@ -189,24 +189,36 @@ vim.g.vsnip_snippet_dirs = { "path/to/your/snippetFolder" }
 
 ## Usage
 
-### Basics
-The plugin provides two ex commands, `:ScissorsAddNewSnippet` and
-`:ScissorsEditSnippet`. You can pass a range to `:ScissorsAddSnippet` command to
-prefill snippet body (for example `:'<,'> ScissorsAddSnippet` or `:3
-ScissorsAddSnippet`).
-
-The plugin also provides two lua functions `addNewSnippet` and `editSnippet`,
-which you can use to directly create keymaps:
+### Starting `nvim-scissors`
+The plugin provides two lua functions, `.addNewSnippet()` and `.editSnippet()`:
 
 ```lua
-vim.keymap.set("n", "<leader>se", function() require("scissors").editSnippet() end)
+vim.keymap.set(
+	"n",
+	"<leader>se",
+	function() require("scissors").editSnippet() end,
+	{ desc = "Snippet: Edit" }
+)
 
 -- when used in visual mode, prefills the selection as snippet body
-vim.keymap.set({ "n", "x" }, "<leader>sa", function() require("scissors").addNewSnippet() end)
+vim.keymap.set(
+	{ "n", "x" },
+	"<leader>sa",
+	function() require("scissors").addNewSnippet() end,
+	{ desc = "Snippet: Add" }
+)
 ```
 
-### Prefixes
-"Prefix" is how trigger words are referred to in the VSCode format.
+You can also use `:ScissorsAddNewSnippet` or `:ScissorsEditSnippet` if you
+prefer ex commands.
+
+The `:ScissorsAddSnippet` ex command also accepts a range to prefill the snippet
+body (for example `:'<,'> ScissorsAddSnippet` or `:3 ScissorsAddSnippet`).
+
+### Editing snippets in the popup window
+The popup is just one window, so you can move between the prefix area and the body
+with `j` and `k` or any other movement commands. ("Prefix" is how trigger words
+are referred to in the VSCode format.)
 
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes
