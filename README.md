@@ -21,22 +21,23 @@ Automagical editing and creation of snippets.
 	* [nvim-scissors](#nvim-scissors)
 	* [Snippet engine setup](#snippet-engine-setup)
 		+ [LuaSnip](#luasnip)
+		+ [mini.snippets](#minisnippets)
 		+ [blink.cmp](#blinkcmp)
 		+ [basics-language-server](#basics-language-server)
 		+ [nvim-snippets](#nvim-snippets)
 		+ [vim-vsnip](#vim-vsnip)
 - [Usage](#usage)
-	* [Basics](#basics)
-	* [Prefixes](#prefixes)
+	* [Starting `nvim-scissors`](#starting-nvim-scissors)
+	* [Editing snippets in the popup window](#editing-snippets-in-the-popup-window)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
 	* [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
-	* [Variables & tabstops](#variables--tabstops)
+	* [Tabstops and variables](#tabstops-and-variables)
 	* [friendly-snippets](#friendly-snippets)
-	* [Edit snippet title and snippet description](#edit-snippet-title-and-snippet-description)
-	* [Version controlling snippets & formatting your snippet files](#version-controlling-snippets--formatting-your-snippet-files)
-	* [Snippets on visual selections](#snippets-on-visual-selections)
-	* [Auto-triggered snippets](#auto-triggered-snippets)
+	* [Edit snippet title or description](#edit-snippet-title-or-description)
+	* [Version controlling snippets & snippet file formatting](#version-controlling-snippets--snippet-file-formatting)
+	* [Snippets on visual selections (`Luasnip` only)](#snippets-on-visual-selections-luasnip-only)
+	* [Auto-triggered snippets (`Luasnip` only)](#auto-triggered-snippets-luasnip-only)
 - [About the author](#about-the-author)
 
 <!-- tocstop -->
@@ -48,9 +49,10 @@ Automagical editing and creation of snippets.
 - Automagical conversion from buffer text to JSON string.
 - Intuitive UI for editing the snippet, dynamically adapting the number of
   prefixes.
-- Automatic hot-reloading of any changes.
-- Optional JSON-formatting and sorting of the snippet file after updating, using
-  `yq` or `jq`. ([Useful when version-controlling your snippet
+- Automatic hot-reloading of any changes, so you do not have to restart nvim for
+  changes to take effect.
+- Optional JSON-formatting and sorting of the snippet file. ([Useful when
+  version-controlling your snippet
   collection](#version-controlling-snippets-json-formatting).)
 - Snippet/file selection via `telescope` or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
@@ -68,8 +70,8 @@ Automagical editing and creation of snippets.
   closest thing to a standard regarding snippets. It is used by
   [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and
   supported by most snippet engine plugins for nvim.
-- However, the snippets are stored as JSON files, which are a pain to modify
-  manually. This plugin aims to alleviate that pain by automagically writing the
+- However, the VSCode snippets are stored as JSON files, which are a pain to
+  modify manually. This plugin alleviates that pain by automagically writing the
   JSON for you.
 
 ## Requirements
@@ -131,24 +133,30 @@ require("luasnip.loaders.from_vscode").lazy_load {
 }
 ```
 
+<!-- LTeX: enabled=false -->
 #### mini.snippets
-
-`mini.snippets` preferred snippet location is any 'snippets/' directory in the 'runtimepath'.
-For manually maintained snippets the best location is the user config directory, which requires the
-following `nvim-scissors` setup:
+<!-- LTeX: enabled=true -->
+`mini.snippets` preferred snippet location is any `snippets/` directory in the
+`runtimepath`. For manually maintained snippets the best location is the user
+config directory, which requires the following `nvim-scissors` setup:
 
 ```lua
-require('scissors').setup({
-  snippetDir = vim.fn.stdpath('config') .. '/snippets',
+require("scissors").setup({
+	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 })
 ```
 
 The `mini.snippets` setup requires explicit definition of loaders. Following its
 [Quickstart](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart)
-guide should be enough to make it respect snippets from 'snippets/' directory inside user config.
-**Note**: `nvim-scissors` works only with VSCode-style snippet files (not Lua files or JSON arrays).
+guide should be enough to make it respect snippets from 'snippets/' directory
+inside user config. **Note**: `nvim-scissors` works only with VSCode-style
+snippet files (not Lua files or JSON arrays), and also requires a
+[`package.json` for the VSCode
+format](#introduction-to-the-vscode-style-snippet-format).
 
+<!-- LTeX: enabled=false -->
 #### blink.cmp
+<!-- LTeX: enabled=true -->
 
 ```lua
 require("blink.cmp").setup {
@@ -172,8 +180,8 @@ work.
 <!-- LTeX: enabled=true -->
 
 ```lua
--- NOTE: this requires the `nvim-lspconfig` as additional dependency
-require('lspconfig').basics_ls.setup({
+-- NOTE: this requires `nvim-lspconfig` as additional dependency
+require("lspconfig").basics_ls.setup({
     settings = {
         snippet = {
             enable = true,
@@ -183,7 +191,8 @@ require('lspconfig').basics_ls.setup({
 })
 ```
 
-Hot-reloading of the new/edited snippet for `basics_ls` requires `nvim-lspconfig`.
+Note that Hot-reloading of the new/edited snippet for `basics_ls` also requires
+`nvim-lspconfig`.
 
 <!-- LTeX: enabled=false -->
 #### nvim-snippets
@@ -408,26 +417,26 @@ regularly). Unfortunately, there is little `nvim-scissors` can do about that.
 What you can do, however, is to copy individual snippets files from the
 `friendly-snippets` repository into your own snippet folder, and edit them there.
 
-### Edit snippet title and snippet description
+### Edit snippet title or description
 `nvim-scissors` only allows to edit the snippet prefix and snippet body, to keep
 the UI as simple as possible. For the few cases where you need to edit a
 snippet's title or description, you can use the `openInFile` keymap and edit
 them directly in the snippet file.
 
-### Version controlling snippets & Snippet file formatting
+### Version controlling snippets & snippet file formatting
 This plugin writes JSON files via `vim.encode.json()`. That method saves
 the file in minified form and does not have a
 deterministic order of dictionary keys.
 
 Both, minification and unstable key order, are a problem if you
 version-control your snippet collection. To solve this issue, `nvim-scissors`
-can optionally unminify and sort the JSON files via `yq` or `jq` after updating
-a snippet. (Both are also available via
+lets you optionally unminify and sort the JSON files via `yq` or `jq` after
+updating a snippet. (Both are also available via
 [mason.nvim](https://github.com/williamboman/mason.nvim).)
 
-It is recommended to run `yq`/`jq` once on all files in your snippet
-collection, since the first time you edit a file, you would still get a large diff
-from the initial sorting. You can do so with `yq` using this command:
+It is recommended to run `yq`/`jq` once on all files in your snippet collection,
+since the first time you edit a file, you would still get a large diff from the
+initial sorting. You can do so with `yq` using this command:
 
 ```bash
 cd "/your/snippet/dir"
@@ -436,7 +445,7 @@ fd ".*\.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
 
 How to do the same with `jq` is left as an exercise to the reader.
 
-### Snippets on visual selections
+### Snippets on visual selections (`Luasnip` only)
 With `Luasnip`, this is an opt-in feature, enabled via:
 
 ```lua
@@ -453,13 +462,13 @@ Then, in visual mode, press the key from `store_selection_keys`. The selection
 disappears, and you are put in insert mode. The next snippet you now trigger
 is going to have `$TM_SELECTED_TEXT` replaced with your selection.
 
-### Auto-triggered snippets
+### Auto-triggered snippets (`Luasnip` only)
 While the VSCode snippet format does not support auto-triggered snippets,
 `LuaSnip` allows you to [specify auto-triggering in the VSCode-style JSON
 files by adding the `luasnip` key](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
 
 `nvim-scissors` does not touch any keys other than `prefix` and `body` in the
-JSON files, so any additions via the `luasnip` key are preserved.
+JSON files, so any additions like the `luasnip` key are preserved.
 
 > [!TIP]
 > You can use the `openInFile` keymap to directory open JSON file at the
