@@ -70,9 +70,9 @@ Automagical editing and creation of snippets.
   closest thing to a standard regarding snippets. It is used by
   [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and
   supported by most snippet engine plugins for nvim.
-- However, the VSCode snippets are stored as JSON files, which are a pain to
-  modify manually. This plugin alleviates that pain by automagically writing the
-  JSON for you.
+- However, VSCode snippets are stored as JSON, which are a pain to modify
+  manually. This plugin alleviates that pain by automagically writing the JSON
+  for you.
 
 ## Requirements
 - nvim 0.10+
@@ -85,7 +85,7 @@ Automagical editing and creation of snippets.
 - A snippet engine that can load VSCode-style snippets, such as:
   * [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
   * [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
-  * [blink.cmp](http://support.blinkforhome.com/en_US/account-and-login)
+  * [blink.cmp](https://github.com/Saghen/blink.cmp)
   * [basics-language-server](https://github.com/antonk52/basics-language-server/)
   * [nvim-snippets](https://github.com/garymjr/nvim-snippets)
   * [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
@@ -236,16 +236,16 @@ vim.keymap.set(
 )
 ```
 
-You can also use `:ScissorsAddNewSnippet` or `:ScissorsEditSnippet` if you
+You can also use `:ScissorsAddNewSnippet` and `:ScissorsEditSnippet` if you
 prefer ex commands.
 
 The `:ScissorsAddSnippet` ex command also accepts a range to prefill the snippet
 body (for example `:'<,'> ScissorsAddSnippet` or `:3 ScissorsAddSnippet`).
 
 ### Editing snippets in the popup window
-The popup is just one window, so you can move between the prefix area and the body
-with `j` and `k` or any other movement commands. ("Prefix" is how trigger words
-are referred to in the VSCode format.)
+The popup is just one window, so you can move between the prefix area and the
+body with `j` and `k` or any other movement commands. ("Prefix" is how trigger
+words are referred to in the VSCode format.)
 
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines thus changes
