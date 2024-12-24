@@ -6,10 +6,10 @@ local M = {}
 ---@param opts? table
 function M.notify(msg, level, opts)
 	if not level then level = "info" end
+	opts = opts or {}
 
-	local icon = require("scissors.config").config.icons.scissors
-	local defaultOpts = { title = "scissors", icon = icon }
-	opts = vim.tbl_deep_extend("force", opts, defaultOpts)
+	opts.title = "scissors"
+	opts.icon = require("scissors.config").config.icons.scissors
 
 	vim.notify(msg, vim.log.levels[level:upper()], opts)
 end
