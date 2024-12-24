@@ -245,7 +245,7 @@ function M.editInPopup(snip, mode)
 	local width = math.floor(conf.width * vimWidth)
 	local height = math.floor(conf.height * vimHeight)
 	local keymapHints = generateKeymapHints(mode, width)
-	local popupZindex = 20 -- below nvim-notify, which uses 50
+	local popupZindex = 45 -- below nvim-notify, which uses 50
 
 	local winnr = vim.api.nvim_open_win(bufnr, true, {
 		-- centered window
@@ -258,7 +258,7 @@ function M.editInPopup(snip, mode)
 		title = " " .. winTitle .. " ",
 		title_pos = "center",
 		border = conf.border,
-		zindex = popupZindex, -- below nvim-notify floats
+		zindex = popupZindex,
 		footer = { { " " .. keymapHints .. " ", "FloatBorder" } },
 	})
 	local winOpts = {
@@ -274,14 +274,13 @@ function M.editInPopup(snip, mode)
 	end
 	require("scissors.backdrop").new(bufnr, popupZindex)
 
-	-- move cursor, highlight cursor positions
+	-- move cursor
 	if mode == "new" then
 		vim.defer_fn(vim.cmd.startinsert, 1) -- for whatever reason needs to be deferred to work reliably
 	elseif mode == "update" then
 		local firstLineOfBody = #snip.prefix + 1
 		pcall(vim.api.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
 	end
-	u.tokenHighlight(bufnr)
 
 	-- PREFIX-BODY-SEPARATOR
 	-- (INFO its position determines number of prefixes)
@@ -331,8 +330,9 @@ function M.editInPopup(snip, mode)
 		end,
 	})
 
-	-- keymaps
+	-- MISC
 	setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
+	u.tokenHighlight(bufnr)
 end
 
 --------------------------------------------------------------------------------
