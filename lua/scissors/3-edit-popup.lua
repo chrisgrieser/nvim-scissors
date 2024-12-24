@@ -236,24 +236,18 @@ function M.editInPopup(snip, mode)
 	local ft = snip.filetype
 	if ft == "zsh" or ft == "sh" then ft = "bash" end -- substitute missing `sh` and `zsh` parsers
 	pcall(vim.treesitter.start, bufnr, ft) -- errors when no parser available
-	local scissorsFiletype = require("scissors.config").scissorsFiletype
-	vim.api.nvim_set_option_value("filetype", scissorsFiletype, { buf = bufnr })
+	vim.bo[bufnr].filetype = require("scissors.config").scissorsFiletype
+	local popupZindex = 45 -- below nvim-notify, which uses 50
+	local keymapHints = generateKeymapHints(mode, math.floor(conf.width * vim.o.columns - 2))
 
 	-- CREATE WINDOW
-	local vimWidth = vim.o.columns - 2
-	local vimHeight = vim.o.lines - 2
-	local width = math.floor(conf.width * vimWidth)
-	local height = math.floor(conf.height * vimHeight)
-	local keymapHints = generateKeymapHints(mode, width)
-	local popupZindex = 45 -- below nvim-notify, which uses 50
-
 	local winnr = vim.api.nvim_open_win(bufnr, true, {
 		-- centered window
 		relative = "editor",
-		width = width,
-		height = height,
-		row = math.floor((1 - conf.height) * vimHeight / 2),
-		col = math.floor((1 - conf.width) * vimWidth / 2),
+		width = math.floor(conf.width * vim.o.columns),
+		height = math.floor(conf.height * vim.o.lines),
+		row = math.floor((1 - conf.height) * vim.o.lines / 2),
+		col = math.floor((1 - conf.width) * vim.o.columns / 2),
 
 		title = " " .. winTitle .. " ",
 		title_pos = "center",
@@ -261,17 +255,12 @@ function M.editInPopup(snip, mode)
 		zindex = popupZindex,
 		footer = { { " " .. keymapHints .. " ", "FloatBorder" } },
 	})
-	local winOpts = {
-		signcolumn = "no",
-		winfixbuf = true,
-		conceallevel = 0,
-		-- reduce scrolloff based on user-set window size
-		sidescrolloff = math.floor(vim.wo.sidescrolloff * conf.width),
-		scrolloff = math.floor(vim.wo.scrolloff * conf.height),
-	}
-	for opt, value in pairs(winOpts) do
-		vim.api.nvim_set_option_value(opt, value, { win = winnr })
-	end
+	vim.wo[winnr].signcolumn = "no"
+	vim.wo[winnr].winfixbuf = true
+	vim.wo[winnr].conceallevel = 0
+	-- reduce scrolloff based on user-set window size
+	vim.wo[winnr].sidescrolloff = math.floor(vim.wo.sidescrolloff * conf.width)
+	vim.wo[winnr].scrolloff = math.floor(vim.wo.scrolloff * conf.height)
 	require("scissors.backdrop").new(bufnr, popupZindex)
 
 	-- move cursor
