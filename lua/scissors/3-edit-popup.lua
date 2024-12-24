@@ -285,11 +285,17 @@ function M.editInPopup(snip, mode)
 
 	-- PREFIX-BODY-SEPARATOR
 	-- (INFO its position determines number of prefixes)
+
+	-- style the separator in a way that it does not appear to be two windows
+	-- (see https://github.com/chrisgrieser/nvim-scissors/issues/24#issuecomment-2561255043)
+	local separatorChar = "┄"
+	local separatorHlgroup = "Comment"
+
 	local winWidth = vim.api.nvim_win_get_width(winnr)
 	local prefixBodySep = { bufnr = bufnr, ns = ns, id = -1 } ---@type Scissors.extMarkInfo
 	prefixBodySep.id = vim.api.nvim_buf_set_extmark(bufnr, ns, #snip.prefix - 1, 0, {
 		virt_lines = {
-			{ { ("═"):rep(winWidth), "FloatBorder" } },
+			{ { (separatorChar):rep(winWidth), separatorHlgroup } },
 		},
 		virt_lines_leftcol = true,
 		-- "above line n" instead of "below line n-1" changes where new lines
