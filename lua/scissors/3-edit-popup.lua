@@ -251,6 +251,7 @@ function M.editInPopup(snip, mode)
 		footer = footer,
 	})
 	vim.wo[winnr].signcolumn = "no"
+	vim.wo[winnr].statuscolumn = " " -- just for padding
 	vim.wo[winnr].winfixbuf = true
 	vim.wo[winnr].conceallevel = 0
 	-- reduce scrolloff based on user-set window size
