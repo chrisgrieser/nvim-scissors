@@ -244,14 +244,14 @@ body (for example `:'<,'> ScissorsAddSnippet` or `:3 ScissorsAddSnippet`).
 
 ### Editing snippets in the popup window
 The popup is just one window, so you can move between the prefix area and the
-body with `j` and `k` or any other movement commands. ("Prefix" is how trigger
+body with `j` and `k` or any other movement command. ("Prefix" is how trigger
 words are referred to in the VSCode format.)
 
 Use `showHelp` (default keymap: `?`) to show a notification containing all
 keymaps. 
 
 The popup intelligently adapts to changes in the prefix area: Each line
-represents one prefix, and creating or removing lines thus changes
+represents one prefix, and creating or removing lines in that area thus changes
 the number of prefixes.
 
 <img alt="Showcase prefix change" width=70% src="https://github.com/chrisgrieser/nvim-scissors/assets/73286100/d54f96c2-6751-46e9-9185-77b63eb2664a">

@@ -120,7 +120,10 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	keymap("n", maps.showHelp, function()
 		local info = {
 			"The popup is just one window, so you can move between the prefix area "
-				.. "and the body with `j` and `k` or any other movement commands.",
+				.. "and the body with `j` and `k` or any other movement command.",
+			"",
+			"The popup intelligently adapts to changes in the prefix area: Each line represents "
+				.. "one prefix, and creating or removing lines in that area thus changes the number of prefixes.",
 			"",
 			("- [%s] cancel"):format(maps.cancel),
 			("- [%s] save changes"):format(maps.saveChanges),
