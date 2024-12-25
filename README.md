@@ -53,7 +53,7 @@ Automagical editing and creation of snippets.
   changes to take effect.
 - Optional JSON-formatting and sorting of the snippet file. ([Useful when
   version-controlling your snippet
-  collection](#version-controlling-snippets-json-formatting).)
+  collection](#version-controlling-snippets--snippet-file-formatting).)
 - Snippet/file selection via `telescope` or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
 - Supports only [VSCode-style
@@ -248,7 +248,7 @@ body with `j` and `k` or any other movement command. ("Prefix" is how trigger
 words are referred to in the VSCode format.)
 
 Use `showHelp` (default keymap: `?`) to show a notification containing all
-keymaps. 
+keymaps.
 
 The popup intelligently adapts to changes in the prefix area: Each line
 represents one prefix, and creating or removing lines in that area thus changes
