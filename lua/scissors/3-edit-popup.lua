@@ -175,22 +175,21 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 
 	keymap("n", "dd", function()
 		local prefixCount = getPrefixCount(prefixBodySep)
-		local currentLnum = vim.api.nvim_win_get_cursor(0)[1]
-		local cmd = currentLnum == prefixCount and "^DkJ" or "dd"
-		normal(cmd)
+		local onLastPrefixLine = prefixCount == vim.api.nvim_win_get_cursor(0)[1]
+		normal(onLastPrefixLine and "^DkJ" or "dd")
 	end)
 
 	keymap("n", "o", function()
 		local prefixCount = getPrefixCount(prefixBodySep)
-		local currentLnum = vim.api.nvim_win_get_cursor(0)[1]
-		local totalLines = vim.api.nvim_buf_line_count(0)
-		local cmd = "o"
-		if currentLnum == prefixCount and totalLines ~= prefixCount then
+		local onLastPrefixLine = prefixCount == vim.api.nvim_win_get_cursor(0)[1]
+		local hasBodyLines = prefixCount < vim.api.nvim_buf_line_count(0)
+		if onLastPrefixLine and hasBodyLines then
 			local currentLine = vim.api.nvim_get_current_line()
 			vim.api.nvim_buf_set_lines(0, prefixCount - 1, prefixCount - 1, false, { currentLine })
-			cmd = "cc"
+			normal("cc")
+		else
+			normal("o")
 		end
-		normal(cmd)
 		vim.cmd.startinsert()
 	end)
 end
