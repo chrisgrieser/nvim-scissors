@@ -225,7 +225,7 @@ function M.editInPopup(snip, mode)
 	local footer = {
 		{ " normal mode: ", "FloatBorder" },
 		{ maps.showHelp, hlgroup.key },
-		{ " show help", hlgroup.desc },
+		{ " help", hlgroup.desc },
 		{ "  ", "FloatBorder" },
 		{ maps.cancel, hlgroup.key },
 		{ " cancel", hlgroup.desc },
@@ -273,8 +273,7 @@ function M.editInPopup(snip, mode)
 	-- PREFIX-BODY-SEPARATOR
 	-- (INFO its position determines number of prefixes)
 
-	-- style the separator in a way that it does not appear to be two windows
-	-- (see https://github.com/chrisgrieser/nvim-scissors/issues/24#issuecomment-2561255043)
+	-- style the separator in a way that it does not appear to be two windows, see https://github.com/chrisgrieser/nvim-scissors/issues/24#issuecomment-2561255043
 	local separatorChar = "┄"
 	local separatorHlgroup = "Comment"
 
