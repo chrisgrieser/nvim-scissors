@@ -82,7 +82,7 @@ function M.updateSnippetInVscodeSnippetFile(snip, changedSnippetLines, prefixCou
 	local body = vim.list_slice(changedSnippetLines, prefixCount + 1, #changedSnippetLines)
 	local isNewSnippet = snip.originalKey == nil
 
-	-- LINT
+	-- Cleanup
 	prefix = vim
 		.iter(prefix)
 		:map(function(line) return vim.trim(line) end)
@@ -104,17 +104,8 @@ function M.updateSnippetInVscodeSnippetFile(snip, changedSnippetLines, prefixCou
 			:gsub("([^\\])%$$", "%1\\$") -- end of line
 	end
 
-	-- VALIDATE
-	if #body == 0 then
-		u.notify("Body is empty. No changes made.", "warn")
-		return
-	end
-	if #prefix == 0 then
-		u.notify("Prefix is empty. No changes made.", "warn")
-		return
-	end
-
-	-- convert snipObj to VSCodeSnippet
+	-- convert snipObj to VSCodeSnippet, copy to preserve other properties of the
+	-- snippet
 	local vsCodeSnip = vim.deepcopy(snip)
 	---@diagnostic disable-next-line: cast-type-mismatch we are converting it here
 	---@cast vsCodeSnip Scissors.VSCodeSnippet

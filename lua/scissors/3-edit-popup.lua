@@ -55,6 +55,19 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	local function confirmChanges()
 		local editedLines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 		local newPrefixCount = getPrefixCount(prefixBodySep)
+
+		-- VALIDATE
+		local prefixEmpty = vim.trim(vim.iter(editedLines):take(newPrefixCount):join("\n")) == ""
+		if prefixEmpty then
+			u.notify("Prefix cannot be empty.", "warn")
+			return
+		end
+		local bodyEmpty = vim.trim(vim.iter(editedLines):skip(newPrefixCount):join("\n")) == ""
+		if bodyEmpty then
+			u.notify("Body cannot be empty.", "warn")
+			return
+		end
+
 		convert.updateSnippetInVscodeSnippetFile(snip, editedLines, newPrefixCount)
 		closePopup()
 	end
