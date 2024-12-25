@@ -214,24 +214,23 @@ end
 ---@param mode "new"|"update"
 function M.editInPopup(snip, mode)
 	local conf = require("scissors.config").config.editSnippetPopup
-	local icon = require("scissors.config").config.icons.scissors
 	local ns = vim.api.nvim_create_namespace("nvim-scissors-editing")
 
 	-- snippet properties
 	local copy = vim.deepcopy(snip.prefix) -- copy since `list_extend` mutates destination
 	local lines = vim.list_extend(copy, snip.body)
-	local nameOfSnippetFile = vim.fs.basename(snip.fullPath)
 
-	local bufName, winTitle
-	if mode == "update" then
-		local displayName = u.snipDisplayName(snip)
-		bufName = ("Edit snippet %q"):format(displayName)
-		winTitle = ("Editing %q [%s]"):format(displayName, nameOfSnippetFile)
-	else
-		bufName = "New snippet"
-		winTitle = ("New snippet in %q"):format(nameOfSnippetFile)
-	end
-	winTitle = vim.trim(icon .. " " .. winTitle)
+	local bufName = mode == "new" and "New snippet"
+		or ("Edit snippet %q"):format(u.snipDisplayName(snip))
+	local icon = require("scissors.config").config.icons.scissors
+	local nameOfSnippetFile = vim.fs.basename(snip.fullPath)
+	local winTitle = {
+		{ " ", "FloatBorder" },
+		{ vim.trim(icon .. " " .. bufName), "FloatTitle" },
+		{ " ", "FloatBorder" },
+		{ nameOfSnippetFile, "Comment" },
+		{ " ", "FloatBorder" },
+	}
 
 	-- CREATE BUFFER
 	local bufnr = vim.api.nvim_create_buf(false, true)
@@ -276,7 +275,7 @@ function M.editInPopup(snip, mode)
 		row = math.floor((1 - conf.height) * vim.o.lines / 2),
 		col = math.floor((1 - conf.width) * vim.o.columns / 2),
 
-		title = " " .. winTitle .. " ",
+		title = winTitle,
 		title_pos = "center",
 		border = conf.border,
 		zindex = popupZindex,
