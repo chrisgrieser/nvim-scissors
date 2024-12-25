@@ -216,12 +216,26 @@ function M.editInPopup(snip, mode)
 	local conf = require("scissors.config").config.editSnippetPopup
 	local ns = vim.api.nvim_create_namespace("nvim-scissors-editing")
 
-	-- snippet properties
-	local copy = vim.deepcopy(snip.prefix) -- copy since `list_extend` mutates destination
-	local lines = vim.list_extend(copy, snip.body)
+	-- CREATE BUFFER
+	local bufnr = vim.api.nvim_create_buf(false, true)
+
+	local temp = vim.deepcopy(snip.prefix) -- copy since `list_extend` mutates destination
+	local lines = vim.list_extend(temp, snip.body)
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
 
 	local bufName = mode == "new" and "New snippet"
 		or ("Edit snippet %q"):format(u.snipDisplayName(snip))
+	vim.api.nvim_buf_set_name(bufnr, bufName)
+
+	-- prefer only starting treesitter as opposed to setting the buffer filetype,
+	-- as this avoid triggering the filetype plugin, which can sometimes entail
+	-- undesired effects like LSPs attaching
+	local ft = snip.filetype
+	if ft == "zsh" or ft == "sh" then ft = "bash" end -- substitute missing `sh` and `zsh` parsers
+	pcall(vim.treesitter.start, bufnr, ft) -- errors when no parser available
+	vim.bo[bufnr].filetype = require("scissors.config").scissorsFiletype
+
+	-- WINDOW TITLE
 	local icon = require("scissors.config").config.icons.scissors
 	local nameOfSnippetFile = vim.fs.basename(snip.fullPath)
 	local winTitle = {
@@ -232,22 +246,7 @@ function M.editInPopup(snip, mode)
 		{ " ", "FloatBorder" },
 	}
 
-	-- CREATE BUFFER
-	local bufnr = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-	vim.api.nvim_buf_set_name(bufnr, bufName)
-	vim.api.nvim_set_option_value("buftype", "nofile", { buf = bufnr })
-
-	-- prefer only starting treesitter as opposed to setting the buffer filetype,
-	-- as this avoid triggering the filetype plugin, which can sometimes entail
-	-- undesired effects like LSPs attaching
-	local ft = snip.filetype
-	if ft == "zsh" or ft == "sh" then ft = "bash" end -- substitute missing `sh` and `zsh` parsers
-	pcall(vim.treesitter.start, bufnr, ft) -- errors when no parser available
-	vim.bo[bufnr].filetype = require("scissors.config").scissorsFiletype
-	local popupZindex = 45 -- below nvim-notify, which uses 50
-
-	-- keymap hints
+	-- FOOTER: KEYMAP HINTS
 	local hlgroup = { key = "Keyword", desc = "Comment" }
 	local maps = require("scissors.config").config.editSnippetPopup.keymaps
 	local footer = {
@@ -267,6 +266,7 @@ function M.editInPopup(snip, mode)
 	}
 
 	-- CREATE WINDOW
+	local popupZindex = 45 -- below nvim-notify, which uses 50
 	local winnr = vim.api.nvim_open_win(bufnr, true, {
 		-- centered window
 		relative = "editor",
