@@ -22,6 +22,22 @@ local function getPrefixCount(prefixBodySep)
 	return newCount
 end
 
+-- continuously update highlight prefix lines and add label
+---@param newPrefixCount number
+---@param bufnr number
+local function updatePrefixLabel(newPrefixCount, bufnr)
+	local prefixLabelNs = vim.api.nvim_create_namespace("nvim-scissors-prefix-label")
+	vim.api.nvim_buf_clear_namespace(bufnr, prefixLabelNs, 0, -1)
+	for i = 1, newPrefixCount do
+		local label = newPrefixCount == 1 and "Prefix" or "Prefix #" .. i
+		vim.api.nvim_buf_set_extmark(bufnr, prefixLabelNs, i - 1, 0, {
+			virt_text = { { label, "Todo" } },
+			virt_text_pos = "right_align",
+			line_hl_group = "DiagnosticVirtualTextHint",
+		})
+	end
+end
+
 ---@param bufnr number
 ---@param winnr number
 ---@param mode "new"|"update"
@@ -264,7 +280,7 @@ function M.editInPopup(snip, mode)
 
 	-- move cursor
 	if mode == "new" then
-		vim.defer_fn(vim.cmd.startinsert, 1) -- for whatever reason needs to be deferred to work reliably
+		vim.defer_fn(vim.cmd.startinsert, 1)
 	elseif mode == "update" then
 		local firstLineOfBody = #snip.prefix + 1
 		pcall(vim.api.nvim_win_set_cursor, winnr, { firstLineOfBody, 0 })
@@ -289,31 +305,13 @@ function M.editInPopup(snip, mode)
 		virt_lines_above = false,
 	})
 
-	-- continuously update highlight prefix lines and add label
-	local labelExtMarkIds = {} ---@type number[]
-	local function updatePrefixLabel(newPrefixCount) ---@param newPrefixCount number
-		for _, label in pairs(labelExtMarkIds) do
-			vim.api.nvim_buf_del_extmark(bufnr, ns, label)
-		end
-		for i = 1, newPrefixCount do
-			local ln = i - 1
-			local label = newPrefixCount == 1 and "Prefix" or "Prefix #" .. i
-			vim.api.nvim_buf_add_highlight(bufnr, ns, "DiagnosticVirtualTextHint", ln, 0, -1)
-			local id = vim.api.nvim_buf_set_extmark(bufnr, ns, ln, 0, {
-				virt_text = { { label, "Todo" } },
-				virt_text_pos = "right_align",
-			})
-			table.insert(labelExtMarkIds, id)
-		end
-	end
-	updatePrefixLabel(#snip.prefix) -- initialize
-
-	-- update in case prefix count changes due to user input
+	-- PREFIX LABEL
+	updatePrefixLabel(#snip.prefix, bufnr) -- initialize
 	vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
 		buffer = bufnr,
 		callback = function()
 			local newPrefixCount = getPrefixCount(prefixBodySep)
-			updatePrefixLabel(newPrefixCount)
+			updatePrefixLabel(newPrefixCount, bufnr)
 		end,
 	})
 
