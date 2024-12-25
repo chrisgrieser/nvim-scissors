@@ -183,8 +183,9 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	keymap("n", "o", function()
 		local prefixCount = getPrefixCount(prefixBodySep)
 		local currentLnum = vim.api.nvim_win_get_cursor(0)[1]
+		local totalLines = vim.api.nvim_buf_line_count(0)
 		local cmd = "o"
-		if currentLnum == prefixCount then
+		if currentLnum == prefixCount and totalLines ~= prefixCount then
 			local currentLine = vim.api.nvim_get_current_line()
 			vim.api.nvim_buf_set_lines(0, prefixCount - 1, prefixCount - 1, false, { currentLine })
 			cmd = "cc"
