@@ -246,21 +246,21 @@ function M.editInPopup(snip, mode)
 		{ " ", "FloatBorder" },
 	}
 
-	-- FOOTER: KEYMAP HINTS
+	-- FOOTER – KEYMAP HINTS
 	local hlgroup = { key = "Keyword", desc = "Comment" }
 	local maps = require("scissors.config").config.editSnippetPopup.keymaps
 	local footer = {
 		{ " normal mode: ", "FloatBorder" },
-		{ maps.showHelp, hlgroup.key },
+		{ maps.showHelp:gsub("[<>]", ""), hlgroup.key },
 		{ " help", hlgroup.desc },
 		{ "  ", "FloatBorder" },
-		{ maps.cancel, hlgroup.key },
-		{ " cancel", hlgroup.desc },
-		{ "  ", "FloatBorder" },
-		{ maps.saveChanges, hlgroup.key },
+		{ maps.saveChanges:gsub("[<>]", ""), hlgroup.key },
 		{ " save", hlgroup.desc },
 		{ "  ", "FloatBorder" },
-		{ maps.insertNextPlaceholder, hlgroup.key },
+		{ maps.cancel:gsub("[<>]", ""), hlgroup.key },
+		{ " cancel", hlgroup.desc },
+		{ "  ", "FloatBorder" },
+		{ maps.insertNextPlaceholder:gsub("[<>]", ""), hlgroup.key },
 		{ " placeholder (normal & insert)", hlgroup.desc },
 		{ " ", "FloatBorder" },
 	}
