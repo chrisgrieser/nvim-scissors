@@ -239,27 +239,21 @@ function M.editInPopup(snip, mode)
 	local icon = require("scissors.config").config.icons.scissors
 	local nameOfSnippetFile = vim.fs.basename(snip.fullPath)
 	local winTitle = {
-		{ " ", "FloatBorder" },
-		{ vim.trim(icon .. " " .. bufName), "FloatTitle" },
-		{ " ", "FloatBorder" },
-		{ nameOfSnippetFile, "Comment" },
-		{ " ", "FloatBorder" },
+		{ " " .. vim.trim(icon .. " " .. bufName) .. " ", "FloatTitle" },
+		{ " " .. nameOfSnippetFile .. " ", "Comment" },
 	}
 
 	-- FOOTER – KEYMAP HINTS
-	local hlgroup = { key = "Keyword", desc = "Comment" }
+	local hlgroup = { key = "Comment", desc = "NonText" }
 	local maps = require("scissors.config").config.editSnippetPopup.keymaps
 	local footer = {
-		{ " normal mode: ", "FloatBorder" },
+		{ " normal mode: ", hlgroup.desc },
 		{ maps.showHelp:gsub("[<>]", ""), hlgroup.key },
-		{ " help", hlgroup.desc },
-		{ "  ", "FloatBorder" },
+		{ " help  ", hlgroup.desc },
 		{ maps.saveChanges:gsub("[<>]", ""), hlgroup.key },
-		{ " save", hlgroup.desc },
-		{ "  ", "FloatBorder" },
+		{ " save  ", hlgroup.desc },
 		{ maps.cancel:gsub("[<>]", ""), hlgroup.key },
-		{ " cancel", hlgroup.desc },
-		{ "  ", "FloatBorder" },
+		{ " cancel  ", hlgroup.desc },
 		{ maps.insertNextPlaceholder:gsub("[<>]", ""), hlgroup.key },
 		{ " placeholder (normal & insert)", hlgroup.desc },
 		{ " ", "FloatBorder" },
