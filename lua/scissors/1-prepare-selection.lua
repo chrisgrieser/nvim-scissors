@@ -9,6 +9,28 @@ local createNewSnipAndEdit = require("scissors.3-edit-popup").createNewSnipAndEd
 local addSnippet = require("scissors.2-picker.picker-choice").addSnippet
 --------------------------------------------------------------------------------
 
+---@param lines string[]
+---@return string[] dedentedLines
+---@nodiscard
+local function dedentAndTrimBlanks(lines)
+	-- remove leading and trailing blank lines
+	while vim.trim(lines[1]) == "" do
+		table.remove(lines, 1)
+	end
+	while vim.trim(lines[#lines]) == "" do
+		table.remove(lines)
+	end
+
+	local smallestIndent = vim.iter(lines):fold(math.huge, function(acc, line)
+		local indent = #line:match("^%s*")
+		return math.min(acc, indent)
+	end)
+	local dedentedLines = vim.tbl_map(function(line) return line:sub(smallestIndent + 1) end, lines)
+	return dedentedLines
+end
+
+--------------------------------------------------------------------------------
+
 function M.editSnippet()
 	-- GUARD
 	if not vb.validate(snippetDir) then return end
@@ -70,7 +92,7 @@ function M.addNewSnippet(exCmdArgs)
 			vim.api.nvim_buf_get_text(0, exCmdArgs.line1 - 1, 0, exCmdArgs.line2 - 1, -1, {})
 	end
 	if calledFromExCmd or calledFromVisualMode then
-		bodyPrefill = u.dedentAndTrimBlanks(bodyPrefill)
+		bodyPrefill = dedentAndTrimBlanks(bodyPrefill)
 		-- escape `$`
 		bodyPrefill = vim.tbl_map(function(line) return line:gsub("%$", "\\$") end, bodyPrefill)
 	end
