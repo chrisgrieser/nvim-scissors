@@ -9,9 +9,3 @@ vim.api.nvim_create_user_command(
 	function() require("scissors.1-prepare-selection").editSnippet() end,
 	{ desc = "Edit existing snippet." }
 )
-
-vim.api.nvim_create_user_command(
-	"ScissorsCreateSnippetsForSnippetVars",
-	function() require("scissors.vscode-format.snippet-variables").createSnippetFile() end,
-	{ desc = "Create snippets for VSCode snippet variables." }
-)

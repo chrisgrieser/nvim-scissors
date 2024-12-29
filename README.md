@@ -403,13 +403,6 @@ Furthermore, there are various variables you can use, such as `$TM_FILENAME` or
 `$LINE_COMMENT`. [See here for a full list of
 variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
 
-> [!TIP]
-> If you frequently create new snippets, you can also use the command
-> `:ScissorsCreateSnippetsForSnippetVars` to create snippets for the VSCode
-> snippet variables in the `nvim-scissors` popup window (i.e., snippets for
-> creating snippets). For example, typing `filen` will then trigger a
-> suggestion for `$TM_FILENAME`.
-
 <!-- LTeX: enabled=false -->
 ### friendly-snippets
 <!-- LTeX: enabled=true -->
