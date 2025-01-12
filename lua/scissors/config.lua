@@ -35,7 +35,7 @@ local defaultConfig = {
 		},
 	},
 
-	-- choose which picker to use
+	-- choose which picker to use to select snippets to edit
 	---@type "telescope"|"vim.ui.select"
 	picker = "telescope",
 

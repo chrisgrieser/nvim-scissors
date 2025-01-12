@@ -294,6 +294,10 @@ require("scissors").setup {
 		},
 	},
 
+	-- choose which picker to use to select snippets to edit
+	---@type "telescope"|"vim.ui.select"
+	picker = "telescope",
+
 	-- `none` writes as a minified json file using `vim.encode.json`.
 	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
 	-- you version control your snippets. To use a custom formatter, set to a
