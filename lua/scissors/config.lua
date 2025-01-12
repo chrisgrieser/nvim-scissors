@@ -27,7 +27,7 @@ local defaultConfig = {
 
 		-- accepts the common telescope picker config
 		opts = {
-			layout_strategies = "horizontal",
+			layout_strategy = "horizontal",
 			layout_config = {
 				horizontal = { width = 0.9 },
 				preview_width = 0.6,
