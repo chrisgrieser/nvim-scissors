@@ -59,6 +59,12 @@ M.config = defaultConfig -- in case user does not call `setup`
 function M.setupPlugin(userConfig)
 	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig or {})
 
+	-- preview_width is only supported by `horizontal` and `cursor` strategies
+	local strategy = M.config.telescope.opts.layout_strategy
+	if not (strategy == "horizontal" or strategy == "cursor") then
+		M.config.telescope.opts.layout_config.preview_width = nil
+	end
+
 	-- normalizing relevant as it expands `~` to the home directory
 	M.config.snippetDir = vim.fs.normalize(M.config.snippetDir)
 
