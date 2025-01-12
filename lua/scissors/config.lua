@@ -35,6 +35,10 @@ local defaultConfig = {
 		},
 	},
 
+	-- choose which picker to use
+	---@type "telescope"|"vim.ui.select"
+	picker = "telescope",
+
 	-- `none` writes as a minified json file using `vim.encode.json`.
 	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
 	-- you version control your snippets. To use a custom formatter, set to a
