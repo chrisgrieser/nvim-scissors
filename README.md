@@ -54,7 +54,7 @@ Automagical editing and creation of snippets.
 - Optional JSON-formatting and sorting of the snippet file. ([Useful when
   version-controlling your snippet
   collection](#version-controlling-snippets--snippet-file-formatting).)
-- Snippet/file selection via `telescope` or `vim.ui.select`.
+- Snippet/file selection via `telescope`, `snacks`, or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
 - Supports only [VSCode-style
   snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
@@ -78,10 +78,10 @@ Automagical editing and creation of snippets.
 - nvim 0.10+
 - Snippets saved in the [VSCode-style snippet
   format](#introduction-to-the-vscode-style-snippet-format).
-- [telescope](https://github.com/nvim-telescope/telescope.nvim) OR
+- [telescope](https://github.com/nvim-telescope/telescope.nvim) or [snacks.nvim](https://github.com/folke/snacks.nvim) OR
   ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
   [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
-  * Note that snippet previews only work when using `telescope`.
+  * Note that snippet previews only work when using `telescope` or `snacks`.
 - A snippet engine that can load VSCode-style snippets, such as:
   * [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
   * [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
@@ -100,7 +100,7 @@ Automagical editing and creation of snippets.
 -- lazy.nvim
 {
 	"chrisgrieser/nvim-scissors",
-	dependencies = "nvim-telescope/telescope.nvim", 
+	dependencies = "nvim-telescope/telescope.nvim", -- if using telescope
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
 	} 
@@ -109,7 +109,7 @@ Automagical editing and creation of snippets.
 -- packer
 use {
 	"chrisgrieser/nvim-scissors",
-	dependencies = "nvim-telescope/telescope.nvim", 
+	dependencies = "nvim-telescope/telescope.nvim", -- if using telescope
 	config = function()
 		require("scissors").setup ({
 			snippetDir = "path/to/your/snippetFolder",
@@ -310,6 +310,9 @@ require("scissors").setup {
 	},
 }
 ```
+> Note that you can configure the `snacks` picker through `snacks.nvim`'s picker configuration.
+> See the [snacks docs](https://github.com/folke/snacks.nvim/blob/main/docs/picker.md) for more
+> information.
 
 ## Cookbook & FAQ
 

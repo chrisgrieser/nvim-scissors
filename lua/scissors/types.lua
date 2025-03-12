@@ -1,5 +1,9 @@
 ---@meta
 
+---@class Scissors.SnacksObj: snacks.picker.Item
+---@field snippet Scissors.SnippetObj
+---@field displayName string
+
 ---@class Scissors.snipFile
 ---@field path string
 ---@field ft string
