@@ -46,9 +46,8 @@ function M.selectSnippet(snippets, prompt)
 			return ret
 		end,
 		preview = function(ctx)
-			---@type Scissors.SnippetObj
-			local snip = ctx.item.snippet
-			local bufnr = ctx.buf
+			local snip = ctx.item.snippet ---@type Scissors.SnippetObj
+			local bufnr = ctx.buf ---@type number
 			vim.bo[bufnr].modifiable = true
 			vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, snip.body)
 			vim.bo[bufnr].filetype = snip.filetype
