@@ -9,8 +9,11 @@ function M.selectSnippet(allSnippets)
 	-- INFO not using ternary to pass variable into `require`, since that
 	-- prevents the LSP from picking up references
 	local hasTelescope, _ = pcall(require, "telescope")
+	local hasSnacks, _ = pcall(require, "snacks")
 	if hasTelescope then
 		require("scissors.2-picker.telescope").selectSnippet(allSnippets, prompt)
+	elseif hasSnacks then
+		require("scissors.2-picker.snacks").selectSnippet(allSnippets, prompt)
 	else
 		require("scissors.2-picker.vim-ui-select").selectSnippet(allSnippets, prompt)
 	end

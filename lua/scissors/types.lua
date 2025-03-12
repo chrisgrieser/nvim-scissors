@@ -1,5 +1,13 @@
 ---@meta
 
+---@class Scissors.SnacksObj
+---@field idx integer
+---@field score integer
+---@field text string
+---@field name string
+---@field snippet Scissors.SnippetObj
+---@field displayName string
+
 ---@class Scissors.snipFile
 ---@field path string
 ---@field ft string
