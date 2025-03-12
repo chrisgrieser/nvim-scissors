@@ -78,7 +78,8 @@ Automagical editing and creation of snippets.
 - nvim 0.10+
 - Snippets saved in the [VSCode-style snippet
   format](#introduction-to-the-vscode-style-snippet-format).
-- [telescope](https://github.com/nvim-telescope/telescope.nvim) or [snacks.nvim](https://github.com/folke/snacks.nvim) OR
+- [telescope](https://github.com/nvim-telescope/telescope.nvim) or 
+[snacks.nvim](https://github.com/folke/snacks.nvim) OR
   ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
   [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
   * Note that snippet previews only work when using `telescope` or `snacks`.
@@ -310,9 +311,11 @@ require("scissors").setup {
 	},
 }
 ```
-> Note that you can configure the `snacks` picker through `snacks.nvim`'s picker configuration.
-> See the [snacks docs](https://github.com/folke/snacks.nvim/blob/main/docs/picker.md) for more
-> information.
+
+> Note that you can configure the `snacks` picker through `snacks.nvim`'s
+picker configuration. See the
+[snacks docs](https://github.com/folke/snacks.nvim/blob/main/docs/picker.md)
+for more information.
 
 ## Cookbook & FAQ
 
