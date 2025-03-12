@@ -78,7 +78,7 @@ Automagical editing and creation of snippets.
 - nvim 0.10+
 - Snippets saved in the [VSCode-style snippet
   format](#introduction-to-the-vscode-style-snippet-format).
-- [telescope](https://github.com/nvim-telescope/telescope.nvim) or 
+- [telescope](https://github.com/nvim-telescope/telescope.nvim) or
 [snacks.nvim](https://github.com/folke/snacks.nvim) OR
   ([dressing.nvim](http://github.com/stevearc/dressing.nvim) AND
   [fzf-lua](https://github.com/ibhagwan/fzf-lua)).
