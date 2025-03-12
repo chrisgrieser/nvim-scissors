@@ -3,6 +3,7 @@
 ---@class Scissors.SnacksObj: snacks.picker.Item
 ---@field snippet Scissors.SnippetObj
 ---@field displayName string
+---@field name string
 
 ---@class Scissors.snipFile
 ---@field path string

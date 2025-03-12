@@ -34,7 +34,7 @@ end
 ---@param snippets Scissors.SnippetObj[] entries
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
-	return Snacks.picker {
+	return require("snacks").picker {
 		prompt = prompt,
 		items = createSnacksItems(snippets),
 		---@param item Scissors.SnacksObj
@@ -46,6 +46,7 @@ function M.selectSnippet(snippets, prompt)
 			return ret
 		end,
 		preview = function(ctx)
+			---@type Scissors.SnippetObj
 			local snip = ctx.item.snippet
 			local bufnr = ctx.buf
 			vim.bo[bufnr].modifiable = true
