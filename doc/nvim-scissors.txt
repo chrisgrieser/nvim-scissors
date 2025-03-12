@@ -1,4 +1,4 @@
-*nvim-scissors.txt*           For Neovim          Last change: 2025 January 12
+*nvim-scissors.txt*            For Neovim           Last change: 2025 March 12
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -68,7 +68,7 @@ FEATURES                               *nvim-scissors-nvim-scissors--features*
 - Automatic hot-reloading of any changes, so you do not have to restart nvim for
     changes to take effect.
 - Optional JSON-formatting and sorting of the snippet file. (|nvim-scissors-useful-when-version-controlling-your-snippet-collection|.)
-- Snippet/file selection via `telescope` or `vim.ui.select`.
+- Snippet/file selection via `telescope`, `snacks`, or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
 - Supports only VSCode-style
     snippets <https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets>.
@@ -94,10 +94,11 @@ REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
 
 - nvim 0.10+
 - Snippets saved in the |nvim-scissors-vscode-style-snippet-format|.
-- telescope <https://github.com/nvim-telescope/telescope.nvim> OR
+- telescope <https://github.com/nvim-telescope/telescope.nvim> or
+    snacks.nvim <https://github.com/folke/snacks.nvim> OR
     (dressing.nvim <http://github.com/stevearc/dressing.nvim> AND
     fzf-lua <https://github.com/ibhagwan/fzf-lua>).
-    - Note that snippet previews only work when using `telescope`.
+    - Note that snippet previews only work when using `telescope` or `snacks`.
 - A snippet engine that can load VSCode-style snippets, such as:
     - LuaSnip <https://github.com/L3MON4D3/LuaSnip>
     - mini.snippets <https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md>
@@ -118,7 +119,7 @@ NVIM-SCISSORS ~
     -- lazy.nvim
     {
         "chrisgrieser/nvim-scissors",
-        dependencies = "nvim-telescope/telescope.nvim", 
+        dependencies = "nvim-telescope/telescope.nvim", -- if using telescope
         opts = {
             snippetDir = "path/to/your/snippetFolder",
         } 
@@ -127,7 +128,7 @@ NVIM-SCISSORS ~
     -- packer
     use {
         "chrisgrieser/nvim-scissors",
-        dependencies = "nvim-telescope/telescope.nvim", 
+        dependencies = "nvim-telescope/telescope.nvim", -- if using telescope
         config = function()
             require("scissors").setup ({
                 snippetDir = "path/to/your/snippetFolder",
@@ -335,6 +336,11 @@ The `.setup()` call is optional.
     }
 <
 
+
+  Note that you can configure the `snacks` picker through `snacks.nvim`’s
+  picker configuration. See the snacks docs
+  <https://github.com/folke/snacks.nvim/blob/main/docs/picker.md> for more
+  information.
 
 COOKBOOK & FAQ                   *nvim-scissors-nvim-scissors--cookbook-&-faq*
 
