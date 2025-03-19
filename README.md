@@ -151,7 +151,7 @@ The `mini.snippets` setup requires explicit definition of loaders. Following its
 [Quickstart](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart)
 guide should be enough to make it respect snippets from 'snippets/' directory
 inside user config. **Note**: `nvim-scissors` works only with VSCode-style
-snippet files (not Lua files or JSON arrays), and also requires a
+snippet files (not Lua files or JSON arrays), and requires a
 [`package.json` for the VSCode
 format](#introduction-to-the-vscode-style-snippet-format).
 
@@ -267,7 +267,7 @@ require("scissors").setup {
 	editSnippetPopup = {
 		height = 0.4, -- relative to the window, between 0-1
 		width = 0.6,
-		border = "rounded",
+		border = vim.fn.has("nvim-0.11") == 1 and vim.o.winborder or "rounded",
 		keymaps = {
 			-- if not mentioned otherwise, the keymaps apply to normal mode
 			cancel = "q",

@@ -8,7 +8,7 @@ local defaultConfig = {
 	editSnippetPopup = {
 		height = 0.4, -- relative to the window, between 0-1
 		width = 0.6,
-		border = "rounded",
+		border = vim.fn.has("nvim-0.11") == 1 and vim.o.winborder or "rounded",
 		keymaps = {
 			cancel = "q",
 			saveChanges = "<CR>", -- alternatively, can also use `:w`
