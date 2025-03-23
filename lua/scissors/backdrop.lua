@@ -24,6 +24,7 @@ function M.new(referenceBuf, referenceZindex)
 		width = vim.o.columns,
 		height = vim.o.lines,
 		focusable = false,
+		border = "none",
 		style = "minimal",
 		zindex = referenceZindex - 1, -- ensure it's below the reference window
 	})
