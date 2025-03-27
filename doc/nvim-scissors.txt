@@ -1,4 +1,4 @@
-*nvim-scissors.txt*            For Neovim           Last change: 2025 March 19
+*nvim-scissors.txt*            For Neovim           Last change: 2025 March 27
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -94,7 +94,7 @@ REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
 
 - nvim 0.10+
 - Snippets saved in the |nvim-scissors-vscode-style-snippet-format|.
-- telescope <https://github.com/nvim-telescope/telescope.nvim> or
+- telescope <https://github.com/nvim-telescope/telescope.nvim> OR
     snacks.nvim <https://github.com/folke/snacks.nvim> OR
     (dressing.nvim <http://github.com/stevearc/dressing.nvim> AND
     fzf-lua <https://github.com/ibhagwan/fzf-lua>).
