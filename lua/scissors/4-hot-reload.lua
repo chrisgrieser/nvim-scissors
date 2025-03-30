@@ -17,6 +17,10 @@ function M.reloadSnippetFile(path, fileIsNew)
 	local blinkCmpInstalled, blinkCmp = pcall(require, "blink.cmp")
 	local basicsLsInstalled = vim.fn.executable("basics-language-server") == 1
 	local miniSnippetsInstalled = _G.MiniSnippets ~= nil ---@diagnostic disable-line:undefined-field
+	-- INFO yasp.nvim does not need to be hot-reloaded, since it reloads every
+	-- time on `BufEnter` https://github.com/DimitrisDimitropoulos/yasp.nvim/issues/2#issuecomment-2764463329
+
+	-----------------------------------------------------------------------------
 
 	-- GUARD
 	-- hot-reloading new files is supported by mini.snippets: https://github.com/chrisgrieser/nvim-scissors/pull/25#issuecomment-2561345395

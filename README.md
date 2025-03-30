@@ -26,6 +26,7 @@ Automagical editing and creation of snippets.
 		+ [basics-language-server](#basics-language-server)
 		+ [nvim-snippets](#nvim-snippets)
 		+ [vim-vsnip](#vim-vsnip)
+		+ [yasp.nvim](#yaspnvim)
 - [Usage](#usage)
 	* [Starting `nvim-scissors`](#starting-nvim-scissors)
 	* [Editing snippets in the popup window](#editing-snippets-in-the-popup-window)
@@ -213,6 +214,19 @@ require("nvim-snippets").setup {
 vim.g.vsnip_snippet_dir = "path/to/your/snippetFolder"
 -- OR
 vim.g.vsnip_snippet_dirs = { "path/to/your/snippetFolder" }
+```
+
+<!-- LTeX: enabled=false -->
+#### yasp.nvim
+<!-- LTeX: enabled=true -->
+
+```lua
+require("yasp").setup {
+	paths = {
+		vim.fn.stdpath("config") .. "/snippets/package.json",
+	},
+	descs = { "user snippets" },
+}
 ```
 
 ## Usage
