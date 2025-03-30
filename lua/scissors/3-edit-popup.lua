@@ -247,16 +247,19 @@ function M.editInPopup(snip, mode)
 	local hlgroup = { key = "Comment", desc = "NonText" }
 	local maps = require("scissors.config").config.editSnippetPopup.keymaps
 	local footer = {
-		{ " normal mode: ", hlgroup.desc },
+		{ " normal mode: " },
 		{ maps.showHelp:gsub("[<>]", ""), hlgroup.key },
-		{ " help  ", hlgroup.desc },
+		{ " help", hlgroup.desc },
+		{ " " },
 		{ maps.saveChanges:gsub("[<>]", ""), hlgroup.key },
-		{ " save  ", hlgroup.desc },
+		{ " save", hlgroup.desc },
+		{ " " },
 		{ maps.cancel:gsub("[<>]", ""), hlgroup.key },
-		{ " cancel  ", hlgroup.desc },
+		{ " cancel", hlgroup.desc },
+		{ " " },
 		{ maps.insertNextPlaceholder:gsub("[<>]", ""), hlgroup.key },
 		{ " placeholder (normal & insert)", hlgroup.desc },
-		{ " ", "FloatBorder" },
+		{ " " },
 	}
 
 	-- CREATE WINDOW
