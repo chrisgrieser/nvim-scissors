@@ -1,4 +1,4 @@
-*nvim-scissors.txt*            For Neovim           Last change: 2025 March 27
+*nvim-scissors.txt*            For Neovim           Last change: 2025 March 30
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -42,6 +42,7 @@ TABLE OF CONTENTS             *nvim-scissors-nvim-scissors--table-of-contents*
         - |nvim-scissors-basics-language-server|
         - |nvim-scissors-nvim-snippets|
         - |nvim-scissors-vim-vsnip|
+        - |nvim-scissors-yasp.nvim|
 - |nvim-scissors-usage|
     - |nvim-scissors-starting-`nvim-scissors`|
     - |nvim-scissors-editing-snippets-in-the-popup-window|
@@ -229,6 +230,18 @@ VIM-VSNIP
     vim.g.vsnip_snippet_dir = "path/to/your/snippetFolder"
     -- OR
     vim.g.vsnip_snippet_dirs = { "path/to/your/snippetFolder" }
+<
+
+
+YASP.NVIM
+
+>lua
+    require("yasp").setup {
+        paths = {
+            vim.fn.stdpath("config") .. "/snippets/package.json",
+        },
+        descs = { "user snippets" },
+    }
 <
 
 
