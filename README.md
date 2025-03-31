@@ -91,6 +91,7 @@ Automagical editing and creation of snippets.
   * [basics-language-server](https://github.com/antonk52/basics-language-server/)
   * [nvim-snippets](https://github.com/garymjr/nvim-snippets)
   * [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
+  * [yasp.nvim](https://github.com/DimitrisDimitropoulos/yasp.nvim)
 - *Optional*: Treesitter parsers for the languages you want syntax highlighting
   for.
 
