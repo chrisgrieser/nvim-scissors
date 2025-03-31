@@ -47,13 +47,15 @@ function M.reloadSnippetFile(path, fileIsNew)
 
 	-- https://github.com/antonk52/basics-language-server/issues/1
 	elseif basicsLsInstalled then
-		if vim.cmd.LspRestart == nil then
-			local msg =
-				"Hot-reloading for `basics_ls` requires `nvim-lspconfig`. Restart nvim manually for changes to take effect."
-			u.notify(msg, "warn")
-			return
+		local client = vim.lsp.get_clients({ name = "basics_ls" })[1]
+		if client then
+			success = true
+			client:stop()
+			vim.defer_fn(vim.cmd.edit, 1000) -- wait for shutdown -> reloads -> re-attach LSPs
+		else
+			success = false
+			errorMsg = "`basics_ls` client not found."
 		end
-		success, errorMsg = pcall(vim.cmd.LspRestart, "basics_ls")
 
 	-- https://github.com/Saghen/blink.cmp/issues/428#issuecomment-2513235377
 	elseif blinkCmpInstalled then

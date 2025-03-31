@@ -193,9 +193,6 @@ require("lspconfig").basics_ls.setup({
 })
 ```
 
-Note that hot-reloading of the new/edited snippet for `basics_ls` also requires
-`nvim-lspconfig`.
-
 <!-- LTeX: enabled=false -->
 #### nvim-snippets
 <!-- LTeX: enabled=true -->
