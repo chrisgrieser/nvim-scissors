@@ -3,10 +3,7 @@ local M = {}
 local u = require("scissors.utils")
 local snippetDir = require("scissors.config").config.snippetDir
 local convert = require("scissors.vscode-format.convert-object")
-local picker = require("scissors.2-picker.picker-choice")
 local vb = require("scissors.vscode-format.validate-bootstrap")
-local createNewSnipAndEdit = require("scissors.3-edit-popup").createNewSnipAndEdit
-local addSnippet = require("scissors.2-picker.picker-choice").addSnippet
 --------------------------------------------------------------------------------
 
 ---@param lines string[]
@@ -64,7 +61,7 @@ function M.editSnippet()
 	end
 
 	-- SELECT
-	picker.selectSnippet(allSnippets)
+	require("scissors.2-picker.picker-choice").selectSnippet(allSnippets)
 end
 
 function M.addNewSnippet(exCmdArgs)
@@ -129,9 +126,9 @@ function M.addNewSnippet(exCmdArgs)
 
 	-- SELECT
 	if #allSnipFiles == 1 then
-		createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
+		require("scissors.3-edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
 	else
-		addSnippet(allSnipFiles, bodyPrefill)
+		require("scissors.2-picker.vim-ui-select").addSnippet(allSnipFiles, bodyPrefill)
 	end
 end
 
