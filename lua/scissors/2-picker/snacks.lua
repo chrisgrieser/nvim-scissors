@@ -2,7 +2,6 @@
 --------------------------------------------------------------------------------
 local M = {}
 
-local edit = require("scissors.3-edit-popup")
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
@@ -24,8 +23,6 @@ local function createSnacksItems(snippets)
 			snippet = snip,
 			displayName = displayName,
 		})
-
-		table.sort(items, function(a, b) return a.name < b.name end)
 	end
 
 	return items
@@ -35,28 +32,33 @@ end
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
 	return require("snacks").picker {
-		prompt = prompt,
+		title = prompt:gsub(": ?", ""),
 		items = createSnacksItems(snippets),
-		---@param item Scissors.SnacksObj
-		format = function(item, _)
-			local ret = {}
-			ret[#ret + 1] = { item.displayName, "SnacksPickerFile" }
-			ret[#ret + 1] = { " " }
-			ret[#ret + 1] = { "[" .. item.snippet.filetype .. "]", "@comment" }
-			return ret
+
+		format = function(item, _) ---@param item Scissors.SnacksObj
+			return {
+				{ item.displayName, "SnacksPickerFile" },
+				{ " " },
+				{ item.snippet.filetype, "Comment" },
+			}
 		end,
+
 		preview = function(ctx)
 			local snip = ctx.item.snippet ---@type Scissors.SnippetObj
 			local bufnr = ctx.buf ---@type number
+
 			vim.bo[bufnr].modifiable = true
 			vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, snip.body)
+			vim.bo[bufnr].modifiable = false
+
 			vim.bo[bufnr].filetype = snip.filetype
 			vim.defer_fn(function() u.tokenHighlight(bufnr) end, 1)
 		end,
+
 		---@param item Scissors.SnacksObj,
 		confirm = function(picker, item)
 			picker:close()
-			if item then edit.editInPopup(item.snippet, "update") end
+			require("scissors.3-edit-popup").editInPopup(item.snippet, "update")
 		end,
 	}
 end

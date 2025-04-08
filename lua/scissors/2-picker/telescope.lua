@@ -9,7 +9,6 @@ local actions = require("telescope.actions")
 local finders = require("telescope.finders")
 local previewers = require("telescope.previewers")
 
-local edit = require("scissors.3-edit-popup")
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
@@ -68,7 +67,7 @@ function M.selectSnippet(snippets, prompt)
 				actions.select_default:replace(function()
 					actions.close(promptBufnr)
 					local snip = actionState.get_selected_entry().value ---@type Scissors.SnippetObj
-					edit.editInPopup(snip, "update")
+					require("scissors.3-edit-popup").editInPopup(snip, "update")
 				end)
 				return true -- `true` = keeps default mappings from user
 			end,

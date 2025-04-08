@@ -4,7 +4,7 @@ local M = {}
 ---@param allSnippets Scissors.SnippetObj[]
 function M.selectSnippet(allSnippets)
 	local icon = require("scissors.config").config.icons.scissors
-	local prompt = vim.trim(icon .. " Select Snippet: ")
+	local prompt = vim.trim(icon .. " Select snippet: ")
 	local picker = require("scissors.config").config.snippetSelection.picker
 	local hasTelescope, _ = pcall(require, "telescope")
 	local hasSnacks, _ = pcall(require, "snacks")
