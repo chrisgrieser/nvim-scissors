@@ -5,14 +5,13 @@ local M = {}
 function M.selectSnippet(allSnippets)
 	local icon = require("scissors.config").config.icons.scissors
 	local prompt = vim.trim(icon .. " Select Snippet: ")
-
-	-- INFO not using ternary to pass variable into `require`, since that
-	-- prevents the LSP from picking up references
+	local picker = require("scissors.config").config.snippetSelection.picker
 	local hasTelescope, _ = pcall(require, "telescope")
 	local hasSnacks, _ = pcall(require, "snacks")
-	if hasTelescope then
+
+	if picker == "telescope" or (picker == "auto" and hasTelescope) then
 		require("scissors.2-picker.telescope").selectSnippet(allSnippets, prompt)
-	elseif hasSnacks then
+	elseif picker == "snacks" or (picker == "auto" and hasSnacks) then
 		require("scissors.2-picker.snacks").selectSnippet(allSnippets, prompt)
 	else
 		require("scissors.2-picker.vim-ui-select").selectSnippet(allSnippets, prompt)
@@ -35,9 +34,10 @@ end
 function M.addSnippet(allSnipFiles, bodyPrefill)
 	local icon = require("scissors.config").config.icons.scissors
 	local prompt = vim.trim(icon .. " Select file for new snippet: ")
-
+	local picker = require("scissors.config").config.snippetSelection.picker
 	local hasTelescope, _ = pcall(require, "telescope")
-	if hasTelescope then
+
+	if picker == "telescope" or (picker == "auto" and hasTelescope) then
 		-- stylua: ignore
 		require("scissors.2-picker.telescope").addSnippet(allSnipFiles, fileDisplay, prompt, bodyPrefill)
 	else

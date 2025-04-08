@@ -17,7 +17,7 @@ local u = require("scissors.utils")
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
 	require("scissors.backdrop").setup("TelescopeResults")
-	local conf = require("scissors.config").config.telescope
+	local conf = require("scissors.config").config.snippetSelection.telescope
 
 	pickers
 		.new(conf.opts, {

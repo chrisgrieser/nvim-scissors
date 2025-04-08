@@ -292,17 +292,22 @@ require("scissors").setup {
 			showHelp = "?",
 		},
 	},
-	telescope = {
-		-- By default, the query only searches snippet prefixes. Set this to
-		-- `true` to also search the body of the snippets.
-		alsoSearchSnippetBody = false,
 
-		-- accepts the common telescope picker config
-		opts = {
-			layout_strategy = "horizontal",
-			layout_config = {
-				horizontal = { width = 0.9 },
-				preview_width = 0.6,
+	snippetSelection = {
+		picker = "auto", ---@type "auto"|"telescope"|"snacks"|"vim.ui.select"
+
+		telescope = {
+			-- By default, the query only searches snippet prefixes. Set this to
+			-- `true` to also search the body of the snippets.
+			alsoSearchSnippetBody = false,
+
+			-- accepts the common telescope picker config
+			opts = {
+				layout_strategy = "horizontal",
+				layout_config = {
+					horizontal = { width = 0.9 },
+					preview_width = 0.6,
+				},
 			},
 		},
 	},

@@ -31,17 +31,21 @@ local defaultConfig = {
 			showHelp = "?",
 		},
 	},
-	telescope = {
-		-- By default, the query only searches snippet prefixes. Set this to
-		-- `true` to also search the body of the snippets.
-		alsoSearchSnippetBody = false,
+	snippetSelection = {
+		picker = "auto", ---@type "auto"|"telescope"|"snacks"|"vim.ui.select"
 
-		-- accepts the common telescope picker config
-		opts = {
-			layout_strategy = "horizontal",
-			layout_config = {
-				horizontal = { width = 0.9 },
-				preview_width = 0.6,
+		telescope = {
+			-- By default, the query only searches snippet prefixes. Set this to
+			-- `true` to also search the body of the snippets.
+			alsoSearchSnippetBody = false,
+
+			-- accepts the common telescope picker config
+			opts = {
+				layout_strategy = "horizontal",
+				layout_config = {
+					horizontal = { width = 0.9 },
+					preview_width = 0.6,
+				},
 			},
 		},
 	},
@@ -70,10 +74,20 @@ M.config = defaultConfig -- in case user does not call `setup`
 function M.setupPlugin(userConfig)
 	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig or {})
 
+	-- DEPRECATION (2025-04-08)
+	---@diagnostic disable: undefined-field
+	if M.config.telescope then
+		local msg =
+			"The nvim-scissors config `telescope` is deprecated. Use `snippetSelection.telescope` instead."
+		u.notify(msg, "warn")
+		M.config.snippetSelection.telescope = M.config.telescope
+	end
+	---@diagnostic enable: undefined-field
+
 	-- `preview_width` is only supported by `horizontal` & `cursor` strategies, see #28
-	local strategy = M.config.telescope.opts.layout_strategy
+	local strategy = M.config.snippetSelection.telescope.opts.layout_strategy
 	if strategy ~= "horizontal" and strategy ~= "cursor" then
-		M.config.telescope.opts.layout_config.preview_width = nil
+		M.config.snippetSelection.telescope.opts.layout_config.preview_width = nil
 	end
 
 	-- normalizing relevant as it expands `~` to the home directory
