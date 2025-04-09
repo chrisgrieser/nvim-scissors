@@ -1,4 +1,4 @@
-*nvim-scissors.txt*            For Neovim           Last change: 2025 March 31
+*nvim-scissors.txt*            For Neovim           Last change: 2025 April 09
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -271,8 +271,8 @@ Youcan also use `:ScissorsAddNewSnippet` and `:ScissorsEditSnippet` if you
 prefer ex commands.
 
 The `:ScissorsAddSnippet` ex command also accepts a range to prefill the
-snippet body (for example `:'<,'> ScissorsAddSnippet` or `:3
-ScissorsAddSnippet`).
+snippet body (for example `:'<,'> ScissorsAddNewSnippet` or `:3
+ScissorsAddNewSnippet`).
 
 
 EDITING SNIPPETS IN THE POPUP WINDOW ~
@@ -315,17 +315,22 @@ The `.setup()` call is optional.
                 showHelp = "?",
             },
         },
-        telescope = {
-            -- By default, the query only searches snippet prefixes. Set this to
-            -- `true` to also search the body of the snippets.
-            alsoSearchSnippetBody = false,
     
-            -- accepts the common telescope picker config
-            opts = {
-                layout_strategy = "horizontal",
-                layout_config = {
-                    horizontal = { width = 0.9 },
-                    preview_width = 0.6,
+        snippetSelection = {
+            picker = "auto", ---@type "auto"|"telescope"|"snacks"|"vim.ui.select"
+    
+            telescope = {
+                -- By default, the query only searches snippet prefixes. Set this to
+                -- `true` to also search the body of the snippets.
+                alsoSearchSnippetBody = false,
+    
+                -- accepts the common telescope picker config
+                opts = {
+                    layout_strategy = "horizontal",
+                    layout_config = {
+                        horizontal = { width = 0.9 },
+                        preview_width = 0.6,
+                    },
                 },
             },
         },
