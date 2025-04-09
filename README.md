@@ -253,7 +253,7 @@ You can also use `:ScissorsAddNewSnippet` and `:ScissorsEditSnippet` if you
 prefer ex commands.
 
 The `:ScissorsAddSnippet` ex command also accepts a range to prefill the snippet
-body (for example `:'<,'> ScissorsAddSnippet` or `:3 ScissorsAddSnippet`).
+body (for example `:'<,'> ScissorsAddNewSnippet` or `:3 ScissorsAddNewSnippet`).
 
 ### Editing snippets in the popup window
 The popup is just one window, so you can move between the prefix area and the
