@@ -324,6 +324,22 @@ function M.editInPopup(snip, mode)
 		end,
 	})
 
+	-- Adjusts the popup size when the Neovim window is resized
+	vim.api.nvim_create_autocmd("VimResized", {
+		group = vim.api.nvim_create_augroup("scissors-resized", { clear = true }),
+		callback = function()
+			if not vim.api.nvim_win_is_valid(winnr) then return end
+
+			vim.api.nvim_win_set_config(winnr, {
+				relative = "editor",
+				width = math.floor(conf.width * vim.o.columns),
+				height = math.floor(conf.height * vim.o.lines),
+				row = math.floor((1 - conf.height) * vim.o.lines / 2),
+				col = math.floor((1 - conf.width) * vim.o.columns / 2),
+			})
+		end,
+	})
+
 	-- MISC
 	setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 	u.tokenHighlight(bufnr)
