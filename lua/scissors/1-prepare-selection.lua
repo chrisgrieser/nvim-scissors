@@ -67,7 +67,7 @@ end
 function M.addNewSnippet(exCmdArgs)
 	-- GUARD & bootstrap
 	if not vb.validate(snippetDir) then return end
-	vb.bootstrapSnipDir(snippetDir)
+	vb.bootstrapSnipDirIfNeeded(snippetDir)
 
 	-- PARAMS
 	local bufferFt = vim.bo.filetype
