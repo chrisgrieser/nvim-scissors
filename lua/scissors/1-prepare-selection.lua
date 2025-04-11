@@ -1,8 +1,7 @@
 local M = {}
 
-local u = require("scissors.utils")
-local snippetDir = require("scissors.config").config.snippetDir
 local convert = require("scissors.vscode-format.convert-object")
+local u = require("scissors.utils")
 local vb = require("scissors.vscode-format.validate-bootstrap")
 --------------------------------------------------------------------------------
 
@@ -29,6 +28,8 @@ end
 --------------------------------------------------------------------------------
 
 function M.editSnippet()
+	local snippetDir = require("scissors.config").config.snippetDir
+
 	-- GUARD
 	if not vb.validate(snippetDir) then return end
 	local packageJsonExist = u.fileExists(snippetDir .. "/package.json")
@@ -65,6 +66,8 @@ function M.editSnippet()
 end
 
 function M.addNewSnippet(exCmdArgs)
+	local snippetDir = require("scissors.config").config.snippetDir
+
 	-- GUARD & bootstrap
 	if not vb.validate(snippetDir) then return end
 	vb.bootstrapSnipDirIfNeeded(snippetDir)
