@@ -324,12 +324,11 @@ function M.editInPopup(snip, mode)
 		end,
 	})
 
+	-- Adjusts the popup size when the Neovim window is resized
 	vim.api.nvim_create_autocmd("VimResized", {
 		group = vim.api.nvim_create_augroup("scissors-resized", { clear = true }),
 		callback = function()
-			if not vim.api.nvim_win_is_valid(winnr) then
-				return
-			end
+			if not vim.api.nvim_win_is_valid(winnr) then return end
 
 			vim.api.nvim_win_set_config(winnr, {
 				relative = "editor",
