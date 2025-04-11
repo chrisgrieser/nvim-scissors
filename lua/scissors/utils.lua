@@ -26,7 +26,10 @@ end
 ---@nodiscard
 ---@param path string
 ---@return boolean
-function M.fileExists(path) return vim.uv.fs_stat(path) ~= nil end
+function M.fileExists(path)
+	path = vim.fs.normalize(path)
+	return vim.uv.fs_stat(path) ~= nil
+end
 
 ---DOCS https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax
 ---@param bufnr number
