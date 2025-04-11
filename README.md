@@ -310,6 +310,9 @@ require("scissors").setup {
 				},
 			},
 		},
+
+		-- `snacks` picker configurable via snacks config, 
+		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
 
 	-- `none` writes as a minified json file using `vim.encode.json`.
@@ -328,11 +331,6 @@ require("scissors").setup {
 	},
 }
 ```
-
-> Note that you can configure the `snacks` picker through `snacks.nvim`'s
-picker configuration. See the
-[snacks docs](https://github.com/folke/snacks.nvim/blob/main/docs/picker.md)
-for more information.
 
 ## Cookbook & FAQ
 
@@ -461,7 +459,7 @@ initial sorting. You can do so with `yq` using this command:
 
 ```bash
 cd "/your/snippet/dir"
-fd ".*\.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
+find . -name "*.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
 ```
 
 How to do the same with `jq` is left as an exercise to the reader.

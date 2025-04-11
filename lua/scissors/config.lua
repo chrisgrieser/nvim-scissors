@@ -48,6 +48,9 @@ local defaultConfig = {
 				},
 			},
 		},
+
+		-- `snacks` picker configurable via snacks config,
+		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
 
 	-- `none` writes as a minified json file using `vim.encode.json`.
