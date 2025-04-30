@@ -80,9 +80,9 @@ Automagical editing and creation of snippets.
 - Snippets saved in the [VSCode-style snippet
   format](#introduction-to-the-vscode-style-snippet-format).
 - *Recommended*: [telescope](https://github.com/nvim-telescope/telescope.nvim)
-  OR [snacks.nvim](https://github.com/folke/snacks.nvim). Without 
-  one of them, the plugin falls back to `vim.ui.select`, which still 
-  works but lacks search and snippet previews. 
+  OR [snacks.nvim](https://github.com/folke/snacks.nvim). Without one of them,
+  the plugin falls back to `vim.ui.select`, which still works but lacks search
+  and snippet previews.
 - A snippet engine that can load VSCode-style snippets, such as:
   * [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
   * [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
@@ -317,6 +317,7 @@ require("scissors").setup {
 	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
 	-- you version control your snippets. To use a custom formatter, set to a
 	-- list of strings, which will then be passed to `vim.system()`.
+	-- TIP: `jq` is already pre-installed on newer versions of macOS.
 	---@type "yq"|"jq"|"none"|string[]
 	jsonFormatter = "none",
 
