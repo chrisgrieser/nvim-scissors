@@ -96,9 +96,9 @@ REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
 - nvim 0.10+
 - Snippets saved in the |nvim-scissors-vscode-style-snippet-format|.
 - _Recommended_telescope <https://github.com/nvim-telescope/telescope.nvim>
-    OR snacks.nvim <https://github.com/folke/snacks.nvim>. Without
-    one of them, the plugin falls back to `vim.ui.select`, which still
-    works but lacks search and snippet previews.
+    OR snacks.nvim <https://github.com/folke/snacks.nvim>. Without one of them,
+    the plugin falls back to `vim.ui.select`, which still works but lacks search
+    and snippet previews.
 - A snippet engine that can load VSCode-style snippets, such as:
     - LuaSnip <https://github.com/L3MON4D3/LuaSnip>
     - mini.snippets <https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md>
