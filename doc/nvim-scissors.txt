@@ -1,4 +1,4 @@
-*nvim-scissors.txt*           For Neovim           Last change: 2025 August 25
+*nvim-scissors.txt*           For Neovim          Last change: 2025 October 13
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -95,7 +95,7 @@ REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
 
 - nvim 0.10+
 - Snippets saved in the |nvim-scissors-vscode-style-snippet-format|.
-- _Recommended_telescope <https://github.com/nvim-telescope/telescope.nvim>
+- _Recommended_: telescope <https://github.com/nvim-telescope/telescope.nvim>
     OR snacks.nvim <https://github.com/folke/snacks.nvim>. Without one of them,
     the plugin falls back to `vim.ui.select`, which still works but lacks search
     and snippet previews.
@@ -107,7 +107,7 @@ REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
     - nvim-snippets <https://github.com/garymjr/nvim-snippets>
     - vim-vsnip <https://github.com/hrsh7th/vim-vsnip>
     - yasp.nvim <https://github.com/DimitrisDimitropoulos/yasp.nvim>
-- _Optional_Treesitter parsers for the languages you want syntax highlighting
+- _Optional_: Treesitter parsers for the languages you want syntax highlighting
     for.
 
 
@@ -142,10 +142,10 @@ NVIM-SCISSORS ~
 SNIPPET ENGINE SETUP ~
 
 In addition, your snippet engine needs to point to the same snippet folder as
-`nvim-scissors`
+`nvim-scissors`:
 
 
-  [!TIP] `vim.fn.stdpath("config")`returns the path to your nvim config.
+  [!TIP] `vim.fn.stdpath("config")` returns the path to your nvim config.
 
 LUASNIP
 
@@ -172,7 +172,7 @@ The `mini.snippets` setup requires explicit definition of loaders. Following
 its Quickstart
 <https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart>
 guide should be enough to make it respect snippets from 'snippets/' directory
-inside user config. **Note**`nvim-scissors` works only with VSCode-style
+inside user config. **Note**: `nvim-scissors` works only with VSCode-style
 snippet files (not Lua files or JSON arrays), and requires a
 |nvim-scissors-`package.json`-for-the-vscode-format|.
 
@@ -246,7 +246,7 @@ USAGE                                     *nvim-scissors-nvim-scissors--usage*
 
 STARTING NVIM-SCISSORS ~
 
-The plugin provides two lua functions, `.addNewSnippet()` and `.editSnippet()`
+The plugin provides two lua functions, `.addNewSnippet()` and `.editSnippet()`:
 
 >lua
     vim.keymap.set(
@@ -265,7 +265,7 @@ The plugin provides two lua functions, `.addNewSnippet()` and `.editSnippet()`
     )
 <
 
-Youcan also use `:ScissorsAddNewSnippet` and `:ScissorsEditSnippet` if you
+You can also use `:ScissorsAddNewSnippet` and `:ScissorsEditSnippet` if you
 prefer ex commands.
 
 The `:ScissorsAddSnippet` ex command also accepts a range to prefill the
@@ -365,7 +365,7 @@ to saving the snippets in the required JSON format, there must also be a
 `package.json` file at the root of the snippet folder, specifying which files
 should be used for which languages.
 
-Example file structure inside the `snippetDir`
+Example file structure inside the `snippetDir`:
 
 >txt
     .
@@ -377,7 +377,7 @@ Example file structure inside the `snippetDir`
     └── allFiletypes.json
 <
 
-Example`package.json`
+Example `package.json`:
 
 >json
     {
@@ -406,7 +406,7 @@ Example`package.json`
 <
 
 
-  [!NOTE] Thespecial filetype `all` enables the snippets globally, regardless of
+  [!NOTE] The special filetype `all` enables the snippets globally, regardless of
   filetype.
 Example snippet file (here: `nvim-lua.json`):
 
