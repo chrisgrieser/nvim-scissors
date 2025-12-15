@@ -31,12 +31,13 @@ end
 ---@param snippets Scissors.SnippetObj[] entries
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
-	return require("snacks").picker {
+	require("snacks").picker {
 		title = prompt:gsub(": ?", ""),
 		items = createSnacksItems(snippets),
 
-		format = function(item, _) ---@param item Scissors.SnacksObj
-			return {
+		---@param item Scissors.SnacksObj
+		format = function(item, _)
+			return { ---@diagnostic disable-line: incomplete-signature-doc typing at snacks.nvim
 				{ item.displayName, "SnacksPickerFile" },
 				{ " " },
 				{ item.snippet.filetype, "Comment" },
@@ -56,7 +57,7 @@ function M.selectSnippet(snippets, prompt)
 		end,
 
 		---@param item Scissors.SnacksObj,
-		confirm = function(picker, item)
+		confirm = function(picker, item) ---@diagnostic disable-line: incomplete-signature-doc typing at snacks.nvim
 			picker:close()
 			require("scissors.3-edit-popup").editInPopup(item.snippet, "update")
 		end,
