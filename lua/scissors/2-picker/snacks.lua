@@ -51,7 +51,7 @@ function M.selectSnippet(snippets, prompt)
 			vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, snip.body)
 			vim.bo[bufnr].modifiable = false
 
-			vim.bo[bufnr].filetype = snip.filetype
+			vim.bo[bufnr].filetype = snip.filetype == "all" and "text" or snip.filetype
 			vim.defer_fn(function() u.tokenHighlight(bufnr) end, 1)
 		end,
 

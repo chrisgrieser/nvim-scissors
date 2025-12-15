@@ -51,7 +51,7 @@ function M.editSnippet()
 		vim.list_extend(allSnippets, filetypeSnippets)
 	end
 	for _, absPath in pairs(convert.getSnippetfilePathsForFt("all")) do
-		local globalSnippets = convert.readVscodeSnippetFile(absPath, "plaintext")
+		local globalSnippets = convert.readVscodeSnippetFile(absPath, "all")
 		vim.list_extend(allSnippets, globalSnippets)
 	end
 
