@@ -18,10 +18,14 @@ local function dedentAndTrimBlanks(lines)
 	end
 
 	local smallestIndent = vim.iter(lines):fold(math.huge, function(acc, line)
+		if vim.trim(line) == "" then return acc end -- ignore empty lines for indent
 		local indent = #line:match("^%s*")
 		return math.min(acc, indent)
 	end)
-	local dedentedLines = vim.tbl_map(function(line) return line:sub(smallestIndent + 1) end, lines)
+	local dedentedLines = vim.tbl_map(function(line)
+		if vim.trim(line) == "" then return line end -- ignore empty lines for indent
+		return line:sub(smallestIndent + 1)
+	end, lines)
 	return dedentedLines
 end
 
