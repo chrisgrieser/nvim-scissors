@@ -1,4 +1,4 @@
-*nvim-scissors.txt*          For Neovim          Last change: 2025 December 20
+*nvim-scissors.txt*          For Neovim          Last change: 2025 December 25
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -120,7 +120,8 @@ NVIM-SCISSORS ~
     -- lazy.nvim
     {
         "chrisgrieser/nvim-scissors",
-        dependencies = "nvim-telescope/telescope.nvim", -- if using telescope
+        dependencies = "folke/snacks.nvim", -- either snacks or telescope
+       -- dependencies = "nvim-telescope/telescope.nvim",
         opts = {
             snippetDir = "path/to/your/snippetFolder",
         } 
@@ -129,7 +130,8 @@ NVIM-SCISSORS ~
     -- packer
     use {
         "chrisgrieser/nvim-scissors",
-        dependencies = "nvim-telescope/telescope.nvim", -- if using telescope
+        dependencies = "folke/snacks.nvim", -- either snacks or telescope
+          -- dependencies = "nvim-telescope/telescope.nvim",
         config = function()
             require("scissors").setup ({
                 snippetDir = "path/to/your/snippetFolder",
@@ -156,7 +158,7 @@ LUASNIP
 <
 
 
-MINI.SNIPPETS 
+MINI.SNIPPETS
 
 `mini.snippets` preferred snippet location is any `snippets/` directory in the
 `runtimepath`. For manually maintained snippets the best location is the user
@@ -177,7 +179,7 @@ snippet files (not Lua files or JSON arrays), and requires a
 |nvim-scissors-`package.json`-for-the-vscode-format|.
 
 
-BLINK.CMP 
+BLINK.CMP
 
 >lua
     require("blink.cmp").setup {
@@ -197,7 +199,7 @@ It is recommended to use the latest release of `blink.cmp` for hot-reloading to
 work.
 
 
-BASICS-LANGUAGE-SERVER 
+BASICS-LANGUAGE-SERVER
 
 >lua
     require("lspconfig").basics_ls.setup({
@@ -211,7 +213,7 @@ BASICS-LANGUAGE-SERVER
 <
 
 
-NVIM-SNIPPETS 
+NVIM-SNIPPETS
 
 >lua
     require("nvim-snippets").setup {
@@ -220,7 +222,7 @@ NVIM-SNIPPETS
 <
 
 
-VIM-VSNIP 
+VIM-VSNIP
 
 >lua
     vim.g.vsnip_snippet_dir = "path/to/your/snippetFolder"
@@ -229,7 +231,7 @@ VIM-VSNIP
 <
 
 
-YASP.NVIM 
+YASP.NVIM
 
 >lua
     require("yasp").setup {
