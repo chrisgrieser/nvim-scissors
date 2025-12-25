@@ -16,7 +16,7 @@ Automagical editing and creation of snippets.
 - [Rationale](#rationale)
 - [Requirements](#requirements)
 - [Installation](#installation)
-    - [nvim-scissors](#nvim-scissors)
+    - [Nvim-scissors](#nvim-scissors)
     - [Snippet engine setup](#snippet-engine-setup)
         - [LuaSnip](#luasnip)
         - [mini.snippets](#minisnippets)
@@ -32,7 +32,7 @@ Automagical editing and creation of snippets.
 - [Cookbook & FAQ](#cookbook--faq)
     - [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
     - [Tabstops and variables](#tabstops-and-variables)
-    - [friendly-snippets](#friendly-snippets)
+    - [Friendly-snippets](#friendly-snippets)
     - [Edit snippet title or description](#edit-snippet-title-or-description)
     - [Version controlling snippets & snippet file formatting](#version-controlling-snippets--snippet-file-formatting)
     - [Snippets on visual selections (`Luasnip` only)](#snippets-on-visual-selections-luasnip-only)
@@ -82,19 +82,20 @@ Automagical editing and creation of snippets.
   the plugin falls back to `vim.ui.select`, which still works but lacks search
   and snippet previews.
 - A snippet engine that can load VS Code-style snippets, such as:
-  - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
-  - [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
-  - [blink.cmp](https://github.com/Saghen/blink.cmp)
-  - [basics-language-server](https://github.com/antonk52/basics-language-server/)
-  - [nvim-snippets](https://github.com/garymjr/nvim-snippets)
-  - [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
-  - [yasp.nvim](https://github.com/DimitrisDimitropoulos/yasp.nvim)
+    - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
+    - [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
+    - [blink.cmp](https://github.com/Saghen/blink.cmp)
+    - [basics-language-server](https://github.com/antonk52/basics-language-server/)
+    - [nvim-snippets](https://github.com/garymjr/nvim-snippets)
+    - [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
+    - [yasp.nvim](https://github.com/DimitrisDimitropoulos/yasp.nvim)
 - *Optional*: Treesitter parsers for the languages you want syntax highlighting
   for.
 
 ## Installation
 
-### Nvim-scissors
+<!-- rumdl-disable-next-line MD063 -->
+### nvim-scissors
 
 ```lua
 -- lazy.nvim
@@ -125,6 +126,7 @@ In addition, your snippet engine must point to the same snippet folder as
 > [!TIP]
 > `vim.fn.stdpath("config")` returns the path to your nvim config.
 
+<!-- rumdl-disable MD063 plugins names as headings here -->
 #### LuaSnip
 
 ```lua
@@ -133,7 +135,7 @@ require("luasnip.loaders.from_vscode").lazy_load {
 }
 ```
 
-#### mini.snippets <!-- rumdl-disable-line MD063 -->
+#### mini.snippets
 `mini.snippets` preferred snippet location is any `snippets/` directory in the
 `runtimepath`. For manually maintained snippets the best location is the user
 config directory, which requires the following `nvim-scissors` setup:
@@ -152,7 +154,7 @@ snippet files (not Lua files or JSON arrays), and requires a
 [`package.json` for the VSCode
 format](#introduction-to-the-vscode-style-snippet-format).
 
-#### blink.cmp <!-- rumdl-disable-line MD063 -->
+#### blink.cmp
 
 ```lua
 require("blink.cmp").setup {
@@ -171,7 +173,7 @@ require("blink.cmp").setup {
 It is recommended to use the latest release of `blink.cmp` for hot-reloading to
 work.
 
-#### basics-language-server <!-- rumdl-disable-line MD063 -->
+#### basics-language-server
 
 ```lua
 require("lspconfig").basics_ls.setup({
@@ -184,7 +186,7 @@ require("lspconfig").basics_ls.setup({
 })
 ```
 
-#### nvim-snippets <!-- rumdl-disable-line MD063 -->
+#### nvim-snippets
 
 ```lua
 require("nvim-snippets").setup {
@@ -192,7 +194,7 @@ require("nvim-snippets").setup {
 }
 ```
 
-#### vim-vsnip <!-- rumdl-disable-line MD063 -->
+#### vim-vsnip
 
 ```lua
 vim.g.vsnip_snippet_dir = "path/to/your/snippetFolder"
@@ -200,7 +202,7 @@ vim.g.vsnip_snippet_dir = "path/to/your/snippetFolder"
 vim.g.vsnip_snippet_dirs = { "path/to/your/snippetFolder" }
 ```
 
-#### yasp.nvim <!-- rumdl-disable-line MD063 -->
+#### yasp.nvim
 
 ```lua
 require("yasp").setup {
@@ -211,6 +213,7 @@ require("yasp").setup {
 }
 ```
 
+<!-- rumdl-enable MD063 -->
 ## Usage
 
 ### Starting `nvim-scissors`
