@@ -16,7 +16,7 @@ Automagical editing and creation of snippets.
 - [Rationale](#rationale)
 - [Requirements](#requirements)
 - [Installation](#installation)
-    - [Nvim-scissors](#nvim-scissors)
+    - [nvim-scissors](#nvim-scissors)
     - [Snippet engine setup](#snippet-engine-setup)
         - [LuaSnip](#luasnip)
         - [mini.snippets](#minisnippets)
@@ -34,7 +34,6 @@ Automagical editing and creation of snippets.
     - [Tabstops and variables](#tabstops-and-variables)
     - [Friendly-snippets](#friendly-snippets)
     - [Edit snippet title or description](#edit-snippet-title-or-description)
-    - [Version controlling snippets & snippet file formatting](#version-controlling-snippets--snippet-file-formatting)
     - [Snippets on visual selections (`Luasnip` only)](#snippets-on-visual-selections-luasnip-only)
     - [Auto-triggered snippets (`Luasnip` only)](#auto-triggered-snippets-luasnip-only)
 - [About the author](#about-the-author)
@@ -50,9 +49,8 @@ Automagical editing and creation of snippets.
   prefixes.
 - Automatic hot-reloading of any changes, so you do not have to restart nvim for
   changes to take effect.
-- Optional JSON-formatting and sorting of the snippet file. ([Useful when
-  version-controlling your snippet
-  collection](#version-controlling-snippets--snippet-file-formatting).)
+- The snippet JSON is automatically formatted and sorted (relevant when
+  version controlling snippets).
 - Snippet/file selection via `telescope`, `snacks`, or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
 - Supports only [VSCode-style
@@ -74,13 +72,13 @@ Automagical editing and creation of snippets.
   for you.
 
 ## Requirements
-- nvim 0.10+
+- nvim 0.12+
 - Snippets saved in the [VSCode-style snippet
   format](#introduction-to-the-vscode-style-snippet-format).
 - *Recommended*: [telescope](https://github.com/nvim-telescope/telescope.nvim)
   OR [snacks.nvim](https://github.com/folke/snacks.nvim). Without one of them,
-  the plugin falls back to `vim.ui.select`, which still works but lacks search
-  and snippet previews.
+  the plugin falls back to `vim.ui.select`, which lacks search and snippet
+  previews.
 - A snippet engine that can load VS Code-style snippets, such as:
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
     - [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
@@ -303,15 +301,10 @@ require("scissors").setup {
 		-- `snacks` picker configurable via snacks config, 
 		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
-
-	-- `none` writes as a minified json file using `vim.encode.json`.
-	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
-	-- you version control your snippets. To use a custom formatter, set to a
-	-- list of strings, which will then be passed to `vim.system()`.
-	-- TIP: `jq` is already pre-installed on newer versions of macOS.
-	---@type "yq"|"jq"|"none"|string[]
-	jsonFormatter = "none",
-
+	jsonFormatOpts = { -- formatting of snippet files, passed to `:h vim.json.encode()`
+		sort_keys = true,
+		indent = "  ",
+	},
 	backdrop = {
 		enabled = true,
 		blend = 50, -- between 0-100
@@ -432,28 +425,6 @@ there.
 keep the UI as simple as possible. For the few cases where you need to edit a
 snippet's title or description, you can use the `openInFile` keymap and edit
 them directly in the snippet file.
-
-### Version controlling snippets & snippet file formatting
-This plugin writes JSON files via `vim.encode.json()`. That method saves
-the file in minified form and does not have a
-deterministic order of dictionary keys.
-
-Both, minification and unstable key order, are a problem if you
-version-control your snippet collection. To solve this issue, `nvim-scissors`
-lets you optionally unminify and sort the JSON files via `yq` or `jq` after
-updating a snippet. (Both are also available via
-[mason.nvim](https://github.com/williamboman/mason.nvim).)
-
-It is recommended to run `yq`/`jq` once on all files in your snippet collection,
-since the first time you edit a file, you would still get a large diff from the
-initial sorting. You can do so with `yq` using this command:
-
-```bash
-cd "/your/snippet/dir"
-find . -name "*.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
-```
-
-How to do the same with `jq` is left as an exercise to the reader.
 
 ### Snippets on visual selections (`Luasnip` only)
 With `Luasnip`, this is an opt-in feature, enabled via:

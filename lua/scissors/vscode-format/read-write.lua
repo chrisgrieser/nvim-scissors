@@ -36,37 +36,9 @@ end
 ---@param fileIsNew? boolean
 ---@return boolean success
 function M.writeAndFormatSnippetFile(filepath, jsonObj, fileIsNew)
-	local jsonFormatter = require("scissors.config").config.jsonFormatter
-
-	local ok, jsonStr = pcall(vim.json.encode, jsonObj)
+	local jsonFormatOpts = require("scissors.config").config.jsonFormatOpts
+	local ok, jsonStr = pcall(vim.json.encode, jsonObj, jsonFormatOpts)
 	assert(ok and jsonStr, "Could not encode JSON.")
-
-	-- FORMAT
-	-- INFO sorting via `yq` or `jq` is necessary, since `vim.json.encode`
-	-- does not ensure a stable order of keys in the written JSON.
-	if jsonFormatter ~= "none" then
-		local cmds = {
-			-- DOCS https://mikefarah.gitbook.io/yq/operators/sort-keys
-			yq = {
-				"yq",
-				"--prettyPrint",
-				"--output-format=json",
-				"--input-format=json", -- different parser, more stable https://github.com/mikefarah/yq/issues/1265#issuecomment-1200784274
-				"--no-colors", -- safety net for some shells
-				"sort_keys(..)",
-			},
-			-- DOCS https://jqlang.github.io/jq/manual/#invoking-jq
-			jq = { "jq", "--sort-keys", "--monochrome-output" },
-		}
-		local shellCmd = type(jsonFormatter) == "table" and jsonFormatter or cmds[jsonFormatter]
-		local result = vim.system(shellCmd, { stdin = jsonStr }):wait()
-
-		if result.code ~= 0 then
-			u.notify("JSON formatting failed: " .. result.stderr, "error")
-			return false
-		end
-		jsonStr = result.stdout ---@cast jsonStr string
-	end
 
 	-- WRITE & RELOAD
 	local writeSuccess = M.writeFile(filepath, jsonStr)
