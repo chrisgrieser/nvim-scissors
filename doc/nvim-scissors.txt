@@ -69,7 +69,7 @@ FEATURES                               *nvim-scissors-nvim-scissors--features*
 - Automatic hot-reloading of any changes, so you do not have to restart nvim for
     changes to take effect.
 - Optional JSON-formatting and sorting of the snippet file. (|nvim-scissors-useful-when-version-controlling-your-snippet-collection|.)
-- Snippet/file selection via `telescope`, `snacks`, or `vim.ui.select`.
+- Snippet/file selection via `telescope`, `snacks`, `fzf-lua`, or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
 - Supports only VSCode-style
     snippets <https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets>.
@@ -95,10 +95,14 @@ REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
 
 - nvim 0.10+
 - Snippets saved in the |nvim-scissors-vscode-style-snippet-format|.
-- _Recommended_: telescope <https://github.com/nvim-telescope/telescope.nvim>
-    OR snacks.nvim <https://github.com/folke/snacks.nvim>. Without one of them,
-    the plugin falls back to `vim.ui.select`, which still works but lacks search
-    and snippet previews.
+- _Recommended_:
+  - _ONE_ of the following pickers:
+    - telescope <https://github.com/nvim-telescope/telescope.nvim>
+    - snacks.nvim <https://github.com/folke/snacks.nvim>
+    - fzf-lua <https://github.com/ibhagwan/fzf-lua>
+
+    Without one of them, the plugin falls back to `vim.ui.select`, which still
+    works but lacks search and snippet previews.
 - A snippet engine that can load VS Code-style snippets, such as:
     - LuaSnip <https://github.com/L3MON4D3/LuaSnip>
     - mini.snippets <https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md>
@@ -119,18 +123,20 @@ NVIM-SCISSORS ~
 >lua
     -- lazy.nvim
     {
-        "chrisgrieser/nvim-scissors",
-        dependencies = "folke/snacks.nvim", -- either snacks or telescope
-       -- dependencies = "nvim-telescope/telescope.nvim",
-        opts = {
-            snippetDir = "path/to/your/snippetFolder",
-        } 
+	"chrisgrieser/nvim-scissors",
+	dependencies = "folke/snacks.nvim", -- either snacks, fzf-lua, telescope
+	  -- dependencies = "ibhagwan/fzf-lua",
+	  -- dependencies = "nvim-telescope/telescope.nvim",
+	opts = {
+	    snippetDir = "path/to/your/snippetFolder",
+	}
     },
-    
+
     -- packer
     use {
         "chrisgrieser/nvim-scissors",
-        dependencies = "folke/snacks.nvim", -- either snacks or telescope
+        dependencies = "folke/snacks.nvim", -- either snacks, fzf-lua, telescope
+          -- dependencies = "ibhagwan/fzf-lua",
           -- dependencies = "nvim-telescope/telescope.nvim",
         config = function()
             require("scissors").setup ({
