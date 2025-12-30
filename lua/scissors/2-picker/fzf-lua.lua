@@ -5,17 +5,23 @@ local M = {}
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
---- an implementation of the fzf-lua previewer api which shows snippet bodies.
---- @class Snacks.FzfLuaSnippetPreviewer : fzf-lua.config.Previewer, fzf-lua.previewer.Builtin
---- @field super fzf-lua.previewer.Builtin the Builtin class
---- @see <https://github.com/ibhagwan/fzf-lua/wiki/Advanced#neovim-builtin-preview>
+--- an implementation of the
+--- [fzf-lua](https://github.com/ibhagwan/fzf-lua/wiki/Advanced#neovim-builtin-preview)
+--- previewer api which shows snippet bodies.
+--- @class Scissors.FzfLuaSnippetPreviewer
+--- @field super Scissors.FzfLua.Object the Builtin class
+--- @field opts { [string]: unknown }
+--- @field get_tmp_buffer fun(): integer
+--- @field set_preview_buf fun(self: Scissors.FzfLuaSnippetPreviewer, buf: integer)
+--- @field win Scissors.FzfLua.Win
 local SnippetPreviewer = require("fzf-lua.previewer.builtin").base:extend()
 
 --- creates a new instance of the snippet previewer class.
 --- part of fzf-lua's previewer api.
 ---@param o table
 ---@param opts table
----@return fzf-lua.previewer.Builtin
+---@param fzf_win unknown
+---@return Scissors.FzfLuaSnippetPreviewer
 function SnippetPreviewer:new(o, opts, fzf_win)
 	SnippetPreviewer.super.new(self, o, opts, fzf_win)
 	setmetatable(self, SnippetPreviewer)

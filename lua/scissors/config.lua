@@ -46,12 +46,9 @@ local defaultConfig = {
 			silent = true,
 
 			-- same format as winopts in `:h fzf-lua-customization`
-			--- @type fzf-lua.config.Winopts
 			winopts = {
 				preview = {
 					hidden = false,
-					--- @diagnostic disable-next-line missing-fields
-					winopts = {},
 				},
 			},
 		},

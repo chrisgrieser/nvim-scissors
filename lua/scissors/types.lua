@@ -37,3 +37,9 @@
 ---@field prefix string|string[]
 ---@field body string|string[]
 ---@field description? string
+
+---@class Scissors.FzfLua.Object
+---@field new fun(self: table, o: table, opts: table, fzf_win?: unknown)
+
+---@class Scissors.FzfLua.Win
+---@field update_preview_scrollbar fun(self: Scissors.FzfLua.Win)

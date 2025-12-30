@@ -302,12 +302,9 @@ require("scissors").setup {
 			silent = true,
 
 			-- same format as winopts in `:h fzf-lua-customization`
-			--- @type fzf-lua.config.Winopts
 			winopts = {
 				preview = {
 					hidden = false,
-					--- @diagnostic disable-next-line missing-fields
-					winopts = {},
 				},
 			},
 		},
@@ -327,7 +324,7 @@ require("scissors").setup {
 			},
 		},
 
-		-- `snacks` picker configurable via snacks config, 
+		-- `snacks` picker configurable via snacks config,
 		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
 
