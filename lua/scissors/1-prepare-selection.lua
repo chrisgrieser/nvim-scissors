@@ -5,32 +5,6 @@ local u = require("scissors.utils")
 local vb = require("scissors.vscode-format.validate-bootstrap")
 --------------------------------------------------------------------------------
 
----@param lines string[]
----@return string[] dedentedLines
----@nodiscard
-local function dedentAndTrimBlanks(lines)
-	-- remove leading and trailing blank lines
-	while vim.trim(lines[1]) == "" do
-		table.remove(lines, 1)
-	end
-	while vim.trim(lines[#lines]) == "" do
-		table.remove(lines)
-	end
-
-	local smallestIndent = vim.iter(lines):fold(math.huge, function(acc, line)
-		if vim.trim(line) == "" then return acc end -- ignore empty lines for indent
-		local indent = #line:match("^%s*")
-		return math.min(acc, indent)
-	end)
-	local dedentedLines = vim.tbl_map(function(line)
-		if vim.trim(line) == "" then return line end -- ignore empty lines for indent
-		return line:sub(smallestIndent + 1)
-	end, lines)
-	return dedentedLines
-end
-
---------------------------------------------------------------------------------
-
 function M.editSnippet()
 	local snippetDir = require("scissors.config").config.snippetDir
 
@@ -96,7 +70,12 @@ function M.addNewSnippet(exCmdArgs)
 			vim.api.nvim_buf_get_text(0, exCmdArgs.line1 - 1, 0, exCmdArgs.line2 - 1, -1, {})
 	end
 	if calledFromExCmd or calledFromVisualMode then
-		bodyPrefill = dedentAndTrimBlanks(bodyPrefill)
+		local bodyStr = table
+			.concat(bodyPrefill, "\n") -- join, since `vim.text.indent` expects a single string
+			:gsub("^%s*\n", "") -- trim, but not 1st indent
+			:gsub("%s+$", "")
+		local dedented = vim.text.indent(0, bodyStr)
+		bodyPrefill = vim.split(dedented, "\n")
 		-- escape `$`
 		bodyPrefill = vim.tbl_map(function(line) return line:gsub("%$", "\\$") end, bodyPrefill)
 	end

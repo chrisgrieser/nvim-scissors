@@ -74,7 +74,7 @@ Automagical editing and creation of snippets.
   for you.
 
 ## Requirements
-- nvim 0.10+
+- nvim 0.11+
 - Snippets saved in the [VSCode-style snippet
   format](#introduction-to-the-vscode-style-snippet-format).
 - *Recommended*:

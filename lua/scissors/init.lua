@@ -1,6 +1,6 @@
 local version = vim.version()
-if version.major == 0 and version.minor < 10 then
-	vim.notify("nvim-scissors requires at least nvim 0.10.", vim.log.levels.WARN)
+if version.major == 0 and version.minor < 11 then
+	vim.notify("nvim-scissors requires at least nvim 0.11.", vim.log.levels.WARN)
 	return
 end
 --------------------------------------------------------------------------------
