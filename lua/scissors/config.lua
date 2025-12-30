@@ -32,7 +32,26 @@ local defaultConfig = {
 		},
 	},
 	snippetSelection = {
-		picker = "auto", ---@type "auto"|"telescope"|"snacks"|"vim.ui.select"
+		picker = "auto", ---@type "auto"|"fzf-lua"|"telescope"|"snacks"|"vim.ui.select"
+
+		--- @module 'fzf-lua'
+
+		fzfLua = {
+			-- same format as fzf_opts in `:h fzf-lua-customization`
+			fzf_opts = {},
+
+			-- suppress warnings from fzf-lua.
+			-- This is true by default, since commonly-used fzf-lua presets
+			-- create warnings due to border settings.
+			silent = true,
+
+			-- same format as winopts in `:h fzf-lua-customization`
+			winopts = {
+				preview = {
+					hidden = false,
+				},
+			},
+		},
 
 		telescope = {
 			-- By default, the query only searches snippet prefixes. Set this to

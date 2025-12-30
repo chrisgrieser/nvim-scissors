@@ -77,10 +77,13 @@ Automagical editing and creation of snippets.
 - nvim 0.10+
 - Snippets saved in the [VSCode-style snippet
   format](#introduction-to-the-vscode-style-snippet-format).
-- *Recommended*: [telescope](https://github.com/nvim-telescope/telescope.nvim)
-  OR [snacks.nvim](https://github.com/folke/snacks.nvim). Without one of them,
-  the plugin falls back to `vim.ui.select`, which still works but lacks search
-  and snippet previews.
+- *Recommended*:
+    - One of the following pickers:
+        - [telescope](https://github.com/nvim-telescope/telescope.nvim)
+        - [snacks.nvim](https://github.com/folke/snacks.nvim)
+        - [fzf-lua](https://github.com/ibhagwan/fzf-lua)
+    - Without one of them, the plugin falls back to `vim.ui.select`, which still
+      works but lacks search and snippet previews.
 - A snippet engine that can load VS Code-style snippets, such as:
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
     - [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
@@ -101,17 +104,19 @@ Automagical editing and creation of snippets.
 -- lazy.nvim
 {
 	"chrisgrieser/nvim-scissors",
-	dependencies = "folke/snacks.nvim", -- either snacks or telescope
-   -- dependencies = "nvim-telescope/telescope.nvim",
+	dependencies = "folke/snacks.nvim", -- either snacks, fzf-lua, telescope
+	  -- dependencies = "ibhagwan/fzf-lua",
+	  -- dependencies = "nvim-telescope/telescope.nvim",
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
-	} 
+	}
 },
 
 -- packer
 use {
 	"chrisgrieser/nvim-scissors",
-	dependencies = "folke/snacks.nvim", -- either snacks or telescope
+	dependencies = "folke/snacks.nvim", -- either snacks, fzf-lua, telescope
+	  -- dependencies = "ibhagwan/fzf-lua",
 	  -- dependencies = "nvim-telescope/telescope.nvim",
 	config = function()
 		require("scissors").setup ({
@@ -128,7 +133,7 @@ In addition, your snippet engine must point to the same snippet folder as
 > [!TIP]
 > `vim.fn.stdpath("config")` returns the path to your nvim config.
 
-<!-- rumdl-disable MD063 plugins names as headings here -->
+<!-- rumdl-disable MD063 -->
 #### LuaSnip
 
 ```lua
@@ -285,6 +290,23 @@ require("scissors").setup {
 	snippetSelection = {
 		picker = "auto", ---@type "auto"|"telescope"|"snacks"|"vim.ui.select"
 
+		fzfLua = {
+			-- same format as fzf_opts in `:h fzf-lua-customization`
+			fzf_opts = {},
+
+			-- suppress warnings from fzf-lua.
+			-- This is true by default, since commonly-used fzf-lua presets
+			-- create warnings due to border settings.
+			silent = true,
+
+			-- same format as winopts in `:h fzf-lua-customization`
+			winopts = {
+				preview = {
+					hidden = false,
+				},
+			},
+		},
+
 		telescope = {
 			-- By default, the query only searches snippet prefixes. Set this to
 			-- `true` to also search the body of the snippets.
@@ -300,7 +322,7 @@ require("scissors").setup {
 			},
 		},
 
-		-- `snacks` picker configurable via snacks config, 
+		-- `snacks` picker configurable via snacks config,
 		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
 
