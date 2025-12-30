@@ -43,47 +43,22 @@ function SnippetPreviewer:populate_preview_buf(displayName)
 	self.win:update_preview_scrollbar()
 end
 
---- creates a function which fzf will use to populate the list of
---- available snippets.
----
---- when the function is called, it will populate a cache of
---- display names for each snippet. This cache is typically re-used
---- by the FzfLuaSnippetPreviewer.
----
---- @param snippets Scissors.SnippetObj
---- @return { [string]: Scissors.SnippetObj } snippetsByDisplayName
---- @return fun(cb: fzf-lua.fzfCb) setContents
-local function createContentSetter(snippets)
-	local snippetsByDisplayName = {}
-
-	--- @param cb fzf-lua.fzfCb
-	local function setContents(cb)
-		local co = coroutine.running()
-		local function resume() coroutine.resume(co) end
-
-		for _, snip in ipairs(snippets) do
-			local displayName = u.snipDisplayName(snip)
-
-			snippetsByDisplayName[displayName] = snip
-			cb(displayName, resume)
-			coroutine.yield()
-		end
-
-		-- signal EOF to fzf and close the named pipe
-		cb()
-	end
-
-	return snippetsByDisplayName, coroutine.wrap(setContents)
-end
-
 ---@param snippets Scissors.SnippetObj[] entries
 ---@param prompt string
 function M.selectSnippet(snippets, prompt)
 	local fzf = require('fzf-lua')
 	local conf = require("scissors.config").config.snippetSelection.fzfLua
 
-	local snippetsByDisplayName, setContents = createContentSetter(snippets)
-	fzf.fzf_exec(setContents, {
+	local snippetsByDisplayName = {}
+	local snippetDislayNames = {}
+
+	for i, snip in ipairs(snippets) do
+		local displayName = u.snipDisplayName(snip)
+		snippetsByDisplayName[displayName] = snip
+		snippetDislayNames[i] = displayName
+	end
+
+	fzf.fzf_exec(snippetDislayNames, {
 		prompt = prompt,
 		previewer = SnippetPreviewer,
 		actions = {
