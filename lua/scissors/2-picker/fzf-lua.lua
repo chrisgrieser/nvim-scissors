@@ -1,8 +1,13 @@
--- DOCS https://github.com/folke/snacks.nvim/blob/main/docs/picker.md#-module
+-- DOCS https://github.com/ibhagwan/fzf-lua/wiki/Advanced#api-basics-fzf_exec
 --------------------------------------------------------------------------------
 local M = {}
 
 local u = require("scissors.utils")
+---@class Scissors.FzfLua.Object
+---@field new fun(self: table, o: table, opts: table, fzf_win?: unknown)
+
+---@class Scissors.FzfLua.Win
+---@field update_preview_scrollbar fun(self: Scissors.FzfLua.Win)
 --------------------------------------------------------------------------------
 
 --- an implementation of the
@@ -56,15 +61,15 @@ function M.selectSnippet(snippets, prompt)
 	local conf = require("scissors.config").config.snippetSelection.fzfLua
 
 	local snippetsByDisplayName = {}
-	local snippetDislayNames = {}
+	local snippetDisplayNames = {}
 
 	for i, snip in ipairs(snippets) do
 		local displayName = u.snipDisplayName(snip)
 		snippetsByDisplayName[displayName] = snip
-		snippetDislayNames[i] = displayName
+		snippetDisplayNames[i] = displayName
 	end
 
-	fzf.fzf_exec(snippetDislayNames, {
+	fzf.fzf_exec(snippetDisplayNames, {
 		prompt = prompt,
 		previewer = SnippetPreviewer,
 		actions = {
