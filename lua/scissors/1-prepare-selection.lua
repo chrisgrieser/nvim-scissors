@@ -90,8 +90,9 @@ function M.addNewSnippet(exCmdArgs)
 		function(file) return { path = file, ft = "plaintext" } end,
 		convert.getSnippetfilePathsForFt("all")
 	)
+	-- deepcopy to not mutate `snipFilesForFt`
 	---@type Scissors.snipFile[]
-	local allSnipFiles = vim.list_extend(snipFilesForFt, snipFilesForAll)
+	local allSnipFiles = vim.list_extend(vim.deepcopy(snipFilesForFt), snipFilesForAll)
 
 	-- GUARD file listed in `package.json` does not exist
 	for _, snipFile in ipairs(allSnipFiles) do
@@ -106,13 +107,20 @@ function M.addNewSnippet(exCmdArgs)
 
 	-- BOOTSTRAP new snippet file, if none exists
 	if #allSnipFiles == 0 then
-		u.notify(("No snippet file found for filetype: %s.\nBootstrapping one."):format(bufferFt))
+		u.notify(("No snippet file found for filetype `%s`.\nBootstrapping one."):format(bufferFt))
 		local newSnipFile = vb.bootstrapSnippetFile(bufferFt)
 		table.insert(allSnipFiles, newSnipFile)
 	end
 
 	-- SELECT
-	if #allSnipFiles == 1 then
+	if #snipFilesForFt == 0 then
+		-- only global snippet files -> offer bootstrapping one for the filetype
+		require("scissors.2-picker.vim-ui-select").addSnippet(
+			allSnipFiles,
+			bodyPrefill,
+			"offer-bootstrap"
+		)
+	elseif #allSnipFiles == 1 then
 		require("scissors.3-edit-popup").createNewSnipAndEdit(allSnipFiles[1], bodyPrefill)
 	else
 		require("scissors.2-picker.vim-ui-select").addSnippet(allSnipFiles, bodyPrefill)

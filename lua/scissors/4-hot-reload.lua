@@ -26,8 +26,8 @@ function M.reloadSnippetFile(path, fileIsNew)
 	-- hot-reloading new files is supported by mini.snippets: https://github.com/chrisgrieser/nvim-scissors/pull/25#issuecomment-2561345395
 	if fileIsNew and not miniSnippetsInstalled then
 		local name = vim.fs.basename(path)
-		local msg = ("%q is a new file and thus cannot be hot-reloaded. "):format(name)
-			.. "Please restart nvim for this change to take effect."
+		local msg = ("%q is a new file and thus cannot be hot-reloaded.\n\n"):format(name)
+			.. "Restart nvim to make the new snippet available."
 		u.notify(msg)
 		return
 	end
@@ -80,8 +80,7 @@ function M.reloadSnippetFile(path, fileIsNew)
 
 	if not success then
 		local msg = ("Failed to hot-reload snippet file: %q\n\n."):format(errorMsg)
-			.. "Please restart nvim for changes to snippets to take effect. "
-			.. "If this issue keeps occurring, create a bug report at your snippet plugin's repo."
+			.. "Please restart nvim for changes to take effect. "
 		u.notify(msg, "warn")
 	end
 end
