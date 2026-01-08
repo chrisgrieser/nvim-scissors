@@ -31,21 +31,17 @@ function M.validate(snipDir)
 			vim.tbl_isempty(packageJson)
 			or not (packageJson.contributes and packageJson.contributes.snippets)
 		then
-			u.notify(
-				"The `package.json` in your `snippetDir` is invalid.\n"
-					.. "Please make sure it follows the required specification for VSCode snippets.",
-				"error"
-			)
+			local msg = "The `package.json` in your `snippetDir` is invalid.\n"
+				.. "Please make sure it follows the required specification for VSCode snippets."
+			u.notify(msg, "error")
 			return false
 		end
 
 	-- using friendly-snippets
 	elseif isFriendlySnippetsDir then
-		u.notify(
-			"Snippets from `friendly-snippets` should be edited directly, since any changes would be overwritten as soon as the repo is updated.\n"
-				.. "Copy the snippet files you want from the repo into your snippet directory and edit them there.",
-			"error"
-		)
+		local msg = "Snippets from `friendly-snippets` should be edited directly, since any changes would be overwritten as soon as the repo is updated.\n"
+			.. "Copy the snippet files you want from the repo into your snippet directory and edit them there."
+		u.notify(msg, "error")
 		return false
 	end
 

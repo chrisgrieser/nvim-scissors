@@ -60,17 +60,19 @@ function M.addNewSnippet(exCmdArgs)
 	local mode = vim.fn.mode()
 	local calledFromVisualMode = mode:find("[vV]")
 	local calledFromExCmd = exCmdArgs.range and exCmdArgs.range > 0
-	if calledFromVisualMode then
-		vim.cmd.normal { mode, bang = true } -- leave visual mode so `<`/`>` marks are set
-		local startRow, startCol = unpack(vim.api.nvim_buf_get_mark(0, "<"))
-		local endRow, endCol = unpack(vim.api.nvim_buf_get_mark(0, ">"))
-		endCol = mode:find("V") and -1 or (endCol + 1)
-		bodyPrefill = vim.api.nvim_buf_get_text(0, startRow - 1, startCol, endRow - 1, endCol, {})
-	elseif calledFromExCmd then
-		bodyPrefill =
-			vim.api.nvim_buf_get_text(0, exCmdArgs.line1 - 1, 0, exCmdArgs.line2 - 1, -1, {})
-	end
+
 	if calledFromExCmd or calledFromVisualMode then
+		if calledFromVisualMode then
+			vim.cmd.normal { mode, bang = true } -- leave visual mode so `<`/`>` marks are set
+			local startRow, startCol = unpack(vim.api.nvim_buf_get_mark(0, "<"))
+			local endRow, endCol = unpack(vim.api.nvim_buf_get_mark(0, ">"))
+			endCol = mode:find("V") and -1 or (endCol + 1)
+			bodyPrefill = vim.api.nvim_buf_get_text(0, startRow - 1, startCol, endRow - 1, endCol, {})
+		elseif calledFromExCmd then
+			bodyPrefill =
+				vim.api.nvim_buf_get_text(0, exCmdArgs.line1 - 1, 0, exCmdArgs.line2 - 1, -1, {})
+		end
+
 		local bodyStr = table
 			.concat(bodyPrefill, "\n") -- join, since `vim.text.indent` expects a single string
 			:gsub("^%s*\n", "") -- trim, but not 1st indent
