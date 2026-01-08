@@ -1,17 +1,13 @@
 ---@meta
 
----@class Scissors.snipFile
+---@class Scissors.SnippetFile
 ---@field path string
 ---@field ft string
 ---@field fileIsNew? boolean
 
 ---DOCS https://code.visualstudio.com/api/language-extensions/snippet-guide
----@class Scissors.packageJson
----@field contributes { snippets: Scissors.snippetFileMetadata[] }
-
----@class (exact) Scissors.snippetFileMetadata
----@field language string|string[]
----@field path string
+---@class Scissors.PackageJson
+---@field contributes { snippets: { language: string|string[], path: string }[] }
 
 ---@class (exact) Scissors.SnippetObj used by this plugin
 ---@field fullPath string (key only set by this plugin)

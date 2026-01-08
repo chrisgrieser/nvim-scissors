@@ -55,7 +55,7 @@ function M.addNewSnippet(exCmdArgs)
 	local bufferFt = vim.bo.filetype
 	exCmdArgs = exCmdArgs or {}
 
-	-- VISUAL MODE: PREFILL BODY WITH SELECTED TEXT
+	-- VISUAL MODE – PREFILL BODY WITH SELECTED TEXT
 	local bodyPrefill = { "" }
 	local mode = vim.fn.mode()
 	local calledFromVisualMode = mode:find("[vV]")
@@ -93,7 +93,7 @@ function M.addNewSnippet(exCmdArgs)
 		convert.getSnippetfilePathsForFt("all")
 	)
 	-- deepcopy to not mutate `snipFilesForFt`
-	---@type Scissors.snipFile[]
+	---@type Scissors.SnippetFile[]
 	local allSnipFiles = vim.list_extend(vim.deepcopy(snipFilesForFt), snipFilesForAll)
 
 	-- GUARD file listed in `package.json` does not exist

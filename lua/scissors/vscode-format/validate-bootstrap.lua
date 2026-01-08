@@ -81,7 +81,7 @@ end
 ---returns the snipFile.
 ---@param ft string
 ---@param contents? string -- defaults to `{}`
----@return Scissors.snipFile -- the newly created snippet file
+---@return Scissors.SnippetFile -- the newly created snippet file
 function M.bootstrapSnippetFile(ft, contents)
 	local snipDir = require("scissors.config").config.snippetDir
 	local newSnipName = ft .. ".json"
@@ -96,7 +96,7 @@ function M.bootstrapSnippetFile(ft, contents)
 	rw.writeFile(newSnipFilepath, contents or "{}")
 
 	-- update package.json
-	local packageJson = rw.readAndParseJson(snipDir .. "/package.json") ---@type Scissors.packageJson
+	local packageJson = rw.readAndParseJson(snipDir .. "/package.json") ---@type Scissors.PackageJson
 	table.insert(packageJson.contributes.snippets, {
 		language = { ft },
 		path = "./" .. newSnipName,

@@ -11,7 +11,7 @@ local config = require("scissors.config").config
 ---@return string[] absPathsOfSnipfileForFt
 function M.getSnippetfilePathsForFt(filetype)
 	local packageJson = rw.readAndParseJson(config.snippetDir .. "/package.json")
-	---@cast packageJson Scissors.packageJson
+	---@cast packageJson Scissors.PackageJson
 
 	local snipFilesMetadata = packageJson.contributes.snippets
 	local absPaths = {}

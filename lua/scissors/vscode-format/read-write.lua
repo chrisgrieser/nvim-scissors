@@ -32,7 +32,7 @@ function M.writeFile(filepath, text)
 end
 
 ---@param filepath string
----@param jsonObj Scissors.VSCodeSnippetDict|Scissors.packageJson
+---@param jsonObj Scissors.VSCodeSnippetDict|Scissors.PackageJson
 ---@param fileIsNew? boolean
 ---@return boolean success
 function M.writeAndFormatSnippetFile(filepath, jsonObj, fileIsNew)

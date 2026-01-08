@@ -22,7 +22,7 @@ end
 
 --------------------------------------------------------------------------------
 
----@param allSnipFiles Scissors.snipFile[]
+---@param allSnipFiles Scissors.SnippetFile[]
 ---@param bodyPrefill string[] for the new snippet
 ---@param offerBootstrap? "offer-bootstrap"
 function M.addSnippet(allSnipFiles, bodyPrefill, offerBootstrap)
@@ -48,7 +48,7 @@ function M.addSnippet(allSnipFiles, bodyPrefill, offerBootstrap)
 			snipFile = vb.bootstrapSnippetFile(bufferFt)
 			u.notify(("Created new snippet file for `%s`."):format(bufferFt))
 		else
-			snipFile = selection --[[@as Scissors.snipFile]]
+			snipFile = selection --[[@as Scissors.SnippetFile]]
 		end
 		edit.createNewSnipAndEdit(snipFile, bodyPrefill)
 	end)

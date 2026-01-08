@@ -106,7 +106,7 @@ local function setupPopupKeymaps(bufnr, winnr, mode, snip, prefixBodySep)
 		local currentBody =
 			vim.api.nvim_buf_get_lines(bufnr, getPrefixCount(prefixBodySep), -1, false)
 		closePopup()
-		local snipFile = { path = snip.fullPath, ft = snip.filetype } ---@type Scissors.snipFile
+		local snipFile = { path = snip.fullPath, ft = snip.filetype } ---@type Scissors.SnippetFile
 		M.createNewSnipAndEdit(snipFile, currentBody)
 	end)
 
@@ -196,7 +196,7 @@ end
 
 --------------------------------------------------------------------------------
 
----@param snipFile Scissors.snipFile
+---@param snipFile Scissors.SnippetFile
 ---@param bodyPrefill string[]
 function M.createNewSnipAndEdit(snipFile, bodyPrefill)
 	---@type Scissors.SnippetObj
