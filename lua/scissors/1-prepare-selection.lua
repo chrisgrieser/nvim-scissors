@@ -43,10 +43,11 @@ function M.editSnippet()
 	require("scissors.2-picker.picker-choice").selectSnippet(allSnippets)
 end
 
+---@param exCmdArgs? vim.api.keyset.create_user_command.command_args
 function M.addNewSnippet(exCmdArgs)
 	local snippetDir = require("scissors.config").config.snippetDir
 
-	-- GUARD & bootstrap
+	-- GUARD & BOOTSTRAP
 	if not vb.validate(snippetDir) then return end
 	vb.bootstrapSnipDirIfNeeded(snippetDir)
 
@@ -54,7 +55,7 @@ function M.addNewSnippet(exCmdArgs)
 	local bufferFt = vim.bo.filetype
 	exCmdArgs = exCmdArgs or {}
 
-	-- VISUAL MODE: prefill body with selected text
+	-- VISUAL MODE: PREFILL BODY WITH SELECTED TEXT
 	local bodyPrefill = { "" }
 	local mode = vim.fn.mode()
 	local calledFromVisualMode = mode:find("[vV]")
