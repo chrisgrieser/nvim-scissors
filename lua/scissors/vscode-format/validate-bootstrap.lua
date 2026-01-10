@@ -79,12 +79,11 @@ end
 
 ---Write a new snippet file for the given filetype, update package.json, and
 ---returns the snipFile.
----@param ft string
----@param contents? string -- defaults to `{}`
+---@param filetype string
 ---@return Scissors.SnippetFile -- the newly created snippet file
-function M.bootstrapSnippetFile(ft, contents)
+function M.bootstrapSnippetFile(filetype)
 	local snipDir = require("scissors.config").config.snippetDir
-	local newSnipName = ft .. ".json"
+	local newSnipName = filetype .. ".json"
 
 	-- create empty snippet file
 	local newSnipFilepath
@@ -93,18 +92,18 @@ function M.bootstrapSnippetFile(ft, contents)
 		if not u.fileExists(newSnipFilepath) then break end
 		newSnipName = newSnipName .. "-1"
 	end
-	rw.writeFile(newSnipFilepath, contents or "{}")
+	rw.writeFile(newSnipFilepath, "{}")
 
 	-- update package.json
 	local packageJson = rw.readAndParseJson(snipDir .. "/package.json") ---@type Scissors.PackageJson
 	table.insert(packageJson.contributes.snippets, {
-		language = { ft },
+		language = { filetype },
 		path = "./" .. newSnipName,
 	})
 	rw.writeAndFormatSnippetFile(snipDir .. "/package.json", packageJson)
 
 	-- return snipFile to directly add to it
-	return { ft = ft, path = newSnipFilepath, fileIsNew = true }
+	return { ft = filetype, path = newSnipFilepath, fileIsNew = true }
 end
 
 --------------------------------------------------------------------------------
