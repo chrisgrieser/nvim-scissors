@@ -82,8 +82,7 @@ end
 ---@param snip Scissors.SnippetObj
 function M.deleteSnippet(snip)
 	local key = assert(snip.originalKey)
-	local snippetsInFile = M.readAndParseJson(snip.fullPath)
-	---@cast snippetsInFile Scissors.VSCodeSnippetDict
+	local snippetsInFile = M.readAndParseJson(snip.fullPath) ---@type Scissors.VSCodeSnippetDict
 	snippetsInFile[key] = nil -- = delete
 
 	local success = M.writeAndFormatSnippetFile(snip.fullPath, snippetsInFile)

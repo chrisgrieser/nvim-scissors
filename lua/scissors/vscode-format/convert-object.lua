@@ -10,8 +10,7 @@ local config = require("scissors.config").config
 ---@param filetype "all"|string
 ---@return string[] absPathsOfSnipfileForFt
 function M.getSnippetfilePathsForFt(filetype)
-	local packageJson = rw.readAndParseJson(config.snippetDir .. "/package.json")
-	---@cast packageJson Scissors.PackageJson
+	local packageJson = rw.readAndParseJson(config.snippetDir .. "/package.json") ---@type Scissors.PackageJson
 
 	local snipFilesMetadata = packageJson.contributes.snippets
 	local absPaths = {}
@@ -32,8 +31,7 @@ end
 ---@return Scissors.SnippetObj[]
 ---@nodiscard
 function M.readVscodeSnippetFile(absPath, filetype)
-	local vscodeJson = rw.readAndParseJson(absPath) ---@cast vscodeJson Scissors.VSCodeSnippetDict
-
+	local vscodeJson = rw.readAndParseJson(absPath) ---@type Scissors.VSCodeSnippetDict
 	local snippetsInFileList = {} ---@type Scissors.SnippetObj[]
 
 	-- convert dictionary to array for `vim.ui.select`
@@ -49,10 +47,8 @@ function M.readVscodeSnippetFile(absPath, filetype)
 	-- VSCode allows body and prefix to be a string. Converts to array on
 	-- read for consistent handling with nvim-api.
 	for _, snip in ipairs(snippetsInFileList) do
-		local rawPrefix = type(snip.prefix) == "string" and { snip.prefix } or snip.prefix
-		local rawBody = type(snip.body) == "string" and { snip.body } or snip.body
-		---@cast rawPrefix string[] -- ensured above
-		---@cast rawBody string[] -- ensured above
+		local rawPrefix = type(snip.prefix) == "string" and { snip.prefix } or snip.prefix ---@type string[]
+		local rawBody = type(snip.body) == "string" and { snip.body } or snip.body ---@type string[]
 
 		-- Strings can contain lines breaks, but nvim-api functions expect each
 		-- string representing a single line, so we are converting them.
@@ -75,7 +71,7 @@ end
 ---@param changedSnippetLines string[]
 ---@param prefixCount number determining how many lines in the changes lines belong to the prefix
 function M.updateSnippetInVscodeSnippetFile(snip, changedSnippetLines, prefixCount)
-	local snippetsInFile = rw.readAndParseJson(snip.fullPath) ---@cast snippetsInFile Scissors.VSCodeSnippetDict
+	local snippetsInFile = rw.readAndParseJson(snip.fullPath) ---@type Scissors.VSCodeSnippetDict
 
 	local filepath = snip.fullPath
 	local prefix = vim.list_slice(changedSnippetLines, 1, prefixCount)
