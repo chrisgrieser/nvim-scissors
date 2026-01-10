@@ -88,7 +88,7 @@ function M.bootstrapSnippetFile(filetype)
 	-- create empty snippet file
 	local newSnipFilepath
 	while true do
-		newSnipFilepath = snipDir .. "/" .. newSnipName
+		newSnipFilepath = vim.fs.joinpath(snipDir, newSnipName .. ".json")
 		if not u.fileExists(newSnipFilepath) then break end
 		newSnipName = newSnipName .. "-1"
 	end
@@ -98,7 +98,7 @@ function M.bootstrapSnippetFile(filetype)
 	local packageJson = rw.readAndParseJson(snipDir .. "/package.json") ---@type Scissors.PackageJson
 	table.insert(packageJson.contributes.snippets, {
 		language = { filetype },
-		path = "./" .. newSnipName,
+		path = ("./%s.json"):format(newSnipName),
 	})
 	rw.writeAndFormatSnippetFile(snipDir .. "/package.json", packageJson)
 
