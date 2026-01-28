@@ -273,7 +273,7 @@ require("scissors").setup {
 	editSnippetPopup = {
 		height = 0.4, -- relative to the window, between 0-1
 		width = 0.6,
-		border = getBorder(), -- `vim.o.winborder` on nvim 0.11, otherwise "rounded"
+		border = vim.o.winborder,
 		keymaps = {
 			-- if not mentioned otherwise, the keymaps apply to normal mode
 			cancel = "q",

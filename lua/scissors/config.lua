@@ -2,24 +2,13 @@ local M = {}
 local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
-local fallbackBorder = "rounded"
-
----@return string
-local function getBorder()
-	local hasWinborder, winborder = pcall(function() return vim.o.winborder end)
-	if not hasWinborder or winborder == "" or winborder == "none" then return fallbackBorder end
-	return winborder
-end
-
---------------------------------------------------------------------------------
-
 ---@class Scissors.Config
 local defaultConfig = {
 	snippetDir = vim.fn.stdpath("config") .. "/snippets",
 	editSnippetPopup = {
 		height = 0.4, -- relative to the window, between 0-1
 		width = 0.6,
-		border = getBorder(), -- `vim.o.winborder` on nvim 0.11, otherwise "rounded"
+		border = vim.o.winborder,
 		keymaps = {
 			cancel = "q",
 			saveChanges = "<CR>", -- alternatively, can also use `:w`
@@ -117,9 +106,7 @@ function M.setupPlugin(userConfig)
 
 	-- border `none` does not work with and title/footer used by this plugin
 	if M.config.editSnippetPopup.border == "none" or M.config.editSnippetPopup.border == "" then
-		M.config.editSnippetPopup.border = fallbackBorder
-		local msg = ('Border type "none" is not supported, falling back to %q'):format(fallbackBorder)
-		u.notify(msg, "warn")
+		M.config.editSnippetPopup.border = "single"
 	end
 end
 
