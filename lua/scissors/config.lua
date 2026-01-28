@@ -1,5 +1,4 @@
 local M = {}
-local u = require("scissors.utils")
 --------------------------------------------------------------------------------
 
 ---@class Scissors.Config
@@ -84,16 +83,6 @@ M.config = defaultConfig -- in case user does not call `setup`
 ---@param userConfig? Scissors.Config
 function M.setupPlugin(userConfig)
 	M.config = vim.tbl_deep_extend("force", defaultConfig, userConfig or {})
-
-	-- DEPRECATION (2025-04-08)
-	---@diagnostic disable: undefined-field
-	if M.config.telescope then
-		local msg =
-			"The nvim-scissors config `telescope` is deprecated. Use `snippetSelection.telescope` instead."
-		u.notify(msg, "warn")
-		M.config.snippetSelection.telescope = M.config.telescope
-	end
-	---@diagnostic enable: undefined-field
 
 	-- `preview_width` is only supported by `horizontal` & `cursor` strategies, see #28
 	local strategy = M.config.snippetSelection.telescope.opts.layout_strategy
