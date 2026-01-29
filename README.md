@@ -11,12 +11,11 @@ Automagical editing and creation of snippets.
 ## Table of contents
 
 <!-- toc -->
-
 - [Features](#features)
 - [Rationale](#rationale)
 - [Requirements](#requirements)
 - [Installation](#installation)
-    - [Nvim-scissors](#nvim-scissors)
+    - [nvim-scissors](#nvim-scissors)
     - [Snippet engine setup](#snippet-engine-setup)
         - [LuaSnip](#luasnip)
         - [mini.snippets](#minisnippets)
@@ -26,7 +25,7 @@ Automagical editing and creation of snippets.
         - [vim-vsnip](#vim-vsnip)
         - [yasp.nvim](#yaspnvim)
 - [Usage](#usage)
-    - [Starting `nvim-scissors`](#starting-nvim-scissors)
+    - [Starting nvim-scissors](#starting-nvim-scissors)
     - [Editing snippets in the popup window](#editing-snippets-in-the-popup-window)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
@@ -35,10 +34,9 @@ Automagical editing and creation of snippets.
     - [Friendly-snippets](#friendly-snippets)
     - [Edit snippet title or description](#edit-snippet-title-or-description)
     - [Version controlling snippets & snippet file formatting](#version-controlling-snippets--snippet-file-formatting)
-    - [Snippets on visual selections (`Luasnip` only)](#snippets-on-visual-selections-luasnip-only)
-    - [Auto-triggered snippets (`Luasnip` only)](#auto-triggered-snippets-luasnip-only)
+    - [Snippets on visual selections (Luasnip only)](#snippets-on-visual-selections-luasnip-only)
+    - [Auto-triggered snippets (Luasnip only)](#auto-triggered-snippets-luasnip-only)
 - [About the author](#about-the-author)
-
 <!-- tocstop -->
 
 ## Features
@@ -69,7 +67,7 @@ Automagical editing and creation of snippets.
   closest thing to a standard regarding snippets. It is used by
   [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) and
   supported by most snippet engine plugins for nvim.
-- However, VSCode snippets are stored as JSON, which are a pain to modify
+- However, VS Code snippets are stored as JSON, which are a pain to modify
   manually. This plugin alleviates that pain by automagically writing the JSON
   for you.
 
