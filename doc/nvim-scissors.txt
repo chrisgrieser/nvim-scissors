@@ -1,4 +1,4 @@
-*nvim-scissors.txt*          For Neovim          Last change: 2025 December 30
+*nvim-scissors.txt*           For Neovim          Last change: 2026 January 29
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -44,7 +44,7 @@ TABLE OF CONTENTS             *nvim-scissors-nvim-scissors--table-of-contents*
         - |nvim-scissors-vim-vsnip|
         - |nvim-scissors-yasp.nvim|
 - |nvim-scissors-usage|
-    - |nvim-scissors-starting-`nvim-scissors`|
+    - |nvim-scissors-starting-nvim-scissors|
     - |nvim-scissors-editing-snippets-in-the-popup-window|
 - |nvim-scissors-configuration|
 - |nvim-scissors-cookbook-&-faq|
@@ -53,8 +53,8 @@ TABLE OF CONTENTS             *nvim-scissors-nvim-scissors--table-of-contents*
     - |nvim-scissors-friendly-snippets|
     - |nvim-scissors-edit-snippet-title-or-description|
     - |nvim-scissors-version-controlling-snippets-&-snippet-file-formatting|
-    - |nvim-scissors-snippets-on-visual-selections-(`luasnip`-only)|
-    - |nvim-scissors-auto-triggered-snippets-(`luasnip`-only)|
+    - |nvim-scissors-snippets-on-visual-selections-(luasnip-only)|
+    - |nvim-scissors-auto-triggered-snippets-(luasnip-only)|
 - |nvim-scissors-about-the-author|
 
 
@@ -86,7 +86,7 @@ RATIONALE                             *nvim-scissors-nvim-scissors--rationale*
     closest thing to a standard regarding snippets. It is used by
     friendly-snippets <https://github.com/rafamadriz/friendly-snippets> and
     supported by most snippet engine plugins for nvim.
-- However, VSCode snippets are stored as JSON, which are a pain to modify
+- However, VS Code snippets are stored as JSON, which are a pain to modify
     manually. This plugin alleviates that pain by automagically writing the JSON
     for you.
 
@@ -307,7 +307,7 @@ The `.setup()` call is optional.
         editSnippetPopup = {
             height = 0.4, -- relative to the window, between 0-1
             width = 0.6,
-            border = getBorder(), -- `vim.o.winborder` on nvim 0.11, otherwise "rounded"
+            border = vim.o.winborder,
             keymaps = {
                 -- if not mentioned otherwise, the keymaps apply to normal mode
                 cancel = "q",
