@@ -1,4 +1,7 @@
 LuaSnip
+minification
+tabstop
 tabstops
 unminify
+vsnip
 yasp

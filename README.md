@@ -29,7 +29,7 @@ Automagical editing and creation of snippets.
     - [Editing snippets in the popup window](#editing-snippets-in-the-popup-window)
 - [Configuration](#configuration)
 - [Cookbook & FAQ](#cookbook--faq)
-    - [Introduction to the VSCode-style snippet format](#introduction-to-the-vscode-style-snippet-format)
+    - [Introduction to the VS Code-style snippet format](#introduction-to-the-vs-code-style-snippet-format)
     - [Tabstops and variables](#tabstops-and-variables)
     - [Friendly-snippets](#friendly-snippets)
     - [Edit snippet title or description](#edit-snippet-title-or-description)
@@ -73,15 +73,14 @@ Automagical editing and creation of snippets.
 
 ## Requirements
 - nvim 0.11+
-- Snippets saved in the [VSCode-style snippet
-  format](#introduction-to-the-vscode-style-snippet-format).
+- Snippets saved in the [VS Code-style snippet format](#introduction-to-the-vs-code-style-snippet-format).
 - *Recommended*:
     - One of the following pickers:
         - [telescope](https://github.com/nvim-telescope/telescope.nvim)
         - [snacks.nvim](https://github.com/folke/snacks.nvim)
         - [fzf-lua](https://github.com/ibhagwan/fzf-lua)
-    - Without one of them, the plugin falls back to `vim.ui.select`, which still
-      works but lacks search and snippet previews.
+    - Without one of them, the plugin falls back to `vim.ui.select`, which works
+      but lacks search and snippet previews.
 - A snippet engine that can load VS Code-style snippets, such as:
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
     - [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
@@ -152,12 +151,11 @@ require("scissors").setup({
 ```
 
 The `mini.snippets` setup requires explicit definition of loaders. Following its
-[Quickstart](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart)
+[quickstart](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart)
 guide should be enough to make it respect snippets from 'snippets/' directory
 inside user config. **Note**: `nvim-scissors` works only with VS-Code-style
-snippet files (not Lua files or JSON arrays), and requires a
-[`package.json` for the VSCode
-format](#introduction-to-the-vscode-style-snippet-format).
+snippet files (not Lua files or JSON arrays), and requires a [`package.json` for
+the VS Code format](#introduction-to-the-vs-code-style-snippet-format).
 
 #### blink.cmp
 
@@ -344,7 +342,8 @@ require("scissors").setup {
 
 ## Cookbook & FAQ
 
-### Introduction to the VSCode-style snippet format
+<!-- rumdl-disable-next-line MD063 -->
+### Introduction to the VS Code-style snippet format
 This plugin requires that you have a valid VS Code snippet folder. In addition
 to saving the snippets in the required JSON format, there must also be a
 `package.json` file at the root of the snippet folder, specifying which files
@@ -416,7 +415,7 @@ Example snippet file (here: `nvim-lua.json`):
 }
 ```
 
-For details, read the official VSCode snippet documentation:
+For details, read the official VS Code snippet documentation:
 - [Snippet file specification](https://code.visualstudio.com/docs/editor/userdefinedsnippets)
 - [`package.json` specification](https://code.visualstudio.com/api/language-extensions/snippet-guide)
 - [LuaSnip-specific additions to the format](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code)
@@ -484,7 +483,7 @@ require("luasnip").setup {
 }
 ```
 
-In your VSCode-style snippet, use the token `$TM_SELECTED_TEXT` at the location
+In your VS Code-style snippet, use the token `$TM_SELECTED_TEXT` at the location
 where you want the selection to be inserted. (It's roughly the equivalent of
 `LS_SELECT_RAW` in the `Luasnip` syntax.)
 
