@@ -1,4 +1,4 @@
-*nvim-scissors.txt*           For Neovim          Last change: 2026 January 29
+*nvim-scissors.txt*           For Neovim          Last change: 2026 January 30
 
 ==============================================================================
 Table of Contents                            *nvim-scissors-table-of-contents*
@@ -48,7 +48,7 @@ TABLE OF CONTENTS             *nvim-scissors-nvim-scissors--table-of-contents*
     - |nvim-scissors-editing-snippets-in-the-popup-window|
 - |nvim-scissors-configuration|
 - |nvim-scissors-cookbook-&-faq|
-    - |nvim-scissors-introduction-to-the-vscode-style-snippet-format|
+    - |nvim-scissors-introduction-to-the-vs-code-style-snippet-format|
     - |nvim-scissors-tabstops-and-variables|
     - |nvim-scissors-friendly-snippets|
     - |nvim-scissors-edit-snippet-title-or-description|
@@ -94,14 +94,14 @@ RATIONALE                             *nvim-scissors-nvim-scissors--rationale*
 REQUIREMENTS                       *nvim-scissors-nvim-scissors--requirements*
 
 - nvim 0.11+
-- Snippets saved in the |nvim-scissors-vscode-style-snippet-format|.
+- Snippets saved in the |nvim-scissors-vs-code-style-snippet-format|.
 - _Recommended_:
     - One of the following pickers:
         - telescope <https://github.com/nvim-telescope/telescope.nvim>
         - snacks.nvim <https://github.com/folke/snacks.nvim>
         - fzf-lua <https://github.com/ibhagwan/fzf-lua>
-    - Without one of them, the plugin falls back to `vim.ui.select`, which still
-        works but lacks search and snippet previews.
+    - Without one of them, the plugin falls back to `vim.ui.select`, which works
+        but lacks search and snippet previews.
 - A snippet engine that can load VS Code-style snippets, such as:
     - LuaSnip <https://github.com/L3MON4D3/LuaSnip>
     - mini.snippets <https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md>
@@ -176,12 +176,12 @@ config directory, which requires the following `nvim-scissors` setup:
 <
 
 The `mini.snippets` setup requires explicit definition of loaders. Following
-its Quickstart
+its quickstart
 <https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart>
 guide should be enough to make it respect snippets from 'snippets/' directory
 inside user config. **Note**: `nvim-scissors` works only with VS-Code-style
 snippet files (not Lua files or JSON arrays), and requires a
-|nvim-scissors-`package.json`-for-the-vscode-format|.
+|nvim-scissors-`package.json`-for-the-vs-code-format|.
 
 
 BLINK.CMP
@@ -382,7 +382,7 @@ The `.setup()` call is optional.
 COOKBOOK & FAQ                   *nvim-scissors-nvim-scissors--cookbook-&-faq*
 
 
-INTRODUCTION TO THE VSCODE-STYLE SNIPPET FORMAT ~
+INTRODUCTION TO THE VS CODE-STYLE SNIPPET FORMAT ~
 
 This plugin requires that you have a valid VS Code snippet folder. In addition
 to saving the snippets in the required JSON format, there must also be a
@@ -454,7 +454,7 @@ Example snippet file (here: `nvim-lua.json`):
     }
 <
 
-For details, read the official VSCode snippet documentation: - Snippet file
+For details, read the official VS Code snippet documentation: - Snippet file
 specification <https://code.visualstudio.com/docs/editor/userdefinedsnippets> -
 `package.json` specification
 <https://code.visualstudio.com/api/language-extensions/snippet-guide> -
@@ -533,9 +533,9 @@ With `Luasnip`, this is an opt-in feature, enabled via:
     }
 <
 
-In your VSCode-style snippet, use the token `$TM_SELECTED_TEXT` at the location
-where you want the selection to be inserted. (It’s roughly the equivalent of
-`LS_SELECT_RAW` in the `Luasnip` syntax.)
+In your VS Code-style snippet, use the token `$TM_SELECTED_TEXT` at the
+location where you want the selection to be inserted. (It’s roughly the
+equivalent of `LS_SELECT_RAW` in the `Luasnip` syntax.)
 
 Then, in visual mode, press the key from `store_selection_keys`. The selection
 disappears, and you are put in insert mode. The next snippet you now trigger is
