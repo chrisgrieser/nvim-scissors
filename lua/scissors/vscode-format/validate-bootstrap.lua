@@ -83,7 +83,7 @@ end
 ---@return Scissors.SnippetFile -- the newly created snippet file
 function M.bootstrapSnippetFile(filetype)
 	local snipDir = require("scissors.config").config.snippetDir
-	local newSnipName = filetype .. ".json"
+	local newSnipName = filetype
 
 	-- create empty snippet file
 	local newSnipFilepath
