@@ -59,14 +59,10 @@ local defaultConfig = {
 		-- `snacks` picker configurable via snacks config,
 		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
-
-	-- `none` writes as a minified json file using `vim.encode.json`.
-	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
-	-- you version control your snippets. To use a custom formatter, set to a
-	-- list of strings, which will then be passed to `vim.system()`.
-	---@type "yq"|"jq"|"none"|string[]
-	jsonFormatter = "none",
-
+	jsonFormatOpts = { -- formatting of snippet files, passed to `:h vim.json.encode()`
+		sort_keys = true,
+		indent = "  ",
+	},
 	backdrop = {
 		enabled = true,
 		blend = 50, -- between 0-100
@@ -88,6 +84,18 @@ function M.setupPlugin(userConfig)
 	local strategy = M.config.snippetSelection.telescope.opts.layout_strategy
 	if strategy ~= "horizontal" and strategy ~= "cursor" then
 		M.config.snippetSelection.telescope.opts.layout_config.preview_width = nil
+	end
+
+	-- DEPRECATION 2025-12-29
+	if M.config.jsonFormatter then ---@diagnostic disable-line: undefined-field
+		local msg = {
+			"nvim-scissors now uses the new `vim.json.encode` capabilities to format your snippets.",
+			"The config `jsonFormatter` is thus not used anymore, and should be removed from your config.",
+			"(jq/yq are thus also no longer needed.)",
+			"",
+			"Use the new `jsonFormatOpts` config to control how your snippets are formatted via `vim.json.encode` or to disable formatting.",
+		}
+		require("scissors.utils").notify(table.concat(msg, "\n"), "warn")
 	end
 
 	-- normalizing relevant as it expands `~` to the home directory

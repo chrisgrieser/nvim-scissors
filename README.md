@@ -53,6 +53,7 @@ Automagical editing and creation of snippets.
   collection](#version-controlling-snippets--snippet-file-formatting).)
 - Snippet/file selection via `telescope`, `snacks`, or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
+- Prettifies snippet files for clean diffs in version control.
 - Supports only [VSCode-style
   snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 
@@ -72,7 +73,7 @@ Automagical editing and creation of snippets.
   for you.
 
 ## Requirements
-- nvim 0.11+
+- nvim 0.12+
 - Snippets saved in the [VS Code-style snippet format](#introduction-to-the-vs-code-style-snippet-format).
 - *Recommended*:
     - One of the following pickers:
@@ -271,7 +272,6 @@ require("scissors").setup {
 		width = 0.6,
 		border = vim.o.winborder,
 		keymaps = {
-			-- if not mentioned otherwise, the keymaps apply to normal mode
 			cancel = "q",
 			saveChanges = "<CR>", -- alternatively, can also use `:w`
 			goBackToSearch = "<BS>",
@@ -282,9 +282,10 @@ require("scissors").setup {
 			showHelp = "?",
 		},
 	},
-
 	snippetSelection = {
-		picker = "auto", ---@type "auto"|"telescope"|"snacks"|"vim.ui.select"
+		picker = "auto", ---@type "auto"|"fzf-lua"|"telescope"|"snacks"|"vim.ui.select"
+
+		--- @module 'fzf-lua'
 
 		fzfLua = {
 			-- same format as fzf_opts in `:h fzf-lua-customization`
@@ -321,15 +322,10 @@ require("scissors").setup {
 		-- `snacks` picker configurable via snacks config,
 		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
-
-	-- `none` writes as a minified json file using `vim.encode.json`.
-	-- `yq`/`jq` ensure formatted & sorted json files, which is relevant when
-	-- you version control your snippets. To use a custom formatter, set to a
-	-- list of strings, which will then be passed to `vim.system()`.
-	-- TIP: `jq` is already pre-installed on newer versions of macOS.
-	---@type "yq"|"jq"|"none"|string[]
-	jsonFormatter = "none",
-
+	jsonFormatOpts = { -- formatting of snippet files, passed to `:h vim.json.encode()`
+		sort_keys = true,
+		indent = "  ",
+	},
 	backdrop = {
 		enabled = true,
 		blend = 50, -- between 0-100
@@ -453,26 +449,12 @@ snippet's title or description, you can use the `openInFile` keymap and edit
 them directly in the snippet file.
 
 ### Version controlling snippets & snippet file formatting
-This plugin writes JSON files via `vim.encode.json()`. That method saves
-the file in minified form and does not have a
-deterministic order of dictionary keys.
+This plugin writes JSON files via `vim.encode.json()`, with the default options
+writing them in a prettified manner for clean diffs.
 
-Both, minification and unstable key order, are a problem if you
-version-control your snippet collection. To solve this issue, `nvim-scissors`
-lets you optionally unminify and sort the JSON files via `yq` or `jq` after
-updating a snippet. (Both are also available via
-[mason.nvim](https://github.com/williamboman/mason.nvim).)
-
-It is recommended to run `yq`/`jq` once on all files in your snippet collection,
-since the first time you edit a file, you would still get a large diff from the
-initial sorting. You can do so with `yq` using this command:
-
-```bash
-cd "/your/snippet/dir"
-find . -name "*.json" | xargs -I {} yq --inplace --output-format=json "sort_keys(..)" {}
-```
-
-How to do the same with `jq` is left as an exercise to the reader.
+Previous versions of `nvim-scissors` required a dependency like `jq` since
+`vim.encode.json()` was not able to deterministically prettify snippet files
+yet.
 
 ### Snippets on visual selections (`Luasnip` only)
 With `Luasnip`, this is an opt-in feature, enabled via:
