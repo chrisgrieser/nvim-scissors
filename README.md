@@ -54,8 +54,8 @@ Automagical editing and creation of snippets.
 - Snippet/file selection via `telescope`, `snacks`, or `vim.ui.select`.
 - Automatic bootstrapping of the snippet folder or new snippet files if needed.
 - Prettifies snippet files for clean diffs in version control.
-- Supports only [VSCode-style
-  snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
+- Supports only
+  [VSCode-style snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_create-your-own-snippets).
 
 > [!TIP]
 > You can use
@@ -74,7 +74,8 @@ Automagical editing and creation of snippets.
 
 ## Requirements
 - nvim 0.12+
-- Snippets saved in the [VS Code-style snippet format](#introduction-to-the-vs-code-style-snippet-format).
+- Snippets saved in the
+  [VS Code-style snippet format](#introduction-to-the-vs-code-style-snippet-format).
 - *Recommended*:
     - One of the following pickers:
         - [telescope](https://github.com/nvim-telescope/telescope.nvim)
@@ -140,7 +141,7 @@ require("luasnip.loaders.from_vscode").lazy_load {
 }
 ```
 
-#### mini.snippets
+#### `mini.snippets`
 `mini.snippets` preferred snippet location is any `snippets/` directory in the
 `runtimepath`. For manually maintained snippets the best location is the user
 config directory, which requires the following `nvim-scissors` setup:
@@ -155,8 +156,8 @@ The `mini.snippets` setup requires explicit definition of loaders. Following its
 [quickstart](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md#quickstart)
 guide should be enough to make it respect snippets from 'snippets/' directory
 inside user config. **Note**: `nvim-scissors` works only with VS-Code-style
-snippet files (not Lua files or JSON arrays), and requires a [`package.json` for
-the VS Code format](#introduction-to-the-vs-code-style-snippet-format).
+snippet files (not Lua files or JSON arrays), and requires a
+[`package.json` for the VS Code format](#introduction-to-the-vs-code-style-snippet-format).
 
 #### blink.cmp
 
@@ -426,17 +427,18 @@ support placeholders such as `${1:foobar}`.
 > escaped as `\$`.
 
 Furthermore, there are various variables you can use, such as `$TM_FILENAME` or
-`$LINE_COMMENT`. [See here for a full list of
-variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
+`$LINE_COMMENT`.
+[See here for a full list of variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
 
 <!-- LTeX: enabled=false -->
 ### Friendly-snippets
 <!-- LTeX: enabled=true -->
-Even though the snippets from the [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
-repository are written in the VS Code-style format, editing them directly is not
-supported. The reason being that any changes made would be overwritten as soon
-as the `friendly-snippets` repository is updated (which happens fairly
-regularly). Unfortunately, there is little `nvim-scissors` can do about that.
+Even though the snippets from the
+[friendly-snippets](https://github.com/rafamadriz/friendly-snippets) repository
+are written in the VS Code-style format, editing them directly is not supported.
+The reason being that any changes made would be overwritten as soon as the
+`friendly-snippets` repository is updated (which happens fairly regularly).
+Unfortunately, there is little `nvim-scissors` can do about that.
 
 What you can do, however, is to copy individual snippets files from the
 `friendly-snippets` repository into your own snippet folder, and edit them
@@ -475,8 +477,9 @@ is going to have `$TM_SELECTED_TEXT` replaced with your selection.
 
 ### Auto-triggered snippets (`Luasnip` only)
 While the VS Code snippet format does not support auto-triggered snippets,
-`LuaSnip` allows you to [specify auto-triggering in the VSCode-style JSON
-files by adding the `luasnip` key](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
+`LuaSnip` allows you to specify auto-triggering in the VS Code-style JSON files
+by
+[adding the `luasnip` key](https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md#vs-code).
 
 `nvim-scissors` does not touch any keys other than `prefix` and `body` in the
 JSON files, so any additions like the `luasnip` key are preserved.
