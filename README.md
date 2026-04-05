@@ -76,13 +76,6 @@ Automagical editing and creation of snippets.
 - nvim 0.12+
 - Snippets saved in the
   [VS Code-style snippet format](#introduction-to-the-vs-code-style-snippet-format).
-- *Recommended*:
-    - One of the following pickers:
-        - [telescope](https://github.com/nvim-telescope/telescope.nvim)
-        - [snacks.nvim](https://github.com/folke/snacks.nvim)
-        - [fzf-lua](https://github.com/ibhagwan/fzf-lua)
-    - Without one of them, the plugin falls back to `vim.ui.select`, which works
-      but lacks search and snippet previews.
 - A snippet engine that can load VS Code-style snippets, such as:
     - [LuaSnip](https://github.com/L3MON4D3/LuaSnip)
     - [mini.snippets](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-snippets.md)
@@ -91,8 +84,13 @@ Automagical editing and creation of snippets.
     - [nvim-snippets](https://github.com/garymjr/nvim-snippets)
     - [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
     - [yasp.nvim](https://github.com/DimitrisDimitropoulos/yasp.nvim)
+- *Recommended*: One of the following pickers
+    - [telescope](https://github.com/nvim-telescope/telescope.nvim)
+    - [snacks.nvim](https://github.com/folke/snacks.nvim)
+    - [fzf-lua](https://github.com/ibhagwan/fzf-lua)
+    - Without one of them, the plugin falls back to `vim.ui.select` for snippet
+      selection which lacks search and snippet previews.
 - *Optional*: Treesitter parsers for the languages you want syntax highlighting
-  for.
 
 ## Installation
 
@@ -100,29 +98,20 @@ Automagical editing and creation of snippets.
 ### nvim-scissors
 
 ```lua
+-- vim.pack
+vim.pack.add({ "https://github.com/chrisgrieser/nvim-scissors" })
+
+require("scissors").setup({
+    snippetDir = "path/to/your/snippetFolder",
+})
+
 -- lazy.nvim
 {
 	"chrisgrieser/nvim-scissors",
-	dependencies = "folke/snacks.nvim", -- either snacks, fzf-lua, telescope
-	  -- dependencies = "ibhagwan/fzf-lua",
-	  -- dependencies = "nvim-telescope/telescope.nvim",
 	opts = {
 		snippetDir = "path/to/your/snippetFolder",
 	}
 },
-
--- packer
-use {
-	"chrisgrieser/nvim-scissors",
-	dependencies = "folke/snacks.nvim", -- either snacks, fzf-lua, telescope
-	  -- dependencies = "ibhagwan/fzf-lua",
-	  -- dependencies = "nvim-telescope/telescope.nvim",
-	config = function()
-		require("scissors").setup ({
-			snippetDir = "path/to/your/snippetFolder",
-		})
-	end,
-}
 ```
 
 ### Snippet engine setup
@@ -174,9 +163,6 @@ require("blink.cmp").setup {
 	}
 }
 ```
-
-It is recommended to use the latest release of `blink.cmp` for hot-reloading to
-work.
 
 #### basics-language-server
 
@@ -232,9 +218,8 @@ vim.keymap.set(
 	{ desc = "Snippet: Edit" }
 )
 
--- when used in visual mode, prefills the selection as snippet body
 vim.keymap.set(
-	{ "n", "x" },
+	{ "n", "x" }, -- when used in visual mode, prefills the selection as snippet body
 	"<leader>sa",
 	function() require("scissors").addNewSnippet() end,
 	{ desc = "Snippet: Add" }
@@ -244,7 +229,7 @@ vim.keymap.set(
 You can also use `:ScissorsAddNewSnippet` and `:ScissorsEditSnippet` if you
 prefer ex commands.
 
-The `:ScissorsAddSnippet` ex command also accepts a range to prefill the snippet
+The `:ScissorsAddSnippet` ex command accepts a range to prefill the snippet
 body (for example `:'<,'> ScissorsAddNewSnippet` or `:3 ScissorsAddNewSnippet`).
 
 ### Editing snippets in the popup window
@@ -287,7 +272,6 @@ require("scissors").setup {
 		picker = "auto", ---@type "auto"|"fzf-lua"|"telescope"|"snacks"|"vim.ui.select"
 
 		--- @module 'fzf-lua'
-
 		fzfLua = {
 			-- same format as fzf_opts in `:h fzf-lua-customization`
 			fzf_opts = {},
@@ -320,7 +304,7 @@ require("scissors").setup {
 			},
 		},
 
-		-- `snacks` picker configurable via snacks config,
+		-- the `snacks` picker configurable via snacks config,
 		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
 	jsonFormatOpts = { -- formatting of snippet files, passed to `:h vim.json.encode()`
@@ -430,9 +414,7 @@ Furthermore, there are various variables you can use, such as `$TM_FILENAME` or
 `$LINE_COMMENT`.
 [See here for a full list of variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables).
 
-<!-- LTeX: enabled=false -->
 ### Friendly-snippets
-<!-- LTeX: enabled=true -->
 Even though the snippets from the
 [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) repository
 are written in the VS Code-style format, editing them directly is not supported.
@@ -451,12 +433,12 @@ snippet's title or description, you can use the `openInFile` keymap and edit
 them directly in the snippet file.
 
 ### Version controlling snippets & snippet file formatting
-This plugin writes JSON files via `vim.encode.json()`, with the default options
-writing them in a prettified manner for clean diffs.
+This plugin writes JSON files via `vim.encode.json()`. Using the default options
+of `nvim-scissors`, these JSON files are prettified for clean diffs.
 
-Previous versions of `nvim-scissors` required a dependency like `jq` since
+(Previous versions of `nvim-scissors` required a dependency like `jq` since
 `vim.encode.json()` was not able to deterministically prettify snippet files
-yet.
+yet.)
 
 ### Snippets on visual selections (`Luasnip` only)
 With `Luasnip`, this is an opt-in feature, enabled via:

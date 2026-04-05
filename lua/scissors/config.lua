@@ -23,7 +23,6 @@ local defaultConfig = {
 		picker = "auto", ---@type "auto"|"fzf-lua"|"telescope"|"snacks"|"vim.ui.select"
 
 		--- @module 'fzf-lua'
-
 		fzfLua = {
 			-- same format as fzf_opts in `:h fzf-lua-customization`
 			fzf_opts = {},
@@ -56,7 +55,7 @@ local defaultConfig = {
 			},
 		},
 
-		-- `snacks` picker configurable via snacks config,
+		-- the `snacks` picker configurable via snacks config,
 		-- see https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 	},
 	jsonFormatOpts = { -- formatting of snippet files, passed to `:h vim.json.encode()`
