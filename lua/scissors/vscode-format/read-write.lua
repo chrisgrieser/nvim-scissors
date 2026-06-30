@@ -11,6 +11,11 @@ function M.readAndParseJson(path)
 	assert(file, name .. " could not be read")
 	local content = file:read("*a")
 	file:close()
+
+	-- See #52, #53. utf-8 encoded files have a BOM at the start which
+	-- makes vim.json.decode fail. This removes the BOM if it exists.
+	content = string.gsub(content, "^\xEF\xBB\xBF", "")
+
 	local ok, json = pcall(vim.json.decode, content)
 	if not (ok and json) then
 		u.notify("Could not parse " .. name, "warn")
